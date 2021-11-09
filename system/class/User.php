@@ -45,7 +45,8 @@ class User {
     }
 
     public function setUserBonus() {
-
+        $bon = (new SafeMySQL())->getOne("select count(id) from user_bonus where id_user = ?i limit ?i", $this->user('id'), 1);
+        return $bon;
     }
 
     /**
@@ -54,8 +55,13 @@ class User {
      * @return mixed
      */
     public function userBonus($value) {
-        $data = (new SafeMySQL())->getRow("select * from user_bonus where id_user = ?i limit ?i", $this->userID(), 1);
-        return $data[$value];
+        if ($this->setUserBonus() == 1) {
+            $data = (new SafeMySQL())->getRow("select * from user_bonus where id_user = ?i limit ?i", $this->userID(), 1);
+            return $data[$value];
+        } else {
+            (new SafeMySQL())->query("insert into user_bonus set time = ?i, id_user = ?i, status_day = ?i, last_date = ?s", time(), $this->user('id'), 1, (new Site())->getDate());
+            (new Site())->_location('?');
+        }
     }
 
     public function _noReg() {
@@ -67,6 +73,23 @@ class User {
     public function _Reg() {
         if($this->getUser() == false){
             (new Site())->session_err("Вы не авторизованы!", "index.php");
+        }
+    }
+
+    public function add_narushenie($user) {
+        (new SafeMySQL())->query("update users set narushenie = narushenie + ?i where login = ?s", 1, $user);
+    }
+
+    public function addMoney($value) {
+        try {
+            $addMoney = $this::user('money') + $value;
+            $addMoney = round( (new Filter())->clearInt( $addMoney ) );
+            if ($addMoney > 999999999) {
+                throw new Exception("Вы превысили лимит (999999999)");
+            }
+            (new SafeMySQL())->query("update users set money = ?i where login = ?s limit ?i", $addMoney, $this::user('login'), 1);
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
 

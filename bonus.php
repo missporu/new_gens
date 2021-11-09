@@ -3,14 +3,67 @@ $title = 'Ежедневный бонус';
 require_once ('system/up.php');
 $user->_Reg();
 
-if($user->userBonus('time') < time()) {
-    echo "1";
-    echo $user->userBonus('id_user').$user->userBonus('status_day')."<br>";
-    echo $user->user('login');
-    //$site->session_err('Вы уже получали свой бонус', 'index.php');
-} else {
-    echo "2";
+try {
+    if($user->userBonus('time') < time()+5) {
+        $money = 100 * $user->userBonus('status_day');
+        $gold = 0;
+        if ($user->userBonus('status_day') == 7) {
+            $gold = 10;
+        }
+        $exp = 10 * $user->userBonus('status_day');
+        $day = $user->userBonus('status_day') + 1;
+        if($day > 7) {
+            $day = 1;
+        }
+        if(isset($_POST['bonus'])) {
+
+        } else { ?>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        Сегодня ваш <?= $user->userBonus('status_day') ?> день!<br>
+                        <form class="" action="" method="post">
+                            <input type="submit" class="btn btn-default" name="bonus" value="Получить бонус">
+                        </form>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="separ"></div>
+                    <div class="col-xs-12">
+                        <ol>Расчет бонусов по дням<?
+                            for ($i = 1; $i < 8; $i++) {
+                                if($i == 7) {
+                                    $golds = "<p>10 Gold</p>";
+                                } ?>
+                                <li>
+                                    <p>
+                                        <?= 100 * $i ?> $
+                                    </p>
+                                    <p>
+                                        <?= 10 * $i ?> exp
+                                    </p>
+                                    <?= $golds ?>
+                                </li><?
+                            } ?>
+                        </ol>
+                    </div>
+                </div>
+            </div><?php
+        }
+    } else {
+        $vvv = $user->userBonus('time') - time();
+        $vvv = $times->timeHours($vvv);
+        throw new Exception("До бонуса осталось {$vvv} ");
+    }
+} catch (Exception $e) { ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 text-center text-info">
+                <p><?= $e->getMessage() ?></p>
+            </div>
+        </div>
+    </div><?php
 }
+
 /*
 if(date("d")-$data['day']==1 AND $data['month']==date("F") AND $data['year']==date("Y")){
 mysql_query('UPDATE `user_bonus` SET `status_day`=`status_day`+"1", `status_bonus`="1",`day`="'.date("d").'", `month`="'.date("F").'", `year`="'.date("Y").'" WHERE `id_user`="'.$user_id.'" LIMIT 1');
