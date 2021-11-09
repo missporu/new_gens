@@ -1,6 +1,6 @@
 <?php
 session_start();
-ob_start();
+//ob_start();
 $timeregen = microtime(TRUE); ?>
 <!DOCTYPE html>
 <html lang="ru">
