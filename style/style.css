@@ -1,0 +1,35 @@
+span.heading {
+    font-size: 30px;
+    font-weight: bold;
+}
+.form-login {
+    background-color: #4e5256;
+    border-radius: 15px;
+}
+#server_time {
+    color: #fff;
+    font-style: italic;
+    font-weight: 600;
+}
+a.text-white {
+    color: #fff;
+    font-style: italic;
+    font-weight: 500;
+    text-decoration: none;
+}
+@-webkit-keyframes pulsate {
+    50% {
+        color: #fff;
+        text-shadow: 0 -1px rgba(0,0,0,.3), 0 0 5px #ffd, 0 0 8px #fff;
+    }
+}
+@keyframes pulsate { 50% {
+    color: #fff;
+    text-shadow: 0 -1px rgba(0,0,0,.3), 0 0 5px #ffd, 0 0 8px #fff;
+} }
+#blink7 {
+    color: rgb(245,245,245);
+    text-shadow: 0 -1px rgba(0,0,0,.1);
+    -webkit-animation: pulsate 1.2s linear infinite;
+    animation: pulsate 1.2s linear infinite;
+}

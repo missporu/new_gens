@@ -1,0 +1,6 @@
+RewriteEngine On
+
+RewriteRule ^unit$ /game/unit.php
+RewriteRule ^voina$ /game/war.php
+RewriteRule ^rooms$ /game/chat.php
+RewriteRule ^mail$ /game/mail.php

@@ -1,0 +1,5 @@
+[Sat Jul 27 06:17:03.922979 2019] [ssl:warn] [pid 9185] AH01909: www.gmisspo.gmisspo.ru:443:0 server certificate does NOT include an ID which matches the server name
+[Sat Jul 27 06:17:04.837376 2019] [ssl:warn] [pid 9194] AH01909: www.gmisspo.gmisspo.ru:443:0 server certificate does NOT include an ID which matches the server name
+[Sat Jul 27 11:01:02.417789 2019] [ssl:warn] [pid 9194] AH01909: www.gmisspo.gmisspo.ru:443:0 server certificate does NOT include an ID which matches the server name
+[Sat Jul 27 14:23:02.452713 2019] [ssl:warn] [pid 9194] AH01909: www.gmisspo.gmisspo.ru:443:0 server certificate does NOT include an ID which matches the server name
+[Sun Jul 28 03:12:02.404001 2019] [ssl:warn] [pid 9194] AH01909: www.gmisspo.gmisspo.ru:443:0 server certificate does NOT include an ID which matches the server name
