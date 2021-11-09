@@ -1,6 +1,6 @@
         <hr>
         <div class="col-xs-12 grey text-center">
-            <a href="good.html">
+            <a href="good.php">
                 <small class="text-warning">Правила игры</small>
             </a><br>
             <p>

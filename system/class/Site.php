@@ -33,13 +33,26 @@ class Site {
         return $fileName[1];
     }
 
-    protected function setDomen() {
-        return $domen = $_SERVER['HTTP_HOST'];
-    }
-
     public function getDomen()
     {
-        return $this->setDomen();
+        return $_SERVER['HTTP_HOST'];
+    }
+
+    public function getUserAgent() {
+        return $_SERVER['HTTP_USER_AGENT'];
+    }
+
+    public function getScriptURI() {
+        return $_SERVER['SCRIPT_URI'];
+    }
+
+    public function getServerAddrIP() {
+        return $_SERVER['SERVER_ADDR'];
+    }
+
+    public function getServerAdmin() {
+        $_SERVER['SERVER_ADMIN'] = "misspo.ru@gmail.com";
+        return $_SERVER['SERVER_ADMIN'];
     }
 
     public function getIp() {

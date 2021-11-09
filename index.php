@@ -1,6 +1,6 @@
 <?php
 require_once('./system/up.php');
-//$user->_noReg(); ?>
+$user->_noReg(); ?>
 
 <div class="container">
     <div class="row">
@@ -21,4 +21,4 @@ require_once('./system/up.php');
         </div>
     </div>
 </div><?php
-//require_once('system/down.php');
+require_once('system/down.php');
