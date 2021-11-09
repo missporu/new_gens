@@ -7,8 +7,7 @@ require_once('head.php');
 
 
 /*
-
-$site=_TextFilter($_SERVER['HTTP_HOST']); // Домен
+s
 
 $support='support@'.$site.''; // Почта сайта
 
