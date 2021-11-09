@@ -1,11 +1,11 @@
 body{
-font-family:Verdana,Arial,sans-serif;
-font-size: 13px;
-color:#FFF;
-background-color: #070504;
-text-shadow:#000 0 -1px 1px;
-margin:0 auto;
-max-width: 540px;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 13px;
+    color: #FFFFFF;
+    background-color: #070504;
+    text-shadow: #000 0 -1px 1px;
+    margin: 0 auto;
+    max-width: 540px;
 }
 
 html {

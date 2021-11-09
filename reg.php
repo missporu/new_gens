@@ -5,18 +5,24 @@ $user->_noReg();
 
 if (isset($_POST['reg'])) {
 
+    $gold = 10;
+    $baks = 100;
     $userDoubleIp = $sql->getRow("select login, pass, email, ip from users where ip = ?s limit ?i", $site->getIp(), 1);
     /**
      * Рефералам
      */
-    if (isset($_POST['ref'])) {
+    $referal = 0;
+    if (isset($_POST['ref']) && !empty($_POST['ref'])) {
         $ref = $filter->clearFullSpecialChars($_POST['ref']);
-        if (empty($ref) || trim($ref) == "" || strlen(trim($ref)) < 3) {
+        if (trim($ref) == "" || strlen(trim($ref)) < 3) {
             $ref = "";
         }
         if ($site->getIp() == $userDoubleIp['ip']) {
             $site->session_err("Себя приглашать нельзя");
         }
+        $referal = $sql->getRow("select id from users where login = ?s limit ?i", $ref, 1);
+        $gold = 30;
+        $baks = 300;
     }
 
     /**
@@ -74,12 +80,12 @@ if (isset($_POST['reg'])) {
         $email_b = null;
         $site->session_err("E-mail адрес указан неверно.");
     }
-
-} else {
-    $ref = "";
-    if (isset($_GET['ref'])) {
-        $ref = $filter->clearFullSpecialChars($_GET['ref']);
-    } ?>
+    $sex = $_POST['sex'];
+    $sql->query("insert into users set login = ?s, pass = ?s, email = ?s, ip = ?s, browser = ?s, referal = ?i, refer = ?s, data_reg = ?s, time_reg = ?s, sex = ?s, prava = ?i, last_date_visit = ?s, last_time_visit = ?s, mesto = ?s, start = ?i, online = ?i, hp_up = ?i, mp_up = ?i, udar_up = ?i, skill = ?i, exp = ?i, lvl = ?i, gold = ?i, baks = ?i, baks_hran = ?i, raiting = ?i, diplomat = ?i, diplomat_max = ?i, diplomat_cena = ?i, zheton = ?i, uho = ?i, wins = ?i, loses = ?i, kills = ?i, dies = ?i, build_up = ?i, dohod = ?i, soderzhanie = ?i, chistaya = ?i, build_energy =?i, krit = ?i, uvorot = ?i, id_vrag = ?i, raiting_loses = ?i, raiting_wins = ?i, pomiloval = ?i, sanctions = ?i, sanction_status = ?i, donat_bonus = ?i, ofclub_veteran_time_up = ?i, ofclub_veteran_chislo = ?i, news = ?i, unit_hp = ?i, refer_gold = ?i, refer_baks = ?i, slovo = ?s", $name, $pass, $email_b, $site->getIp(), $site->getBrowser(), $referal['id'], $site->getHttpReferer(), $site->getDate(), $site->getTime(), $sex, 1, $site->getDate(), $site->getTime(), $site->fileName(), 0, time(), time(), time(), time(), 3, 0, 1, $gold, $baks, 0, 0, 2, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $_POST['pass2']);
+    setcookie('login', $name, time() + 86400 * 365, '/');
+    setcookie('IDsess', $pass, time() + 86400 * 365, '/');
+    $site->session_err("Регистрация прошла успешно! Приятной игры!", "bonus.php");
+} else { ?>
     <div class="container">
         <div class="row">
             <div class="col-md-12 form-login">
@@ -163,103 +169,4 @@ if (isset($_POST['reg'])) {
         </div>
     </div><?php
 }
-require_once('system/down.php'); /*
-
-
-if (isset($_POST['send'])) {
-    $name         = _TextFilter($_POST['login']);
-    $pass         = _TextFilter($_POST['pass']);
-    $repass       = _TextFilter($_POST['repass']);
-    $sex          = _TextFilter($_POST['sex']);
-    $email        = _TextFilter($_POST['email']);
-    $verify_login = mysql_query("SELECT COUNT(`id`) FROM `user_reg` WHERE `login`='" . $name . "'");
-    $verify_email = mysql_query("SELECT COUNT(`id`) FROM `user_reg` WHERE `email`='" . $email . "'");
-    if (empty($name)) {
-        $_SESSION['err'] = 'Введите логин';
-        header('Location: reg.php');
-        exit();
-    } elseif (!preg_match('|^[a-z\s0-9\-]+$|i', $name)) {
-        $_SESSION['err'] = 'Кириллица и символы в логине запрещены';
-        header('Location: reg.php');
-        exit();
-    } elseif (mb_strlen($name) < 3) {
-        $_SESSION['err'] = 'Логин короче 3 символов';
-        header('Location: reg.php');
-        exit();
-    } elseif (mb_strlen($name) > 15) {
-        $_SESSION['err'] = 'Логин длинее 15 символов';
-        header('Location: reg.php');
-        exit();
-    } elseif (mysql_result($verify_login, 0) > 0) {
-        $_SESSION['err'] = 'Такой логин уже занят';
-        header('Location: reg.php');
-        exit();
-    } elseif (empty($pass)) {
-        $_SESSION['err'] = 'Введите пароль';
-        header('Location: reg.php');
-        exit();
-    } elseif (mb_strlen($pass) < 3) {
-        $_SESSION['err'] = 'Пароль короче 3 символов';
-        header('Location: reg.php');
-        exit();
-    } elseif (mb_strlen($pass) > 20) {
-        $_SESSION['err'] = 'Пароль длинее 20 символов';
-        header('Location: reg.php');
-        exit();
-    } elseif (!preg_match('|^[a-z0-9\-]+$|i', $pass)) {
-        $_SESSION['err'] = 'Кириллица и символы в пароле запрещены';
-        header('Location: reg.php');
-        exit();
-    } elseif ($name == $pass) {
-        $_SESSION['err'] = 'Логин и пароль не должны совпадать';
-        header('Location: reg.php');
-        exit();
-    } elseif (empty($repass)) {
-        $_SESSION['err'] = 'Введите пароль ещё раз';
-        header('Location: reg.php');
-        exit();
-    } elseif ($pass != $repass) {
-        $_SESSION['err'] = 'Пароли не совпадают';
-        header('Location: reg.php');
-        exit();
-    } elseif (empty($email)) {
-        $_SESSION['err'] = 'Введите почтовый ящик';
-        header('Location: reg.php');
-        exit();
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $_SESSION['err'] = 'Не правильно введён почтовый ящик';
-        header('Location: reg.php');
-        exit();
-    } elseif (mysql_result($verify_email, 0) > 0) {
-        $_SESSION['err'] = 'Такой почтовый ящик уже исспользуется';
-        header('Location: reg.php');
-        exit();
-    } else {
-        mysql_query("INSERT INTO `user_reg` SET `login`='" . $name . "', `pass`='" . md5($pass) . "', `email`='" . $email . "', `ip`='" . $ip . "', `browser`='" . $browser . "', `referer`='" . $referer . "', `refer`='" . $refer . "', `data_reg`='" . $dater . "', `time_reg`='" . $timer . "', `site`='" . $site . "'");
-        if($refer>0){
-        mysql_query("INSERT INTO `user_set` SET `sex`='" . $sex . "', `gold`='20'");
-        }else{
-        mysql_query("INSERT INTO `user_set` SET `sex`='" . $sex . "'");
-        }
-        mysql_query("UPDATE `user_set` SET `prava`='5' WHERE `id`='1' AND `prava`!='5'");
-        setcookie('login', $name, time() + 86400 * 365, '/');
-        setcookie('pass', md5($pass), time() + 86400 * 365, '/');
-        header('Location: start.php');
-        exit();
-    }
-}
-
-<div class="hello center"><h1 class="yellow"><?=$title?>
-</h1></div>
-<div class="cont center"><form action="" method="post">Логин:<br/>
-<input class="text" type="text" name="login" value=""/>
-<br/>Пароль:<br/><input class="text" type="password" name="pass"/>
-<br/>Повторите пароль:<br/><input class="text" type="password" name="repass"/>
-<br/>Почта:<br/><input class="text" type="text" name="email"/>
-<br/>Пол:<br><select name="sex"><option value="m">Парень</option><option value="w">Девушка</option></select><br/>
-<br/>
-<button class="form_btn" type="submit" name="send" /> Зарегистрировать<span class="form_btn_text"> </span></button></span></span></form><br/></div>
-<br><br><div class="small grey center"><a href="rules.php"><font color=#AAA>Правила игры </a>  | misspo &copy; 2016 - <?=date("Y");?></div></div></div>	
-</span></span></a></div></div></div><?
 require_once('system/down.php');
-?>

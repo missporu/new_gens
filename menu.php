@@ -1,14 +1,7 @@
 <?php
-///$title='Главная';
+$title='Главная';
 require_once ('system/up.php');
-_Reg();
-
-if($set['sex']=='m'){
-$sex_pers='m';
-}else{
-$sex_pers='w';
-}
-?>
+$user->_Reg(); ?>
 <div class="row cont">
     <div class="col-sm-6 col-xs-12 col-md-3 col-lg-3">
     	<a class="button btn-default btn-block" href="voina.php?case=vrag"> Война </a>
@@ -78,19 +71,19 @@ $sex_pers='w';
     </a>
     </div>
 </div>
-<?php if ($set['pasha']>0) {
+<?php
+// if ($set['pasha']>0) {
 ?>
 	<div class="mini-line"></div><div class="block_zero center"><a href="pashalka.php"><div class="head"><span style="color: #9bc;">Обмен пасхальных яиц!</span></div></a></div><?
-}
-if ($set['podarok']==0) {
+//}
+// if ($set['podarok']==0) {
 ?>
 	<div class="mini-line"></div><div class="block_zero center"><a href="podarok.php"><div class="head"><span style="color: #9bc;">Подарки сервера!</span></div></a></div><?
-}
-if($set['prava']>=4){
-?><div class="mini-line"></div><div class="block_zero center"><a href="admin.php"><div class="head"><span style="color: #9bc;">Админ - панель</span></div></a></div><?
-}
-if($set['prava']>1){
-?><div class="mini-line"></div><div class="block_zero center"><a href="moder.php"><div class="head"><span style="color: #9bc;">Модерка </span></div></a></div><?
-}
+//}
+//if($set['prava']>=4){
+//?><div class="mini-line"></div><div class="block_zero center"><a href="admin.php"><div class="head"><span style="color: #9bc;">Админ - панель</span></div></a></div><?
+//}
+//if($set['prava']>1){
+//?><div class="mini-line"></div><div class="block_zero center"><a href="moder.php"><div class="head"><span style="color: #9bc;">Модерка </span></div></a></div><?
+//}
 require_once ('system/down.php');
-?>

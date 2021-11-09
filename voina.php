@@ -1,7 +1,7 @@
 <?php
 $title='Война';
 require_once('system/up.php');
-_Reg();
+$user->_Reg();
 if ($set['block']==1) {
     header("Location: blok.php");
     exit();

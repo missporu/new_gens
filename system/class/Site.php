@@ -84,23 +84,23 @@ class Site {
         return $referer;
     }
 
-    public function error_sess ($kto, $text, $tip) {
+    public function error_sess ($kto, $text, $type) {
         global $sql;
         $agent = $_SERVER['HTTP_USER_AGENT'];
         $gde = $_SERVER['SCRIPT_NAME'];
-        $sql->query("insert into log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $gde, $tip, self::getTime(), self::getDate(), $agent, self::getIp());
+        $sql->query("insert into log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $gde, $type, self::getTime(), self::getDate(), $agent, self::getIp());
     }
 
 
-    public function session_err($text = "", $s = "?") {
+    public function session_err($text = "", $location = "?") {
         if (!empty($text)) {
             $_SESSION['err'] = $text;
         }
-        $this->_location($s);
+        $this->_location($location);
     }
 
-    public function _location ($s) {
-        header("Location: ".$s."");
+    public function _location ($location) {
+        header("Location: ".$location."");
         exit;
     }
 
@@ -128,6 +128,11 @@ class Site {
         $d = str_replace("December","декабря",$d);
         $dater = (new Filter())->clearString($d);
         return $dater;
+    }
+
+    public function lastDay() {
+        $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"));
+        $lastmonth = mktime(0, 0, 0, date("m")-1, date("d"),   date("Y"));
     }
 }
 $site = new Site();
