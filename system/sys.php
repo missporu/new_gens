@@ -6,17 +6,6 @@ require_once "User.php";
 require_once('head.php');
 
 
-/*$db_host='localhost';
-$db_user='sql_newgame_miss';
-$db_pass='dsACdJ6LHTXMjfca';
-$db_name='sql_newgame_miss';
-
-$mysql=mysql_connect($db_host,$db_user,$db_pass) OR die("<center><br/>Игра закрыта на доработку</center>");
-mysql_query('SET NAMES utf8',$mysql);
-mysql_select_db($db_name,$mysql) OR die('<center><br/>Ошибка:<br/>Не найдена база MySQL</center>');// Подключаемся к MySQL
-error_reporting(E_ALL); // подключаем вывод ошибок*/
-
-
 /*
 
 $site=_TextFilter($_SERVER['HTTP_HOST']); // Домен
