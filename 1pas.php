@@ -62,8 +62,9 @@ $user = new User();
 $times = new Times();
 
 
-
-
+/**
+ * Шаблон на страницы
+ */
 try {
     if($user->getBlock()) {
         throw new Exception('Вы заблокированы администрацией проекта!');
