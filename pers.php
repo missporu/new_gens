@@ -1,10 +1,7 @@
 <?php
-/*ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);*/
 $title = 'Профиль';
 require_once('system/up.php');
-_Reg();
+$user->_Reg();
 ?><div class="main"><div class="menuList"><?
 
 if($_GET['case'] != ''){

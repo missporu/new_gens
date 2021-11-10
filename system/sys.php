@@ -1,13 +1,16 @@
 <?php
+require_once "setting.php";
+require_once "head.php";
+
+/*
 require_once "class/Filter.php";
 require_once('class/SafeMySQL.php');
 require_once "class/Site.php";
 require_once "class/Times.php";
 require_once "class/User.php";
+require_once "class/Admin.php";
 require_once('head.php');
 
-
-/*
 s
 
 $support='support@'.$site.''; // Почта сайта

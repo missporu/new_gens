@@ -5,9 +5,9 @@ if (isset($_GET['exit'])) {
     $title='Курс молодого бойца';
 }
 require_once('system/up.php');
-_Reg();
+$user->_Reg();
 if (isset($_GET['exit'])) {
-    _ExitReg();
+    $user->exitReg();
 }
 $start_text = $sql->getRow("select text from start where case = ?i limit ?i", $_GET['case'], 1);
 

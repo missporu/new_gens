@@ -22,4 +22,3 @@ class Filter {
         return $string;
     }
 }
-$filter = new Filter;

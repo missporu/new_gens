@@ -13,4 +13,3 @@ class Times {
         return $out;
     }
 }
-$times = new Times();

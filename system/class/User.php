@@ -76,28 +76,49 @@ class User {
         }
     }
 
-    public function add_narushenie($user) {
-        (new SafeMySQL())->query("update users set narushenie = narushenie + ?i where login = ?s", 1, $user);
-    }
-
-    public function addMoney($value) {
+    /**
+     * @param $value
+     */
+    public function addMoney($key, $value) {
         try {
-            $addMoney = $this::user('money') + $value;
+            $addMoney = $this->user($key) + $value;
             $addMoney = round( (new Filter())->clearInt( $addMoney ) );
             if ($addMoney > 999999999) {
                 throw new Exception("Вы превысили лимит (999999999)");
             }
-            (new SafeMySQL())->query("update users set money = ?i where login = ?s limit ?i", $addMoney, $this::user('login'), 1);
+            (new SafeMySQL())->query("update users set $key = ?i where login = ?s limit ?i", $addMoney, $this->user('login'), 1);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
+    /**
+     * @param $userID
+     */
+    public function add_narushenie($userID) {
+        (new SafeMySQL())->query("update users set narushenie = narushenie + ?i where id = ?i", 1, $userID);
+    }
+
+    /**
+     * @param $text
+     * @param $type
+     * @param $admin
+     */
+    public function AdminError($text, $type, $admin) {
+        if ($this->user('dostup') <= $admin) {
+            (new Site())->errorLog($this->user('name'), $text, $type);
+            $this->add_narushenie($this->user('id'));
+            (new Site())->session_err("Запрет входа. Админ получил письмо. Бан выехал", "menu.php");
+        }
+    }
+
+    /**
+     * Выход
+     */
     public function exitReg() {
         setcookie("login", '', time()-3600);
-        setcookie("pass", '', time()-3600);
+        setcookie("IDsess", '', time()-3600);
         session_destroy();
         (new Site())->_location("index.php");
     }
 }
-$user = new User();

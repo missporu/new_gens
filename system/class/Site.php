@@ -84,11 +84,12 @@ class Site {
         return $referer;
     }
 
-    public function error_sess ($kto, $text, $type) {
-        global $sql;
-        $agent = $_SERVER['HTTP_USER_AGENT'];
-        $gde = $_SERVER['SCRIPT_NAME'];
-        $sql->query("insert into log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $gde, $type, self::getTime(), self::getDate(), $agent, self::getIp());
+    public function errorLog($kto, $text, $type) {
+        (new SafeMySQL())->query("insert into logi set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $this->fileName(), $type, $this->getTime(), $this->getDate(), $this->getUserAgent(), $this->getIp());
+    }
+
+    public function adminLog($kto, $text, $type) {
+        (new SafeMySQL())->query("insert into admin_log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $this->fileName(), $type, $this->getTime(), $this->getDate(), $this->getUserAgent(), $this->getIp());
     }
 
 
@@ -135,4 +136,3 @@ class Site {
         $lastmonth = mktime(0, 0, 0, date("m")-1, date("d"),   date("Y"));
     }
 }
-$site = new Site();
