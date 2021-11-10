@@ -1,18 +1,8 @@
 <?php
 class User {
 
-    /**
-     * @var mixed
-     */
-    protected $v;
-
-    /**
-     * @var mixed
-     */
-    public $user;
-
     public function __construct() {
-        $this->user = $this->getUser();
+
     }
 
     /**
@@ -20,20 +10,6 @@ class User {
      */
     public function getBlock() {
         return true;
-    }
-
-    /**
-     * @param int $v
-     */
-    private function setUser($v) {
-        $this->v = $v;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUser() {
-        return $this->v;
     }
 
     /**
