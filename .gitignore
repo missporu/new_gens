@@ -3,3 +3,6 @@
 /system/setting.php
 /images
 /img
+*.sass
+.idea
+*.htaccess
