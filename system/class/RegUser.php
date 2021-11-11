@@ -1,12 +1,32 @@
 <?php
-class User {
+
+class RegUser {
+
+    /**
+     * @var bool
+     */
     public $user = false;
+
+    /**
+     * @var mixed
+     */
     protected $login;
+
+    /**
+     * @var mixed
+     */
     private $pass;
+
+    /**
+     * RegUser constructor.
+     */
 
     public function __construct() {
         $this->login = (new Filter())->clearFullSpecialChars($_COOKIE['login']);
         $this->pass = (new Filter())->clearFullSpecialChars($_COOKIE['IDsess']);
+        if($this->getUser() == true) {
+            (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", time(), $this->userID(), 1);
+        }
     }
 
     /**
@@ -28,7 +48,7 @@ class User {
      * @return bool
      */
     public function getUser() {
-        if(is_numeric($this->userID())) {
+        if(is_numeric($this->userID()) || $this->userID() <> null) {
             return true;
         } else return false;
     }
@@ -44,13 +64,15 @@ class User {
         }
     }
 
+    /**
+     * @return false|mixed
+     */
     public function setUserBonus() {
         $bon = (new SafeMySQL())->getOne("select count(id) from user_bonus where id_user = ?i limit ?i", $this->user('id'), 1);
         return $bon;
     }
 
     /**
-     * @param $user_id
      * @param $value
      * @return mixed
      */
@@ -64,19 +86,42 @@ class User {
         }
     }
 
-    public function _noReg() {
-        if($this->getUser() == true) {
-            (new Site())->_location("menu.php");
-        }
-    }
-
     public function _Reg() {
         if($this->getUser() == false){
             (new Site())->session_err("Вы не авторизованы!", "index.php");
         }
     }
 
+    public function _noReg() {
+        if($this->getUser() == true) {
+            (new Site())->_location("menu.php");
+        }
+    }
+
+    public function addAitomaticBlock($timeDay) {
+        (new SafeMySQL())->query("update users set block = ?i, block_time = ?i where id = ?i limit ?i", 1, (time()+(60*60*24*$timeDay)), $this->userID(), 1);
+    }
+
+    public function getBlock() {
+        if($this->user('block') == 1 && $this->user('block_time') > time()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function setBan() {
+        try {
+            if($this->user('ban') == 1 && $this->user('ban_time') > time()) {
+                throw new Exception('Вы забанены администрацией проекта!');
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
     /**
+     * @param $key
      * @param $value
      */
     public function addMoney($key, $value) {
@@ -99,12 +144,16 @@ class User {
         (new SafeMySQL())->query("update users set narushenie = narushenie + ?i where id = ?i", 1, $userID);
     }
 
+    public function addNarushenieAdmin($userID) {
+        (new SafeMySQL())->query("update users set narushenie_admin = narushenie_admin + ?i where id = ?i", 1, $userID);
+    }
+
     /**
      * @param $text
      * @param $type
      * @param $admin
      */
-    public function AdminError($text, $type, $admin) {
+    public function UserErrorEnterFromModer($text, $type, $admin) {
         if ($this->user('dostup') <= $admin) {
             (new Site())->errorLog($this->user('name'), $text, $type);
             $this->add_narushenie($this->user('id'));
@@ -116,9 +165,20 @@ class User {
      * Выход
      */
     public function exitReg() {
+        (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", 0, $this->userID(), 1);
         setcookie("login", '', time()-3600);
         setcookie("IDsess", '', time()-3600);
         session_destroy();
         (new Site())->_location("index.php");
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    public function mdAmdFunction($value) {
+        if($this->user('prava') > $value) {
+            return true;
+        }
     }
 }
