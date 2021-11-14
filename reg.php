@@ -18,7 +18,7 @@ if (isset($_POST['reg'])) {
             $ref = "";
         }
         if ($site->getIp() == $userDoubleIp['ip']) {
-            $site->session_err("Себя приглашать нельзя");
+            $site->session_inf("Себя приглашать нельзя");
         }
         $referal = $sql->getRow("select id from users where login = ?s limit ?i", $ref, 1);
         $gold = 30;
@@ -30,19 +30,19 @@ if (isset($_POST['reg'])) {
      */
     if (!empty($_POST['login'])) {
         if (strlen(trim($_POST['login'])) < 3 || trim($_POST['login']) == "") {
-            $site->session_err("Поле 'Имя' должно быть от 3х символов");
+            $site->session_inf("Поле 'Имя' должно быть от 3х символов");
         }
         $name = trim($filter->clearFullSpecialChars($_POST['login']));
         if (is_numeric($name)) {
-            $site->session_err("В имени не могут быть только цифры");
+            $site->session_inf("В имени не могут быть только цифры");
         }
         $usr = $sql->getRow("select login from users where login = ?s limit ?i", $name, 1);
         if ($name == $usr['login']) {
-            $site->session_err("Это имя занято");
+            $site->session_inf("Это имя занято");
         }
     } else {
         $name = null;
-        $site->session_err("Не заполнено поле 'Логин'");
+        $site->session_inf("Не заполнено поле 'Логин'");
     }
 
     /**
@@ -50,21 +50,21 @@ if (isset($_POST['reg'])) {
      */
     if (!empty($_POST['pass']) || !empty($_POST['pass2'])) {
         if ($_POST['pass'] != $_POST['pass2']) {
-            $site->session_err("Пароли не совпадают!");
+            $site->session_inf("Пароли не совпадают!");
         }
         if (strlen($_POST['pass']) < 7 || trim($_POST['pass']) == "" || strlen($_POST['pass2']) < 7 || trim($_POST['pass2']) == "") {
-            $site->session_err("Поле 'Пароль' должно быть от 7 символов");
+            $site->session_inf("Поле 'Пароль' должно быть от 7 символов");
         }
         $pass2 = $filter->clearFullSpecialChars($_POST['pass2']);
         $pass = $filter->clearFullSpecialChars($_POST['pass']);
         $pass = password_hash($pass, PASSWORD_DEFAULT);
     } else {
         $pass = null;
-        $site->session_err("Не заполнено поле 'Пароль'");
+        $site->session_inf("Не заполнено поле 'Пароль'");
     }
 
     if ($name == $pass) {
-        $site->session_err("Логин и пароль не должны совпадать");
+        $site->session_inf("Логин и пароль не должны совпадать");
     }
 
     /**
@@ -74,17 +74,17 @@ if (isset($_POST['reg'])) {
         $email_b = $filter->clearFullSpecialChars($_POST['email']);
         $usm = $sql->getRow("select email from users where email = ?s limit ?i", $email_b, 1);
         if ($email_b == $usm['email']) {
-            $site->session_err("Эта почта уже используется");
+            $site->session_inf("Эта почта уже используется");
         }
     } else {
         $email_b = null;
-        $site->session_err("E-mail адрес указан неверно.");
+        $site->session_inf("E-mail адрес указан неверно.");
     }
     $sex = $_POST['sex'];
     $sql->query("insert into users set login = ?s, pass = ?s, email = ?s, ip = ?s, browser = ?s, referal = ?i, refer = ?s, data_reg = ?s, time_reg = ?s, sex = ?s, prava = ?i, last_date_visit = ?s, last_time_visit = ?s, mesto = ?s, start = ?i, online = ?i, hp_up = ?i, mp_up = ?i, udar_up = ?i, skill = ?i, exp = ?i, lvl = ?i, gold = ?i, baks = ?i, baks_hran = ?i, raiting = ?i, diplomat = ?i, diplomat_max = ?i, diplomat_cena = ?i, zheton = ?i, uho = ?i, wins = ?i, loses = ?i, kills = ?i, dies = ?i, build_up = ?i, dohod = ?i, soderzhanie = ?i, chistaya = ?i, build_energy =?i, krit = ?i, uvorot = ?i, id_vrag = ?i, raiting_loses = ?i, raiting_wins = ?i, pomiloval = ?i, sanctions = ?i, sanction_status = ?i, donat_bonus = ?i, ofclub_veteran_time_up = ?i, ofclub_veteran_chislo = ?i, news = ?i, unit_hp = ?i, refer_gold = ?i, refer_baks = ?i, slovo = ?s", $name, $pass, $email_b, $site->getIp(), $site->getBrowser(), $referal['id'], $site->getHttpReferer(), $site->getDate(), $site->getTime(), $sex, 1, $site->getDate(), $site->getTime(), $site->fileName(), 0, time(), time(), time(), time(), 3, 0, 1, $gold, $baks, 0, 0, 2, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $_POST['pass2']);
     setcookie('login', $name, time() + 86400 * 365, '/');
     setcookie('IDsess', $pass, time() + 86400 * 365, '/');
-    $site->session_err("Регистрация прошла успешно! Приятной игры!", "bonus.php");
+    $site->session_inf("Регистрация прошла успешно! Приятной игры!", "bonus.php");
 } else { ?>
     <div class="container">
         <div class="row">

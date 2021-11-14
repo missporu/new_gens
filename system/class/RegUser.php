@@ -25,7 +25,7 @@ class RegUser {
         $this->login = (new Filter())->clearFullSpecialChars($_COOKIE['login']);
         $this->pass = (new Filter())->clearFullSpecialChars($_COOKIE['IDsess']);
         if($this->getUser() == true) {
-            (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", time(), $this->userID(), 1);
+            (new SafeMySQL())->query("update users set online = ?i, mesto = ?s where id = ?i limit ?i", time(), (new Site())->fileName(), $this->userID(), 1);
         }
     }
 
@@ -88,7 +88,7 @@ class RegUser {
 
     public function _Reg() {
         if($this->getUser() == false){
-            (new Site())->session_err("Вы не авторизованы!", "index.php");
+            (new Site())->session_inf("Вы не авторизованы!", "index.php");
         }
     }
 
@@ -157,7 +157,7 @@ class RegUser {
         if ($this->user('dostup') <= $admin) {
             (new Site())->errorLog($this->user('name'), $text, $type);
             $this->add_narushenie($this->user('id'));
-            (new Site())->session_err("Запрет входа. Админ получил письмо. Бан выехал", "menu.php");
+            (new Site())->session_inf("Запрет входа. Админ получил письмо. Бан выехал", "menu.php");
         }
     }
 

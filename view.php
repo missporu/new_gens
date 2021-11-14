@@ -1,7 +1,39 @@
 <?php
 $title='Просмотр';
 require_once('system/up.php');
-_Reg();
+
+$user->_Reg();
+try {
+    if($user->getBlock()) {
+        throw new Exception('Вы заблокированы администрацией проекта!');
+    }
+    $smott = isset($_GET['user']) ? $filter->clearFullSpecialChars($_GET['user']) : NULL;
+    $smotr = $sql->getRow("SELECT * FROM users WHERE login = ?s LIMIT ?i", $smott, 1); ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <?= $smotr['login'] ?> | <?= $smotr['baks'] ?>
+            </p>
+        </div>
+    </div>
+    </div><?php
+} catch (Exception $e) {?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="red">
+                <?= $e->getMessage() ?>
+            </h3>
+            <p class="green">До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?></p>
+        </div>
+    </div>
+    </div><?php
+}
+
+
+
+/*
 if ($set['block']==1) {
     header("Location: blok.php");
     exit();
@@ -70,7 +102,7 @@ switch($_GET['case']){
 default:
 
 echo'<div class="main">';
-/* Админам */
+/* Админам
 if($set['prava']>3){
     echo'<a href="admin.php?case=3_1&id='.$smotr['id'].'">Проверить на мультоводство</a> | ';
     echo'<a href="admin.php?case=mail&id='.$smotr['id'].'">Посмотреть исходящюю почту игрока</a> | ';
@@ -79,7 +111,7 @@ if($set['prava']>3){
     }
     echo'<a href="admin.php?case=mailer&id='.$smotr['id'].'">Посмотреть входящюю почту игрока</a> | ';
 }
-/* Ст.Модерам и выше */
+/* Ст.Модерам и выше
 if ($set['prava']>2) {
     echo'<a href="?case=block&smotr='.$smotr['id'].'">Заблокировать</a> | 
     <a href="?case=razblock&smotr='.$smotr['id'].'">Разблокировать</a> | 
@@ -89,14 +121,14 @@ if ($set['prava']>2) {
 
 
 }
-/* Модерам и выше */
+/* Модерам и выше
 if ($set['prava']>1) {
     echo'<a href="?case=ban&smotr='.$smotr['id'].'">Забанить</a> | ';
     if ($smotr_set['skill_full']==0 || $set['prava']>3) {
         echo'<a href="?case=redu&smotr='.$smotr['id'].'">Редактор сброса уровней / навыков</a> | ';
     }
 }
-/* Админам */
+/* Админам
 if($set['prava']>=4){
 echo'<a href="?case=status&smotr='.$smotr['id'].'">Изменить статус</a> | ';
 }
@@ -793,7 +825,5 @@ case 'logi':
             echo "Навыки ".$smotr_set['user'].": ".$smotr_set['skill']." Свободных, ".$smotr_set['skill_full']." Всего навыков, ".$smotr_set['skill_kuplen']." Куплено навыков <br>";
             echo "".$smotr_set['hp']." / ".$smotr_set['max_hp']." HP, ".$smotr_set['mp']." / ".$smotr_set['max_mp']." MP, ".$smotr_set['udar']." / ".$smotr_set['max_udar']." BP, ".$smotr_set['krit']." Krit, ".$smotr_set['uvorot']." uvorot ";
         break;
-}
+} */
 require_once('system/down.php');
-?>
-    

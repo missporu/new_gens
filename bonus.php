@@ -18,7 +18,7 @@ try {
                 $user->addMoney("gold", $gold);
             }
             $sql->query("update user_bonus set time = ?i, status_day = ?i, last_date = ?s where id_user = ?i limit ?i", (time()+(60*60*24)), $day, $site->getDate(), $user->user('id'), 1);
-            $site->session_err("Получена ежедневная награда!");
+            $site->session_inf("Получена ежедневная награда!");
         } else { ?>
             <div class="container">
                 <div class="row">

@@ -9,10 +9,10 @@ echo'<div class="cont">';
         $name = $filter->clearFullSpecialChars(trim($_POST['login']));
         $pass = $filter->clearFullSpecialChars($_POST['pass']);
         if (empty($name) || trim($name) == "" || strlen(trim($name)) < 3) {
-            $site->session_err("Не заполнено поле логин");
+            $site->session_inf("Не заполнено поле логин");
         }
         if (empty($pass) || trim($pass) == "" || strlen(trim($pass)) < 5) {
-            $site->session_err("Не заполнено поле пароль");
+            $site->session_inf("Не заполнено поле пароль");
         }
         $usr = $sql->getRow("select pass, ip, login from users where login = ?s limit ?i", $name, 1);
         $hash = $usr['pass'];
@@ -20,10 +20,10 @@ echo'<div class="cont">';
         if ($pass_get == TRUE and $name = $usr['login']) {
             setcookie('login', $name, time() + 86400 * 365, '/');
             setcookie('IDsess', $hash, time() + 86400 * 365, '/');
-            $site->session_err("Добро пожаловать!<br>Текущий ip {$site->getIp()}, последний вход был с {$usr['ip']}", "menu.php");
+            $site->session_inf("Добро пожаловать!<br>Текущий ip {$site->getIp()}, последний вход был с {$usr['ip']}", "menu.php");
         } else {
             $site->adminLog($_POST['login'], "пытался зайти на сайт {$pass}", 'novhod');
-            $site->session_err("Неверные данные");
+            $site->session_inf("Неверные данные");
         }
     } ?>
     <div class="container">

@@ -2,6 +2,7 @@
 $title='Война';
 require_once('system/up.php');
 $user->_Reg();
+/*
 if ($set['block']==1) {
     header("Location: blok.php");
     exit();
@@ -746,6 +747,5 @@ exit();
 break;
 
 
-}
+} */
 require_once('system/down.php');
-?>

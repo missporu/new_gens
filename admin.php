@@ -1,7 +1,132 @@
 <?php
 $title = 'Админ-панель';
 require_once('system/up.php');
-_Reg();
+$user->_Reg();
+
+$admin1983 = new Admin('1983');
+$admin5 = new Admin('5');
+
+try {
+    if($user->getBlock() and $admin1983->returnAdmin() == false) {
+        throw new Exception('Вы заблокированы администрацией проекта!');
+    }
+    if($user->user('prava') < 1983 || $user->user('prava') > 1983) {
+        if ($user->user('prava') <> 5) {
+            if($user->user('narushenie_admin') > 1) {
+                $narushenie = $filter->clearInt($user->user('narushenie'));
+                if($narushenie == 0) {
+                    $narushenie = 1;
+                }
+                $timeBlock = 1 * $narushenie;
+                $user->addAitomaticBlock($narushenie);
+                $site->session_inf("У вас кончились бесплатные попытки входа в админку! Ваш аккаунт автоматически заблокирован! Любые жалобы будут рассмотрены в обычном порядке", 'menu.php');
+            } else {
+                $user->addNarushenieAdmin($user->user('id'));
+            }
+            $site->session_inf("Нет доступа! На третьей попытке входа без доступа произойдет автоматическая блокировка до выяснения. Уведомление о попытке входа ушло на почту админу. Приятной игры", 'menu.php');
+        }
+    }
+
+    switch ($_GET['a']) {
+        default: ?>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="col-xs-6">
+                            <a class="miss-block" href="?a=spisokUser"><span>Все пользователи</span></a>
+                        </div>
+                        <div class="col-xs-6">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+            <?php
+            break;
+
+        case 'redUser':
+            if (!$admin1983->returnAdmin()) {
+                $site->session_err("Без доступа");
+            }
+            $userID = $filter->clearInt($_GET['id']);
+            $redUser = $sql->getRow("select * from users where id = ?i limit ?i", $userID, 1);
+
+            if (isset($_GET['enter'])) {
+
+            } else {
+                $ol = $sql->getAll("SELECT COLUMN_NAME, COLUMN_COMMENT, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?s;", 'users'); ?>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal" action="" method="post"><?
+                                foreach ($ol as $aaa) {
+                                    $nameColumn = $aaa['COLUMN_NAME']; ?>
+                                    <div class="form-group col-xs-6">
+                                        <?= $aaa['COLUMN_COMMENT'] ?> | <?= $aaa['COLUMN_TYPE'] ?>
+                                    </div>
+                                    <div class="form-group col-xs-6">
+                                        <input name="<?= $nameColumn ?>" class="form-control" type="text" value="<?= $redUser[$nameColumn] ?>">
+                                    </div>
+                                    <div class="clearfix"></div><?
+                                } ?>
+                            </form>
+                        </div>
+                    </div>
+                </div><?php
+            }
+            break;
+
+        case 'spisokUser':
+            $allUser = $sql->getAll("select * from users order by id desc"); ?>
+            <div class="container">
+                <div class="row">
+                    <h3 class="text-center text-info">Список пользователей</h3><?
+                    $site->PrintMiniLine();
+                    foreach ($allUser as $all) {
+                        if ($admin1983->returnAdmin()) { ?>
+                            <div class="col-xs-10"><?
+                        }
+                        if ($admin5->returnAdmin()) { ?>
+                            <div class="col-xs-12"><?
+                        } ?>
+                        <small class="orange"><?= $all['id'] ?>)</small>
+                        <small class="orange"><?= $all['login'] ?> :</small><?
+                        if ($admin1983->returnAdmin()) {
+                            echo " <small class='text-danger'>[{$all['slovo']}]</small> ";
+                        } ?>
+                        | <small class="text-warning"><?= $all['email'] ?></small>
+                        | <small class="text-info"><?= $all['lvl'] ?> lvl</small>
+                        | <small class="green"><?= $all['baks'] ?> $</small>
+                        | <small class="yellow"><?= $all['gold'] ?> G</small>
+                        |
+                        </div><?
+                        if ($admin1983->returnAdmin()) { ?>
+                            <div class="col-xs-2">
+                                <a class="btn btn-dark" href="?a=redUser&id=<?= $all['id'] ?>">Ред</a>
+                            </div><?
+                        }
+                        $site->PrintMiniLine();
+                    } ?>
+                </div>
+            </div><?php
+            break;
+    }
+} catch (Throwable $e) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="red">
+                <?= $e->getMessage() ?>
+            </h3>
+            <p class="green">
+                До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?>
+            </p>
+        </div>
+    </div>
+    </div><?php
+}
+/*
 if($set['prava']<3){
 $time_block = time()*60*60*24*25;
 mysql_query("UPDATE `user_set` SET `block`='1', `block_time`='".$time_block."' WHERE `id`='".$set['id']."' LIMIT 1");
@@ -254,7 +379,7 @@ break;
 
 /*case '3':
 
-break;*/
+break;
 
 case '3_1':
 if($set['prava']<4){
@@ -424,5 +549,5 @@ $data_setler = mysql_fetch_array($data_set); ?>
         } while ($data_setler = mysql_fetch_array($data_set) );
         break;
 }
-echo '</div>';
+echo '</div>'; */
 require_once('system/down.php');

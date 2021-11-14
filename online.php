@@ -1,13 +1,69 @@
 <?php
-$title='Онлайн';
+$title = 'Онлайн';
 require_once('system/up.php');
-_Reg(); /*
+$user->_Reg();
+try {
+    if($user->getBlock()) {
+        throw new Exception('Вы заблокированы администрацией проекта!');
+    }
+    $superadmin = new Admin('1983');
+    $admin = new Admin('5');
+    $stModer = new Admin('4');
+    $moder = new Admin('3'); ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3 class="text-center text-info"><?= $title ?></h3>
+            </div>
+            <div class="clearfix"></div><?
+            $online_int = $sql->getOne("select count(id) from users where online > ?i", time()-600);
+            if($online_int > 0) {
+                $online = $sql->getAll("select mesto, login, id from users where online > ?i", time()-600);
+                foreach ($online as $onl) {
+                    $mesto = explode('.', $onl['mesto']);
+                    if ($mesto[0] == 'admin') {$m = 'Админка';}
+                    elseif ($mesto[0] == 'menu') {$m = 'Главная';}
+                    elseif ($mesto[0] == 'online') {$m = 'Онлайн';}
+                    elseif ($mesto[0] == 'pers') {$m = 'Профиль';}
+                    else $m = '?'; ?>
+                    <div class="col-xs-6">
+                        <a href="view.php?user=<?= $onl['login'] ?>"><?= $onl['login'] ?></a>
+                    </div>
+                    <div class="col-xs-6">
+                        <?= $m ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="separ"></div>
+                    <div class="clearfix"></div><?
+                }
+            } else { ?>
+                <p class="text-danger text-center">
+                    Никого нет
+                </p><?
+            } ?>
+        </div>
+    </div><?php
+} catch (Exception $e) {?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="red">
+                <?= $e->getMessage() ?>
+            </h3>
+            <p class="green">
+                До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?>
+            </p>
+        </div>
+    </div>
+    </div><?php
+}
+/*
 <div class="row"><?php
 if ($_GET['case'] == ''){
 ?><div class="col-md-6 col-xs-6 text-center">Все игроки </div><div class="col-md-6 col-xs-6 text-center"><a class="btn-primary btn-xs btn-block" href="?case=search">Поиск</a></div><?
 }else{
 ?><div class="col-md-6 col-xs-6 text-center"><a class="btn-primary btn-xs active btn-block" href="?">Все игроки</a></div> <div class="col-md-6 col-xs-6">Поиск</div><?php
-}*/
+}
 if ($set['block']==1) {
 	header("Location: blok.php");
 	exit();
@@ -47,7 +103,7 @@ $start = $page * $sum - $sum;
 	// Количество страниц для пагинации
 	$str_pag = ceil($total / $kol);
 	// echo $str_pag; 
-	// Запрос и вывод записей */
+	// Запрос и вывод записей
 	$result = mysql_query("SELECT * FROM `user_set` WHERE `online`> '".(time()-600)."' ORDER BY `chistaya` DESC LIMIT $start,$sum");
 	$myrow = mysql_fetch_array($result); ?>
 	<div class="col-md-12 text-center text-info"><hr>Вы на <?=$page?> Странице<hr></div><?php
@@ -91,7 +147,7 @@ $start = $page * $sum - $sum;
 			for ($i = 1; $i <= $str_pag; $i++){
 				echo ' <li><a href="?page='.$i.'">'.$i.' </a></li> ';
 			} ?>
-        </ul> */
+        </ul>
         put($page,$get,$total); ?>
 	</div>
 </div><?php
@@ -122,5 +178,5 @@ case 'search':
 		}
         ?><div class="mini-line"></div><div class="block_zero">Введите никнейм:<form action="online.php?case=search" method="post"><input class="text" type="text" name="login" size="30"/><br/><span class="btn"><span class="end"><input class="label" type="submit" name="send" value="Найти"></span></span> </a></form></div><div class="mini-line"></div><ul class="hint"><li>Здесь можно найти нужного игрока по его никнейму.</li></div><?        
         break;
-}
+} */
 require_once('system/down.php');

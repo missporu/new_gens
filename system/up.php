@@ -1,6 +1,6 @@
 <?php
-require_once('sys.php'); ?>
-<div class="clearfix"></div><hr>
+require_once('sys.php');
+$site->lineHrInContainer(); ?>
 <div class="container">
     <div class="row">
         <div class="col-xs-2">
@@ -17,14 +17,58 @@ require_once('sys.php'); ?>
             </h1>
         </div>
     </div>
-</div>
-<div class="clearfix"></div><hr>
-<div class="clearfix"></div><?php
-if (isset($_SESSION['err'])) { ?>
-    <div class="alert alert-warning alert-dismissable">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-    <?= $_SESSION['err'] ?>
+</div><?php
+$site->lineHrInContainer();
+if ($user->getUser()) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <p>
+                <?= $user->user('baks') ?> $ | <?= $user->user('gold') ?> gold
+            </p>
+        </div>
+    </div>
     </div><?php
-    $_SESSION['err'] = NULL;
-} ?>
-<div class="clearfix"></div><?php
+    $site->lineHrInContainer();
+}
+if (isset($_SESSION['info'])) { ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-info alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <?= $_SESSION['info'] ?>
+                </div>
+            </div>
+        </div>
+    </div><?php
+    $_SESSION['info'] = NULL;
+}
+
+if (isset($_SESSION['error'])) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-danger alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <?= $_SESSION['error'] ?>
+            </div>
+        </div>
+    </div>
+    </div><?php
+    $_SESSION['error'] = NULL;
+}
+
+if (isset($_SESSION['ok'])) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <?= $_SESSION['ok'] ?>
+            </div>
+        </div>
+    </div>
+    </div><?php
+    $_SESSION['ok'] = NULL;
+}

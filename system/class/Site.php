@@ -27,6 +27,22 @@ class Site {
         $this->title = $title;
     }
 
+    public function lineHrInContainer() { ?>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <hr>
+                </div>
+            </div>
+        </div><?php
+    }
+
+    public function PrintMiniLine() { ?>
+        <div class="clearfix"></div>
+        <div class="separ"></div>
+        <div class="clearfix"></div><?php
+    }
+
     public function fileName() {
         $fileName = $_SERVER['PHP_SELF'];
         $fileName = explode('/', $fileName);
@@ -92,25 +108,56 @@ class Site {
         (new SafeMySQL())->query("insert into admin_log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $this->fileName(), $type, $this->getTime(), $this->getDate(), $this->getUserAgent(), $this->getIp());
     }
 
-
-    public function session_err($text = "", $location = "?") {
+    /**
+     * @param string $text
+     * @param string $location
+     */
+    public function session_inf($text = "", $location = "?") {
         if (!empty($text)) {
-            $_SESSION['err'] = $text;
+            $_SESSION['info'] = $text;
         }
         $this->_location($location);
     }
 
+    /**
+     * @param string $text
+     * @param string $location
+     */
+    public function session_err($text = "", $location = "?") {
+        if (!empty($text)) {
+            $_SESSION['error'] = $text;
+        }
+        $this->_location($location);
+    }
+
+    /**
+     * @param string $text
+     * @param string $location
+     */
+    public function session_ok($text = "", $location = "?") {
+        if (!empty($text)) {
+            $_SESSION['ok'] = $text;
+        }
+        $this->_location($location);
+    }
+
+    /**
+     * @param $location
+     */
     public function _location ($location) {
         header("Location: ".$location."");
         exit;
     }
 
+    /**
+     * @return mixed
+     */
     public function getTime() {
-        return (new Filter())->clearFullSpecialChars(date("H:i:s"));
+        return Times::setTime();
     }
 
-    public function getDate() {
-        return (new Filter())->clearFullSpecialChars(date("d.m.Y"));
+    public static function getDate() {
+        return Times::setDate();
     }
 
     public function getDateRus() {

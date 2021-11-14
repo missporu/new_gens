@@ -3,9 +3,25 @@ span.heading {
     font-weight: bold;
 }
 .form-login {
+    max-width: 100%;
     background-color: #4e5256;
     border-radius: 15px;
 }
+.form-horizontal{
+    max-width: 100%;
+}
+
+a.miss-block span {
+    display: block;
+    height: 22px;
+    border: 1px solid #2b2b29;
+    color: #99CCCC;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+a.miss-block:hover span { border: 1px solid #a7a4a4; }
+
 #server_time {
     color: #fff;
     font-style: italic;

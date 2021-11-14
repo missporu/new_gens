@@ -1,10 +1,9 @@
 <?php
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 0);
-ini_set('display_startup_errors', 0);
 $title='Настройки';
 require_once('system/up.php');
-_Reg();
+$user->_Reg();
+
+/*
 if($set['logo'] == 'on'){
 echo'<img src="images/logotips/set.jpg" width="100%" alt="logo"/>';
 echo'<div class="mini-line"></div>';
@@ -190,5 +189,5 @@ $new_flag = 'r';
                     </form><?php
                 }
                 break;
-}
+} */
 require_once('system/down.php');
