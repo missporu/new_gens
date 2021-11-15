@@ -27,17 +27,22 @@ try {
         }
     }
 
-    switch ($_GET['a']) {
+    switch ($switch) {
         default: ?>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
-                        <div class="col-xs-6">
-                            <a class="miss-block" href="?a=spisokUser"><span>Все пользователи</span></a>
-                        </div>
-                        <div class="col-xs-6">
-
-                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="btn btn-block btn-dark" href="?a=spisokUser"><span>Все пользователи</span></a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="btn btn-block btn-dark" href="?a=spisokUser">Все пользователи</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a class="miss-block btn-dark" href="?a=spisokUser"><span>Все пользователи</span></a>
+                            </li>
+                        </ul>
                         <div class="clearfix"></div>
                     </div>
                 </div>
@@ -53,7 +58,7 @@ try {
             $redUser = $sql->getRow("select * from users where id = ?i limit ?i", $userID, 1);
 
             if (isset($_GET['enter'])) {
-
+                $login = $filter->clearString($_POST['login']);
             } else {
                 $ol = $sql->getAll("SELECT COLUMN_NAME, COLUMN_COMMENT, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?s;", 'users'); ?>
                 <div class="container">
@@ -85,7 +90,7 @@ try {
                     $site->PrintMiniLine();
                     foreach ($allUser as $all) {
                         if ($admin1983->returnAdmin()) { ?>
-                            <div class="col-xs-10"><?
+                            <div class="col-xs-9"><?
                         }
                         if ($admin5->returnAdmin()) { ?>
                             <div class="col-xs-12"><?
@@ -102,8 +107,8 @@ try {
                         |
                         </div><?
                         if ($admin1983->returnAdmin()) { ?>
-                            <div class="col-xs-2">
-                                <a class="btn btn-dark" href="?a=redUser&id=<?= $all['id'] ?>">Ред</a>
+                            <div class="col-xs-3">
+                                <a class="btn btn-block btn-dark" href="?a=redUser&id=<?= $all['id'] ?>">Ред</a>
                             </div><?
                         }
                         $site->PrintMiniLine();

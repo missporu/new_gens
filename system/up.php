@@ -21,13 +21,18 @@ $site->lineHrInContainer(); ?>
 $site->lineHrInContainer();
 if ($user->getUser()) { ?>
     <div class="container">
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <p>
-                <?= $user->user('baks') ?> $ | <?= $user->user('gold') ?> gold
-            </p>
+        <div class="row">
+            <div class="col-xs-12 text-center">
+                <ul class="list-inline">
+                    <li class="green">
+                        <?= $user->user('baks') ?> <? imageBaks() ?>
+                    </li>
+                    <li class="yellow">
+                        <?= $user->user('gold') ?> <? imageGold() ?>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
     </div><?php
     $site->lineHrInContainer();
 }
@@ -47,28 +52,28 @@ if (isset($_SESSION['info'])) { ?>
 
 if (isset($_SESSION['error'])) { ?>
     <div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="alert alert-danger alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <?= $_SESSION['error'] ?>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <?= $_SESSION['error'] ?>
+                </div>
             </div>
         </div>
-    </div>
     </div><?php
     $_SESSION['error'] = NULL;
 }
 
 if (isset($_SESSION['ok'])) { ?>
     <div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <?= $_SESSION['ok'] ?>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <?= $_SESSION['ok'] ?>
+                </div>
             </div>
         </div>
-    </div>
     </div><?php
     $_SESSION['ok'] = NULL;
 }

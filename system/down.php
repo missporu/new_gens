@@ -1,5 +1,22 @@
 <?php
 if($user->getUser()) {
+    if($user->mdAmdFunction('1') == true) {
+        $admin5 = new Admin(5);
+        $admin1983 = new Admin(1983);
+        if($admin1983->returnAdmin() or $admin5->returnAdmin()) {
+            $site->lineHrInContainer(); ?>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <a class="btn btn-block btn-success" href="admin.php">
+                            Админ - панель
+                        </a>
+                    </div>
+                </div>
+            </div><?php
+            $site->lineHrInContainer();
+        }
+    }
     $site->lineHrInContainer(); ?>
     <div class="container">
         <div class="row">

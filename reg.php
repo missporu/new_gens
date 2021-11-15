@@ -14,7 +14,7 @@ if (isset($_POST['reg'])) {
     $referal = 0;
     if (isset($_POST['ref']) && !empty($_POST['ref'])) {
         $ref = $filter->clearFullSpecialChars($_POST['ref']);
-        if (trim($ref) == "" || strlen(trim($ref)) < 3) {
+        if (!empty($ref) || trim($ref) == "" || strlen(trim($ref)) < 3) {
             $ref = "";
         }
         if ($site->getIp() == $userDoubleIp['ip']) {
@@ -85,7 +85,11 @@ if (isset($_POST['reg'])) {
     setcookie('login', $name, time() + 86400 * 365, '/');
     setcookie('IDsess', $pass, time() + 86400 * 365, '/');
     $site->session_inf("Регистрация прошла успешно! Приятной игры!", "bonus.php");
-} else { ?>
+} else {
+    $ref = "";
+    if (!empty($_GET['ref'])) {
+        $ref = $filter->clearFullSpecialChars($_GET['ref']);
+    } ?>
     <div class="container">
         <div class="row">
             <div class="col-md-12 form-login">

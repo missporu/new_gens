@@ -1,7 +1,14 @@
 <?php
+
 class Site {
-    public $name = "Наследие войн";
-    public $title;
+    /**
+     * @var string
+     */
+    public string $name = "Наследие войн";
+    /**
+     * @var string
+     */
+    public string $title;
 
     public function __construct() {
         $siteStatus = (new SafeMySQL())->getRow("select * from setting_game where id = ?i", 1);
@@ -17,13 +24,14 @@ class Site {
                 }
             }
         } catch (Exception $e) { ?>
-            <div style="text-align: center;">
+            <div class="text-center">
                 <p style="color: red">
                     <?= $e->getMessage(); ?>
                 </p>
             </div><?php
             exit();
         }
+        $title = "";
         $this->title = $title;
     }
 
@@ -49,28 +57,46 @@ class Site {
         return $fileName[1];
     }
 
+    /**
+     * @return mixed
+     */
     public function getDomen()
     {
         return $_SERVER['HTTP_HOST'];
     }
 
+    /**
+     * @return mixed
+     */
     public function getUserAgent() {
         return $_SERVER['HTTP_USER_AGENT'];
     }
 
+    /**
+     * @return mixed
+     */
     public function getScriptURI() {
         return $_SERVER['SCRIPT_URI'];
     }
 
+    /**
+     * @return mixed
+     */
     public function getServerAddrIP() {
         return $_SERVER['SERVER_ADDR'];
     }
 
+    /**
+     * @return string
+     */
     public function getServerAdmin() {
         $_SERVER['SERVER_ADMIN'] = "misspo.ru@gmail.com";
         return $_SERVER['SERVER_ADMIN'];
     }
 
+    /**
+     * @return string
+     */
     public function getIp() {
         $keys = [
             'HTTP_CLIENT_IP',
@@ -87,10 +113,16 @@ class Site {
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getBrowser() {
         return $browser = (new Filter())->clearString($_SERVER['HTTP_USER_AGENT']);
     }
 
+    /**
+     * @return mixed
+     */
     public function getHttpReferer() {
         if (isset($_SERVER['HTTP_REFERER'])) {
             $referer = (new Filter())->clearFullSpecialChars($_SERVER['HTTP_REFERER']);

@@ -8,32 +8,38 @@ class RegUser {
     public $user = false;
 
     /**
-     * @var mixed
+     * @var string|null
      */
-    protected $login;
+    protected ?string $login = null;
 
     /**
-     * @var mixed
+     * @var string
      */
     private $pass;
 
-    /**
-     * RegUser constructor.
-     */
-
     public function __construct() {
-        $this->login = (new Filter())->clearFullSpecialChars($_COOKIE['login']);
-        $this->pass = (new Filter())->clearFullSpecialChars($_COOKIE['IDsess']);
+        if (isset($_COOKIE['login']) && isset($_COOKIE['IDsess'])) {
+            if (!empty(trim($_COOKIE['login'])) && !empty(trim($_COOKIE['IDsess']))) {
+                $this->login = trim((new Filter())->clearFullSpecialChars($_COOKIE['login']));
+                $this->pass = trim((new Filter())->clearFullSpecialChars($_COOKIE['IDsess']));
+            }
+        } else {
+            $this->login = null;
+            $this->pass = null;
+        }
+        if ($this->userID()) {
+            $this->getUser();
+        }
         if($this->getUser() == true) {
             (new SafeMySQL())->query("update users set online = ?i, mesto = ?s where id = ?i limit ?i", time(), (new Site())->fileName(), $this->userID(), 1);
         }
     }
 
     /**
-     * @return mixed|null
+     * @return int|null|
      */
     protected function userID() {
-        if (!empty($this->login) AND !empty($this->pass)) {
+        if (isset($this->login) AND isset($this->pass)) {
             $users = (new SafeMySQL())->getOne("select count(id) from users where login = ?s and pass = ?s limit ?i", $this->login, $this->pass, 1);
             if ($users == 1) {
                 $this->user_id = (new SafeMySQL())->getRow("select id from users where login = ?s and pass = ?s limit ?i", $this->login, $this->pass, 1);
@@ -47,7 +53,7 @@ class RegUser {
     /**
      * @return bool
      */
-    public function getUser() {
+    public function getUser(): bool {
         if(is_numeric($this->userID()) || $this->userID() <> null) {
             return true;
         } else return false;
@@ -65,7 +71,7 @@ class RegUser {
     }
 
     /**
-     * @return false|mixed
+     * @return int
      */
     public function setUserBonus() {
         $bon = (new SafeMySQL())->getOne("select count(id) from user_bonus where id_user = ?i limit ?i", $this->user('id'), 1);
@@ -102,6 +108,9 @@ class RegUser {
         (new SafeMySQL())->query("update users set block = ?i, block_time = ?i where id = ?i limit ?i", 1, (time()+(60*60*24*$timeDay)), $this->userID(), 1);
     }
 
+    /**
+     * @return bool
+     */
     public function getBlock() {
         if($this->user('block') == 1 && $this->user('block_time') > time()) {
             return true;
@@ -109,6 +118,7 @@ class RegUser {
             return false;
         }
     }
+
 
     public function setBan() {
         try {
@@ -162,7 +172,7 @@ class RegUser {
     }
 
     /**
-     * Выход
+     * <====  Выход  ====>
      */
     public function exitReg() {
         (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", 0, $this->userID(), 1);

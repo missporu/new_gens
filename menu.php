@@ -4,11 +4,12 @@ require_once ('system/up.php');
 $user->_Reg();
 $admin1983 = new Admin('1983');
 $admin5 = new Admin('5');
+
 try {
     if($user->getBlock()) {
         throw new Exception('Вы заблокированы администрацией проекта!');
     }
-    switch ($_GET['a']) {
+    switch ($switch) {
         default: ?>
             <div class="container">
                 <div class="row">
@@ -19,9 +20,13 @@ try {
                         </h5>
                         <? $site->PrintMiniLine() ?>
                         <div class="col-xs-12">
-                            <a class="miss-block" href="voina.php">
-                                <span>Война</span>
-                            </a>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="arena.php">
+                                        <span>Арена</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -147,20 +152,5 @@ try {
             </div>
         </div>
     </div><?php
-}
-if($user->mdAmdFunction('1') == true) {
-    if($admin1983->returnAdmin() or $admin5->returnAdmin()) {
-        $site->lineHrInContainer(); ?>
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <a class="btn btn-block btn-success" href="admin.php">
-                        Админ - панель
-                    </a>
-                </div>
-            </div>
-        </div><?php
-        $site->lineHrInContainer();
-    }
 }
 require_once ('system/down.php');

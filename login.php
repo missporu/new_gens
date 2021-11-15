@@ -9,10 +9,10 @@ echo'<div class="cont">';
         $name = $filter->clearFullSpecialChars(trim($_POST['login']));
         $pass = $filter->clearFullSpecialChars($_POST['pass']);
         if (empty($name) || trim($name) == "" || strlen(trim($name)) < 3) {
-            $site->session_inf("Не заполнено поле логин");
+            $site->session_err("Не заполнено поле логин");
         }
         if (empty($pass) || trim($pass) == "" || strlen(trim($pass)) < 5) {
-            $site->session_inf("Не заполнено поле пароль");
+            $site->session_err("Не заполнено поле пароль");
         }
         $usr = $sql->getRow("select pass, ip, login from users where login = ?s limit ?i", $name, 1);
         $hash = $usr['pass'];

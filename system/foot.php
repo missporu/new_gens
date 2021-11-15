@@ -9,7 +9,7 @@
         <div class="clearfix"></div>
         <div class="col-xs-12 text-center">
             <small>
-                <span id="server_time"><?= $time ?></span> | <?= $site->getDate() ?> |<?
+                <span id="server_time"><?= $site->getTime() ?></span> | <?= $site->getDate() ?> |<?
                 if ($user->getUser()) { ?>
                     <b style="color: #fff;"><a href="online.php">Онлайн (<?php echo $sql->getOne("select count(id) from users where online > ?i", time()-600); ?>)</a></b><?
                 } else { ?>

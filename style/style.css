@@ -11,16 +11,27 @@ span.heading {
     max-width: 100%;
 }
 
+.list-group-item {
+    background-color: #3c3b3b;
+    border: 1px solid #000;
+    padding: 0;
+}
+
 a.miss-block span {
     display: block;
     height: 22px;
-    border: 1px solid #2b2b29;
-    color: #99CCCC;
+    color: #b0393d;
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
 }
-a.miss-block:hover span { border: 1px solid #a7a4a4; }
+a.miss-block:hover span {
+    text-decoration: none;
+}
+
+a:focus, a:hover {
+    text-decoration: none !important;
+}
 
 #server_time {
     color: #fff;
