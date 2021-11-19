@@ -1,33 +1,78 @@
 <?php
 $title = 'Профиль';
-require_once('system/up.php');
-$user->_Reg();
-?><div class="main"><div class="menuList"><?
+require_once "system/up.php";
+$user->_Reg(); ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <nav class="navbar navbar-black" role="navigation">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
 
-if($_GET['case'] != ''){
-?><li><a href="pers.php"><img src="images/icons/arrow.png" alt="*" />Персонаж</a></li><?
-}
-if($_GET['case'] != 'raspred'){
-?><li><a href="pers.php?case=raspred"><img src="images/icons/arrow.png" alt="*" />Навыки</a></li><?
-}
-if($_GET['case'] != 'unitbuild'){
-?><li><a href="pers.php?case=unitbuild"><img src="images/icons/arrow.png" alt="*" />Имущество</a></li><?
-}
-if($_GET['case'] != 'trof'){
-?><li><a href="pers.php?case=trof"><img src="images/icons/arrow.png" alt="*" />Трофеи</a></li><?
-}
-if($_GET['case'] != 'pokupka_navik'){
-?><li><a href="pers.php?case=pokupka_navik"><img src="images/icons/arrow.png" alt="*" />Платные услуги</a></li><?
-}
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse navbar-ex1-collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="?a=navik">Навыки</a></li>
+                            <li><a href="?a=sklad">Имущество</a></li>
+                            <li><a href="?a=trofei">Трофеи</a></li><?
+                            if (!empty($_GET)) { ?>
+                                <li><a href="?">Профиль</a></li><?
+                            } ?>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Донат<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#">Купить золото</a></li>
+                                    <li><a href="#">VIP аккаунт</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </nav>
+            </div>
+        </div>
+    </div>
+    <?= $site->lineHrInContainer(); ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12"><?
+                switch ($switch) {
+                    default: ?>
+                    <div class="col-xs-12">
+                        <img src="images/flags/<?= $user->user('side') ?>.png" alt="Флаг"/>
+                        <?= $user->user('login') ?> (<?= $user->user('lvl') ?> lvl) Ал. <?= number_format($user->user_alliance + 1) ?>
+                    </div>
+                    <?
+                        break;
 
-?></div><?
+                    case 'trofei':
+                        echo "Трофеи в разработке";
+                        break;
 
+                    case 'sklad':
+                        echo "Склад в разработке";
+                        break;
+
+                    case 'navik':
+                        echo "Навыки в разработке";
+                        break;
+                } ?>
+            </div>
+        </div>
+    </div><?php
+/*
 switch ($_GET['case']) {
 default:
 
-?><div class="mini-line"></div><?
-
-?><div class="block_zero"><img src="images/flags/<?=$set['side']?>.png"  alt="Флаг"/> <a href="set.php?case=flag">Сменить флаг </a> <?=$user['login']?> <a href="set.php?case=nick">Сменить имя</a><br /><small><span style="color: #fffabd;">Ур.</span> <?=$set['lvl']?>, <span style="color: #fffabd;">Ал.</span> <?=number_format($user_alliance+1)?>, <span style="color: #fffabd;"> Рейтинг</span> <?=$set['raiting']?></small></div><div class="mini-line"></div>
+<span style="color: #fffabd;">Ал.</span> <?=number_format($user_alliance+1)?>, <span style="color: #fffabd;"> Рейтинг</span> <?=$set['raiting']?></small></div><div class="mini-line"></div>
 <hr>Ваш игровой статус: <?=$set['status'] ?> <a href="set.php?case=status">Смена статуса</a><br><?php
 
 $left = _FetchAssoc("SELECT * FROM `user_reg` WHERE `id` = '".$fataliti_user['uho1_kto']."' LIMIT 1");
@@ -131,7 +176,7 @@ echo'Жетоны<span style="float: right;">'.$user['zheton'].'</span><br />';
 echo'Отрезанные уши<span style="float: right;">'.$user['uho'].'</span><br />';
 
 echo'Фаталити доступно<span style="float: right;">'.$user['fataliti_dost'].'/5</span><br />';
-*/
+
 echo "Дата регистрации: ".$set['data_reg']."";
 
 echo'</div></div>';
@@ -775,6 +820,5 @@ case 'pokupka_navik':
 
 
 
-}
+} */
 require_once('system/down.php');
-?>

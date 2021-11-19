@@ -24,6 +24,9 @@ if ($user->getUser()) { ?>
         <div class="row">
             <div class="col-xs-12 text-center">
                 <ul class="list-inline">
+                    <li class="text-info">
+                        <?= $user->user('lvl') ?> lvl
+                    </li>
                     <li class="green">
                         <?= $user->user('baks') ?> <? imageBaks() ?>
                     </li>

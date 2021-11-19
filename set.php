@@ -1,7 +1,22 @@
 <?php
-$title='Настройки';
+$title = 'Настройки';
 require_once('system/up.php');
 $user->_Reg();
+
+switch ($switch) {
+    default: ?>
+        <a href="set.php?a=nick">Сменить имя</a> |
+        <a href="set.php?a=flag">Сменить флаг </a><?php
+        break;
+
+    case 'flag':
+        echo "Смена флага";
+        break;
+
+    case 'nick':
+        echo "Смена имени";
+        break;
+}
 
 /*
 if($set['logo'] == 'on'){

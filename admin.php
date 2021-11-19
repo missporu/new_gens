@@ -31,28 +31,60 @@ try {
         default: ?>
             <div class="container">
                 <div class="row">
-                    <div class="col-xs-12">
+                    <div class="col-xs-12"><?
+                        if ($admin1983->returnAdmin()) { ?>
+                            <? $site->PrintMiniLine() ?>
+                            <h5 class="text-info text-center">
+                                Разработчику
+                            </h5>
+                            <? $site->PrintMiniLine() ?>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="?a=adminLogi">Смотреть логи</a>
+                                </li>
+                            </ul><?php
+                        } ?>
+                        <div class="clearfix"></div>
+                        <? $site->PrintMiniLine() ?>
+                        <h5 class="text-info text-center">
+                            Админка
+                        </h5>
+                        <? $site->PrintMiniLine() ?>
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a class="btn btn-block btn-dark" href="?a=spisokUser"><span>Все пользователи</span></a>
                             </li>
                             <li class="list-group-item">
-                                <a class="btn btn-block btn-dark" href="?a=spisokUser">Все пользователи</a>
-                            </li>
-                            <li class="list-group-item">
-                                <a class="miss-block btn-dark" href="?a=spisokUser"><span>Все пользователи</span></a>
+                                <a class="btn btn-block btn-dark" href="?a=">?</a>
                             </li>
                         </ul>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
             <?php
             break;
 
+        case 'adminLogi':
+            if (!$admin1983->returnAdmin()) {
+                $site->adminLog($user->user('login'), "пытался зайти в админ логи разраба", 'admin1983');
+                $site->session_err("Вам сюда нельзя");
+            }
+            $adminLogs = $sql->getAll("select * from admin_log where tip = ?s order by id desc", 'admin1983');
+            foreach ($adminLogs as $log) { ?>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <?= $log['kto'] ?> | <?= $log['text'] ?> | <?= $log['gde'] ?> | <?= $log['r_time'] ?> | <?= $log['r_date'] ?><? $site->PrintMiniLine() ?>
+                        </div>
+                    </div>
+                </div><?php
+            }
+            break;
+
         case 'redUser':
             if (!$admin1983->returnAdmin()) {
-                $site->session_err("Без доступа");
+                $site->adminLog($user->user('login'), "пытался зайти в редактор юзера", 'admin1983');
+                $site->session_err("Вам сюда нельзя");
             }
             $userID = $filter->clearInt($_GET['id']);
             $redUser = $sql->getRow("select * from users where id = ?i limit ?i", $userID, 1);
@@ -96,7 +128,7 @@ try {
                             <div class="col-xs-12"><?
                         } ?>
                         <small class="orange"><?= $all['id'] ?>)</small>
-                        <small class="orange"><?= $all['login'] ?> :</small><?
+                        <small class="orange"><a href="view.php?user=<?= $all['login'] ?>"><?= $all['login'] ?></a> :</small><?
                         if ($admin1983->returnAdmin()) {
                             echo " <small class='text-danger'>[{$all['slovo']}]</small> ";
                         } ?>

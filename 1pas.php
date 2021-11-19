@@ -16,7 +16,8 @@ class User {
     /**
      * @return bool
      */
-    public function getBlock() {
+    public function getBlock()
+    {
         return true;
     }
 
@@ -33,26 +34,28 @@ class User {
     }
 }
 
-class Times {
+class Times
+{
     /**
      * @param $i
      * @return string
      */
-    public function timeHours($i) {
-        $d  = floor($i / 86400);
-        $h  = floor(($i / 3600) - $d * 24);
-        $m  = floor(($i - $h * 3600 - $d * 86400) / 60);
-        $s  = $i - ($m * 60 + $h * 3600 + $d * 86400);
-        $h = ($h > 0 ? ($h < 10 ? '0':'').$h:'00');
-        $m = ($m > 0 ? ($m < 10 ? '0':'').$m:'00');
-        $s = ($s > 0 ? ($s < 10 ? '0':'').$s:'00');
+    public function timeHours($i)
+    {
+        $d = floor($i / 86400);
+        $h = floor(($i / 3600) - $d * 24);
+        $m = floor(($i - $h * 3600 - $d * 86400) / 60);
+        $s = $i - ($m * 60 + $h * 3600 + $d * 86400);
+        $h = ($h > 0 ? ($h < 10 ? '0' : '') . $h : '00');
+        $m = ($m > 0 ? ($m < 10 ? '0' : '') . $m : '00');
+        $s = ($s > 0 ? ($s < 10 ? '0' : '') . $s : '00');
         if ($d > 0) {
             $result = "$d д $h:$m:$s";
         } elseif ($h > 0) {
             $result = "$h:$m:$s";
-        } elseif($m > 0) {
+        } elseif ($m > 0) {
             $result = "$m:$s";
-        } elseif($s > 0) {
+        } elseif ($s > 0) {
             $result = "$s сек";
         }
         return $result;
@@ -66,7 +69,7 @@ $times = new Times();
  * Шаблон на страницы
  */
 try {
-    if($user->getBlock()) {
+    if ($user->getBlock()) {
         throw new Exception('Вы заблокированы администрацией проекта!');
     }
 } catch (Exception $e) { ?>
@@ -113,7 +116,7 @@ try {
 
 /**
  * Алерт BS-3
-*/ ?>
+ */ ?>
 
 <div class="alert alert-danger">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

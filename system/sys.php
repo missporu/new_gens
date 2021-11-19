@@ -10,8 +10,6 @@ function imageGold() { ?>
     <img src="/images/icons/gold.png" alt="Золото"><?php
 }
 
-$switch = isset($_GET['a']) ? $filter->clearFullSpecialChars($_GET['a']) : NULL;
-
 /*
 require_once "class/Filter.php";
 require_once('class/SafeMySQL.php');

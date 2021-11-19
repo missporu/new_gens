@@ -2,19 +2,51 @@ span.heading {
     font-size: 30px;
     font-weight: bold;
 }
+
 .form-login {
     max-width: 100%;
     background-color: #4e5256;
     border-radius: 15px;
 }
-.form-horizontal{
+
+.form-horizontal {
     max-width: 100%;
 }
 
 .list-group-item {
-    background-color: #3c3b3b;
+    background-color: #000;
     border: 1px solid #000;
     padding: 0;
+}
+
+button.navbar-toggle {
+    border: 1px solid #5a7ce2;
+    color: #FFFFFF;
+}
+
+ul.navbar-nav > li > a {
+    color: #FFFFFF;
+}
+
+ul.navbar-nav > li > a:hover, a.dropdown-toggle:hover, a.dropdown-toggle:focus, a.dropdown-toggle:active, a.dropdown-toggle:target, a.dropdown-toggle:visited, a.dropdown-toggle:focus-visible, .nav .open > a, .nav .open > a:focus, .nav .open > a:hover {
+    background-color: #000000;
+    color: #941919;
+}
+
+ul.navbar-nav:visited {
+    background-color: #0F0F0F;
+}
+
+.dropdown-menu {
+    background-color: #000000;
+}
+
+ul.dropdown-menu > li > a {
+    color: #FFFFFF;
+}
+
+button.navbar-toggle > span {
+    background-color: #ffffff;
 }
 
 a.miss-block span {
@@ -25,6 +57,7 @@ a.miss-block span {
     font-weight: 500;
     text-decoration: none;
 }
+
 a.miss-block:hover span {
     text-decoration: none;
 }
@@ -38,25 +71,71 @@ a:focus, a:hover {
     font-style: italic;
     font-weight: 600;
 }
+
 a.text-white {
     color: #fff;
     font-style: italic;
     font-weight: 500;
     text-decoration: none;
 }
+
 @-webkit-keyframes pulsate {
     50% {
         color: #fff;
-        text-shadow: 0 -1px rgba(0,0,0,.3), 0 0 5px #ffd, 0 0 8px #fff;
+        text-shadow: 0 -1px rgba(0, 0, 0, .3), 0 0 5px #ffd, 0 0 8px #fff;
     }
 }
-@keyframes pulsate { 50% {
-    color: #fff;
-    text-shadow: 0 -1px rgba(0,0,0,.3), 0 0 5px #ffd, 0 0 8px #fff;
-} }
+
+@keyframes pulsate {
+    50% {
+        color: #fff;
+        text-shadow: 0 -1px rgba(0, 0, 0, .3), 0 0 5px #ffd, 0 0 8px #fff;
+    }
+}
+
 #blink7 {
-    color: rgb(245,245,245);
-    text-shadow: 0 -1px rgba(0,0,0,.1);
+    color: rgb(245, 245, 245);
+    text-shadow: 0 -1px rgba(0, 0, 0, .1);
     -webkit-animation: pulsate 1.2s linear infinite;
     animation: pulsate 1.2s linear infinite;
+}
+
+.btn-minidark {
+    font-size: small;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#343a40+0,667584+50,4e5256+51,242a30+71,343a40+100 */
+    background: #343a40;
+    /* Old browsers */
+    background: -moz-linear-gradient(-45deg, #343a40 0%, #667584 50%, #4e5256 51%, #242a30 71%, #343a40 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(-45deg, #343a40 0%, #667584 50%, #4e5256 51%, #242a30 71%, #343a40 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(135deg, #343a40 0%, #667584 50%, #4e5256 51%, #242a30 71%, #343a40 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#343a40', endColorstr='#343a40', GradientType=1);
+    /* IE6-9 fallback on horizontal gradient */
+    background-size: 400% 400%;
+    -webkit-animation: AnimationName 3s ease infinite;
+    -moz-animation: AnimationName 3s ease infinite;
+    animation: AnimationName 3s ease infinite;
+    -webkit-animation: AnimationName 3s ease infinite;
+    -moz-animation: AnimationName 3s ease infinite;
+    animation: AnimationName 3s ease infinite;
+    border: medium none;
+}
+
+.modal-content {
+    background-color: #141313 !important;
+    border: 1px solid #FFFFFF !important;
+}
+
+.modal-dialog {
+    width: 90% !important;
+    max-width: 500px !important;
+}
+button.close {
+    color: #FFFFFF !important;
+}
+.modal {
+    top: 20vh;
+    padding-right: 0 !important;
 }

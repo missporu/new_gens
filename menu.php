@@ -28,6 +28,81 @@ try {
                                 </li>
                             </ul>
                         </div>
+
+                        <? $site->PrintMiniLine() ?>
+                        <h5 class="text-info text-center">
+                            Торговля
+                        </h5>
+                        <? $site->PrintMiniLine() ?>
+                        <div class="col-xs-12">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="marketplace.php">
+                                        <span>Рынок ресурсов</span>
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="blackmarket.php">
+                                        <span>Черный рынок</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <? $site->PrintMiniLine() ?>
+                        <h5 class="text-info text-center">
+                            Персонаж
+                        </h5>
+                        <? $site->PrintMiniLine() ?>
+                        <div class="col-xs-12">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="pers.php">
+                                        <span>Профиль</span>
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="clan.php">
+                                        <span>Клан</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <? $site->PrintMiniLine() ?>
+                        <h5 class="text-info text-center">
+                            Общение
+                        </h5>
+                        <? $site->PrintMiniLine() ?>
+                        <div class="col-xs-12">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="chat.php">
+                                        <span>Чат</span>
+                                    </a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="forum.php">
+                                        <span>форум</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <? $site->PrintMiniLine() ?>
+                        <h5 class="text-info text-center">
+                            Разное
+                        </h5>
+                        <? $site->PrintMiniLine() ?>
+                        <div class="col-xs-12">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="help.php">
+                                        <span>Поддержка</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>

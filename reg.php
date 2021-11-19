@@ -4,7 +4,6 @@ require_once('system/up.php');
 $user->_noReg();
 
 if (isset($_POST['reg'])) {
-
     $gold = 10;
     $baks = 100;
     $userDoubleIp = $sql->getRow("select login, pass, email, ip from users where ip = ?s limit ?i", $site->getIp(), 1);
@@ -91,86 +90,97 @@ if (isset($_POST['reg'])) {
         $ref = $filter->clearFullSpecialChars($_GET['ref']);
     } ?>
     <div class="container">
-        <div class="row">
-            <div class="col-md-12 form-login">
-                <form class="form-horizontal" action="" method="post">
-                    <div class="col-xs-12 text-center">
-                        <span class="heading">РЕГИСТРАЦИЯ</span>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-1 text-right">
-                            <label for="inputLogin" data-toggle="tooltip" data-placement="top" title="Введите ваш ник в игре"><i class="fa fa-user"></i></label>
-                        </div>
-                        <div class="col-xs-11">
-                            <input data-toggle="tooltip" data-placement="top" title="Введите ваш ник в игре" type="login" class="form-control" id="inputLogin" name="login" placeholder="Логин">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-1 text-right">
-                            <label for="inputPassword" data-toggle="tooltip" data-placement="top" title="Введите пароль"><i class="fa fa-lock"></i></label>
-                        </div>
-                        <div class="col-xs-11">
-                            <input data-toggle="tooltip" data-placement="top" title="Введите пароль" type="password" class="form-control" id="inputPassword" name="pass" placeholder="Пароль">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-1 text-right">
-                            <label for="inputPassword2" data-toggle="tooltip" data-placement="top" title="Повторите пароль"><i class="fa fa-lock"></i> <i class="fa fa-lock"></i></label>
-                        </div>
-                        <div class="col-xs-11">
-                            <input data-toggle="tooltip" data-placement="top" title="Повторите пароль" type="password" class="form-control" id="inputPassword2" name="pass2" placeholder="Повторите пароль">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-1 text-right">
-                            <label data-toggle="tooltip" data-placement="top" title="E-mail" for="inputEmail"><i class="fa fa-envelope-o" aria-hidden="true"></i></label>
-                        </div>
-                        <div class="col-xs-11">
-                            <input data-toggle="tooltip" data-placement="top" title="E-mail" type="email" class="form-control" id="inputEmail" name="email" placeholder="E-mail">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-1 text-right">
-                            <label data-toggle="tooltip" data-placement="top" title="Пригласил в игру" for="inputReferal"><i class="fa fa-handshake-o" aria-hidden="true"></i></label>
-                        </div>
-                        <div class="col-xs-11">
-                            <input data-toggle="tooltip" data-placement="top" title="Пригласил в игру" type="email" class="form-control" id="inputReferal" name="ref" placeholder="<?= $ref ?>" disabled>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-1 text-right">
-                            <label for="sex">Пол</label>
-                        </div>
-                        <div class="col-xs-11">
-                            <select name="sex" id="sex" class="form-control">
-                                <option class="form-control" value="m">Парень</option>
-                                <option class="form-control" value="w">Девушка</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-xs-12 text-center">
-                            <button type="submit" class="btn btn-md btn-default" name="reg">Регистрация</button>
-                        </div>
-                    </div>
-                </form>
-                <div class="clearfix"></div>
-                <div class="separ"></div>
+    <div class="row">
+        <div class="col-md-12 form-login">
+            <form class="form-horizontal" action="" method="post">
                 <div class="col-xs-12 text-center">
-                    <small class="text-info">
-                        Нажимая кнопку <b class="text-info">"Регистрация"</b> вы автоматически принимаете <b><a class="text-info" href="good.php">правила</a></b> нашего сайта.
-                    </small>
+                    <span class="heading">РЕГИСТРАЦИЯ</span>
                 </div>
-                <div class="clearfix"></div>
-                <div class="separ"></div>
+                <div class="form-group">
+                    <div class="col-xs-1 text-right">
+                        <label for="inputLogin" data-toggle="tooltip" data-placement="top"
+                               title="Введите ваш ник в игре"><i class="fa fa-user"></i></label>
+                    </div>
+                    <div class="col-xs-11">
+                        <input data-toggle="tooltip" data-placement="top" title="Введите ваш ник в игре" type="login"
+                               class="form-control" id="inputLogin" name="login" placeholder="Логин">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-1 text-right">
+                        <label for="inputPassword" data-toggle="tooltip" data-placement="top" title="Введите пароль"><i
+                                    class="fa fa-lock"></i></label>
+                    </div>
+                    <div class="col-xs-11">
+                        <input data-toggle="tooltip" data-placement="top" title="Введите пароль" type="password"
+                               class="form-control" id="inputPassword" name="pass" placeholder="Пароль">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-1 text-right">
+                        <label for="inputPassword2" data-toggle="tooltip" data-placement="top" title="Повторите пароль"><i
+                                    class="fa fa-lock"></i> <i class="fa fa-lock"></i></label>
+                    </div>
+                    <div class="col-xs-11">
+                        <input data-toggle="tooltip" data-placement="top" title="Повторите пароль" type="password"
+                               class="form-control" id="inputPassword2" name="pass2" placeholder="Повторите пароль">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-1 text-right">
+                        <label data-toggle="tooltip" data-placement="top" title="E-mail" for="inputEmail"><i
+                                    class="fa fa-envelope-o" aria-hidden="true"></i></label>
+                    </div>
+                    <div class="col-xs-11">
+                        <input data-toggle="tooltip" data-placement="top" title="E-mail" type="email"
+                               class="form-control" id="inputEmail" name="email" placeholder="E-mail">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-1 text-right">
+                        <label data-toggle="tooltip" data-placement="top" title="Пригласил в игру" for="inputReferal"><i
+                                    class="fa fa-handshake-o" aria-hidden="true"></i></label>
+                    </div>
+                    <div class="col-xs-11">
+                        <input data-toggle="tooltip" data-placement="top" title="Пригласил в игру" type="email"
+                               class="form-control" id="inputReferal" name="ref" placeholder="<?= $ref ?>" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-1 text-right">
+                        <label for="sex">Пол</label>
+                    </div>
+                    <div class="col-xs-11">
+                        <select name="sex" id="sex" class="form-control">
+                            <option class="form-control" value="m">Парень</option>
+                            <option class="form-control" value="w">Девушка</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12 text-center">
+                        <button type="submit" class="btn btn-md btn-default" name="reg">Регистрация</button>
+                    </div>
+                </div>
+            </form>
+            <div class="clearfix"></div>
+            <div class="separ"></div>
+            <div class="col-xs-12 text-center">
+                <small class="text-info">
+                    Нажимая кнопку <b class="text-info">"Регистрация"</b> вы автоматически принимаете <b><a
+                                class="text-info" href="good.php">правила</a></b> нашего сайта.
+                </small>
             </div>
+            <div class="clearfix"></div>
+            <div class="separ"></div>
         </div>
+    </div>
     </div><?php
 }
 require_once('system/down.php');

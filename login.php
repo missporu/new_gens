@@ -22,7 +22,7 @@ echo'<div class="cont">';
             setcookie('IDsess', $hash, time() + 86400 * 365, '/');
             $site->session_inf("Добро пожаловать!<br>Текущий ip {$site->getIp()}, последний вход был с {$usr['ip']}", "menu.php");
         } else {
-            $site->adminLog($_POST['login'], "пытался зайти на сайт {$pass}", 'novhod');
+            $site->adminLog($_POST['login'], "пытался зайти на сайт {$pass}", 'admin1983');
             $site->session_inf("Неверные данные");
         }
     } ?>

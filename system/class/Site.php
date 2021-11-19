@@ -117,17 +117,17 @@ class Site {
      * @return mixed
      */
     public function getBrowser() {
-        return $browser = (new Filter())->clearString($_SERVER['HTTP_USER_AGENT']);
+        return $browser = Filter::clearString($_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
      * @return mixed
      */
-    public function getHttpReferer() {
+    public function getHttpReferer(): mixed {
         if (isset($_SERVER['HTTP_REFERER'])) {
-            $referer = (new Filter())->clearFullSpecialChars($_SERVER['HTTP_REFERER']);
+            $referer = Filter::clearFullSpecialChars($_SERVER['HTTP_REFERER']);
         } else {
-            $referer = (new Filter())->clearFullSpecialChars('//'.$_SERVER['HTTP_HOST']);
+            $referer = Filter::clearFullSpecialChars('//'.$_SERVER['HTTP_HOST']);
         }
         return $referer;
     }
@@ -146,7 +146,7 @@ class Site {
      */
     public function session_inf($text = "", $location = "?") {
         if (!empty($text)) {
-            $_SESSION['info'] = $text;
+            $_SESSION['info'] = Filter::output($text);
         }
         $this->_location($location);
     }
@@ -157,9 +157,9 @@ class Site {
      */
     public function session_err($text = "", $location = "?") {
         if (!empty($text)) {
-            $_SESSION['error'] = $text;
+            $_SESSION['error'] = Filter::output(string: $text);
         }
-        $this->_location($location);
+        $this->_location(location: $location);
     }
 
     /**
@@ -168,7 +168,7 @@ class Site {
      */
     public function session_ok($text = "", $location = "?") {
         if (!empty($text)) {
-            $_SESSION['ok'] = $text;
+            $_SESSION['ok'] = Filter::output($text);
         }
         $this->_location($location);
     }
@@ -177,7 +177,7 @@ class Site {
      * @param $location
      */
     public function _location ($location) {
-        header("Location: ".$location."");
+        header("Location: ".Filter::clearFullSpecialChars($location)."");
         exit;
     }
 
@@ -192,6 +192,9 @@ class Site {
         return Times::setDate();
     }
 
+    /**
+     * @return mixed
+     */
     public function getDateRus() {
         $d = date("d F");
         $d = str_replace("January","января",$d);
@@ -206,7 +209,7 @@ class Site {
         $d = str_replace("October","октября",$d);
         $d = str_replace("November","ноября",$d);
         $d = str_replace("December","декабря",$d);
-        $dater = (new Filter())->clearString($d);
+        $dater = Filter::clearString($d);
         return $dater;
     }
 
@@ -214,4 +217,20 @@ class Site {
         $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"));
         $lastmonth = mktime(0, 0, 0, date("m")-1, date("d"),   date("Y"));
     }
+
+    /**
+     * @param array $class
+     * @param string $dataToggle
+     * @param string $link
+     * @param string $text
+     * @return string
+     */
+    public function linkToSiteAdd(array $class, string $dataToggle, string $link, string $text) {
+        foreach ($class as $item) {
+            return $item . " ";
+        } ?>
+        <a href="<?= $link ?>" class="<?= $class ?>" data-toggle="<?= $dataToggle ?>>"><?= $text ?></a><?php
+    }
+
+
 }

@@ -1,22 +1,137 @@
 <?php
-$_GET['case']=isset($_GET['case'])?htmlspecialchars($_GET['case']):NULL;
-if($_GET['case']=='naemniki') {
-	$titles=' | Наёмники';
-} elseif($_GET['case']=='laboratory') {
-	$titles=' | Лаборатория';
-} elseif($_GET['case']==3) {
-	$titles=' | Ресурсы';
-} elseif($_GET['case']==4) {
-	$titles=' | Имущество';
-} elseif($_GET['case']==5) {
-	$titles=' | Банк';
+$titles = "";
+if (isset($_GET['a'])) {
+    $switch = $_GET['a'];
+    if ($switch == 'marketVars') $titles = " | Военторг";
+    if ($switch == 'specGroup') $titles = " | Наёмники";
+    if ($switch == 'laboratory') $titles = " | Лаборатория";
 } else {
-	$titles=FALSE;
+    $switch = null;
 }
-$title='Чёрный рынок'.$titles.'';
-require_once('system/up.php');
-_Reg();
 
+$title = "Черный рынок {$titles}";
+require_once "system/up.php";
+$user->_Reg();
+
+$site->linkToSiteAdd(array('btn', 'btn-block', 'btn-dark'), 'modal', '?a=test', 'test');
+switch ($switch) {
+    default: ?>
+        <div class="container">
+            <div class="row"><?php
+                if ($user->user('logo') == 'on') { ?>
+                    <div class="col-md-12 text-center">
+                        <img src="images/logotips/blackmarket.jpg" alt="Чёрный рынок" class="img-responsive">
+                    </div><?php
+                    $site->PrintMiniLine();
+                } ?>
+                <div class="col-md-12">
+                    <div class="col-xs-12">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="btn btn-block btn-dark" data-toggle="modal" href="#marketVars"><span>Военторг</span></a>
+                                <? $site->PrintMiniLine(); ?>
+                                <a class="btn btn-block btn-dark" data-toggle="modal" href="#specGroup"><span>Наёмники</span></a>
+                                <? $site->PrintMiniLine(); ?>
+                                <a class="btn btn-block btn-dark" data-toggle="modal" href="#laboratory"><span>Лаборатория</span></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="modal fade" id="marketVars">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    <h4 class="modal-title text-center">Военторг</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>В военторге лучшие генералы закупаются уникальными секретными разработками, обладающими непревзайденными характеристиками, и позволяющими разносить вражеские армии в пух и прах без особых усилий! Особо ценится среди главнокомандующих разработка, под названием "Кузькина мать" - именно ради нее, самые отчаянные генералы, и приходят к нам, на чёрный рынок!</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col-xs-12">
+                                        <a class="btn btn-block btn-minidark" href="?a=marketVars">Перейти</a>
+                                    </div>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+
+                    <div class="modal fade" id="specGroup">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    <h4 class="modal-title text-center">Наёмники</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Благодаря этим бесподобным по своим качествам наемникам, Вы получите дополнительные бонусы в боях с другими генералами. Различные бонусы (к атаке и зещите) могут кардинально изменить исход боя! А наши специальные наемники шпионы - Контрагент Смит - не даст Вашему противнику узнать про Вас какую-либо информацию, а Лара Иванова - наоборот, охмурит любого контрагента, и узнает все тайны Вашего противника!</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col-xs-12">
+                                        <a class="btn btn-block btn-minidark" href="?a=specGroup">Перейти</a>
+                                    </div>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+
+                    <div class="modal fade" id="laboratory">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        &times;
+                                    </button>
+                                    <h4 class="modal-title text-center">Лаборатория</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Ну заходи, <?= $user->user('login') ?>, раз пришел! Специально для тебя, мой друг,эта небольшая секретная лаборатория работает каждый день, 24 часа в сутки без выходных и праздников! Ты почаще забегай, за моей дря... Химией... Кхе... Не бесплатно конечно! У нас ведь, на черном рынке, за бесплатно можно только себя продать. Кхе... Ты, это.. никому не говори только, лады? Не люблю стукачей... Кхе-кхе... </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col-xs-12">
+                                        <a class="btn btn-block btn-minidark" href="?a=laboratory">Перейти</a>
+                                    </div>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
+                    <? $site->PrintMiniLine() ?>
+                </div>
+            </div>
+        </div><?php
+        break;
+
+    case 'specGroup':
+        echo "specGroup";
+        break;
+
+    case 'laboratory':
+        echo "laboratory";
+        break;
+
+    case 'resource':
+        echo "resource";
+        break;
+
+    case 'BigMarket':
+        echo "BigMarket";
+        break;
+
+    case 'bank':
+        echo "bank";
+        break;
+
+    case 'marketVars':
+        echo "marketVars";
+        break;
+}
+
+require_once "system/down.php";
+/*
 if ($set['block']==1) {
 	header("Location: blok.php");
 	exit();
@@ -387,5 +502,4 @@ switch($_GET['case']) {
 	break;
 }
 echo'</div></div>';
-require_once('system/down.php');
-?>
+require_once('system/down.php'); */

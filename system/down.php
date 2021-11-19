@@ -1,9 +1,9 @@
 <?php
-if($user->getUser()) {
-    if($user->mdAmdFunction('1') == true) {
+if ($user->getUser()) {
+    if ($user->mdAmdFunction('1') == true) {
         $admin5 = new Admin(5);
         $admin1983 = new Admin(1983);
-        if($admin1983->returnAdmin() or $admin5->returnAdmin()) {
+        if ($admin1983->returnAdmin() or $admin5->returnAdmin()) {
             $site->lineHrInContainer(); ?>
             <div class="container">
                 <div class="row">
@@ -26,7 +26,8 @@ if($user->getUser()) {
                 </a>
             </div>
             <div class="col-xs-6 text-right">
-                <a class="btn btn-primary btn-block" href="set.php">Настройки <img src="images/icons/settings.png" alt="Настройки"/></a>
+                <a class="btn btn-primary btn-block" href="set.php">Настройки <img src="images/icons/settings.png"
+                                                                                   alt="Настройки"/></a>
             </div>
             <div class="clearfix"></div>
             <div class="col-xs-12"></div>

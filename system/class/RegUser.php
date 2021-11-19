@@ -3,9 +3,9 @@
 class RegUser {
 
     /**
-     * @var bool
+     * @var array
      */
-    public $user = false;
+    //public array $user = [];
 
     /**
      * @var string|null
@@ -13,15 +13,16 @@ class RegUser {
     protected ?string $login = null;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $pass;
+    private ?string $pass;
+    public int $user_alliance;
 
     public function __construct() {
         if (isset($_COOKIE['login']) && isset($_COOKIE['IDsess'])) {
             if (!empty(trim($_COOKIE['login'])) && !empty(trim($_COOKIE['IDsess']))) {
-                $this->login = trim((new Filter())->clearFullSpecialChars($_COOKIE['login']));
-                $this->pass = trim((new Filter())->clearFullSpecialChars($_COOKIE['IDsess']));
+                $this->login = trim(Filter::clearFullSpecialChars($_COOKIE['login']));
+                $this->pass = trim(Filter::clearFullSpecialChars($_COOKIE['IDsess']));
             }
         } else {
             $this->login = null;
@@ -30,7 +31,9 @@ class RegUser {
         if ($this->userID()) {
             $this->getUser();
         }
-        if($this->getUser() == true) {
+        if ($this->getUser() == true) {
+            $this->user_alliance = Filter::clearInt((new SafeMySQL())->getOne("select count(id) from alliance_user where kto = ?i OR s_kem = ?i", $this->userID(), $this->userID()));
+
             (new SafeMySQL())->query("update users set online = ?i, mesto = ?s where id = ?i limit ?i", time(), (new Site())->fileName(), $this->userID(), 1);
         }
     }
@@ -63,7 +66,7 @@ class RegUser {
      * @param $key
      * @return mixed
      */
-    public function user($key) {
+    public function user($key): mixed {
         if ($this->getUser() == true) {
             $this->user = (new SafeMySQL())->getRow("select $key from users where id = ?i limit ?i", $this->userID(), 1);
             return $this->user[$key];
