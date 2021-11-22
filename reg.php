@@ -1,6 +1,7 @@
 <?php
 $title = 'Регистрация';
 require_once('system/up.php');
+$user = new RegUser();
 $user->_noReg();
 
 if (isset($_POST['reg'])) {

@@ -1,6 +1,8 @@
 <?php
 $title='Просмотр';
-require_once('system/up.php');
+require_once 'system/up.php';
+$user = new RegUser();
+$sql = new SafeMySQL();
 
 $user->_Reg();
 
@@ -10,7 +12,7 @@ try {
     }
 
     $smott = isset($_GET['user']) ? Filter::clearFullSpecialChars(string: $_GET['user']) : NULL;
-    $smotr = $sql->getRow("SELECT * FROM users WHERE login = ?s LIMIT ?i", $smott, 1); ?>
+    $smotr = $sql->getRow("select * from users where login = ?s limit ?i", $smott, 1); ?>
 
     <div class="container">
     <div class="row">

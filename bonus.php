@@ -1,6 +1,9 @@
 <?php
 $title = 'Ежедневный бонус';
 require_once "system/up.php";
+$user = new RegUser();
+$sql = new SafeMySQL();
+
 $user->_Reg();
 try {
     try {

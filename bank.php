@@ -1,6 +1,7 @@
 <?php
 $title = 'Банк';
 require_once "system/up.php";
+$user = new RegUser();
 $user->_Reg();
 
 

@@ -1,6 +1,7 @@
 <?php
 $title = 'Админ-панель';
 require_once('system/up.php');
+$user = new RegUser();
 $user->_Reg();
 
 $admin = new Admin();

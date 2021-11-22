@@ -1,9 +1,11 @@
 <?php
 $title = 'Профиль';
 require_once "system/up.php";
+$user = new RegUser();
+$site = new Site();
 
 $user->_Reg();
-$site->setSwitch('a'); ?>
+$site->setSwitch(a: 'a'); ?>
 
     <div class="container">
         <div class="row">
@@ -45,7 +47,7 @@ $site->setSwitch('a'); ?>
             </div>
         </div>
     </div>
-<?= Site::lineHrInContainer(); ?>
+<? Site::lineHrInContainer() ?>
     <div class="container">
     <div class="row">
         <div class="col-xs-12"><?php
