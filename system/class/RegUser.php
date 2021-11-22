@@ -1,12 +1,6 @@
 <?php
 
 class RegUser {
-
-    /**
-     * @var array
-     */
-    //public array $user = [];
-
     /**
      * @var string|null
      */
@@ -18,6 +12,7 @@ class RegUser {
     private ?string $pass;
     public int $user_alliance;
     private $user_id;
+    private false|null|array $user;
 
     public function __construct() {
         if (isset($_COOKIE['login']) && isset($_COOKIE['IDsess'])) {
@@ -35,7 +30,7 @@ class RegUser {
         if ($this->getUser() == true) {
             $this->user_alliance = Filter::clearInt((new SafeMySQL())->getOne("select count(id) from alliance_user where kto = ?i OR s_kem = ?i", $this->userID(), $this->userID()));
 
-            (new SafeMySQL())->query("update users set online = ?i, mesto = ?s where id = ?i limit ?i", time(), (new Site())->fileName(), $this->userID(), 1);
+            (new SafeMySQL())->query("update users set online = ?i, mesto = ?s where id = ?i limit ?i", time(), Site::fileName(), $this->userID(), 1);
         }
     }
 
@@ -74,7 +69,7 @@ class RegUser {
     /**
      * @return int
      */
-    public function setUserBonus() {
+    public function setUserBonus(): int {
         $bon = (new SafeMySQL())->getOne("select count(id) from user_bonus where id_user = ?i limit ?i", $this->user(key: 'id'), 1);
         return $bon;
     }
@@ -105,6 +100,9 @@ class RegUser {
         }
     }
 
+    /**
+     * @param $timeDay
+     */
     public function addAitomaticBlock($timeDay) {
         (new SafeMySQL())->query("update users set block = ?i, block_time = ?i where id = ?i limit ?i", 1, (time()+(60*60*24*$timeDay)), $this->userID(), 1);
     }

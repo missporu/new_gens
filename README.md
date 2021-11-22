@@ -4,3 +4,11 @@
 v.1.0.0 - тестовая в режиме разработки
 v.1.0.1 - уже рабочая с небольшими обновлениями
 1.0.0.4.1 - рендер классов. Статичные функции (сайт, фильтр, тайм)
+
+
+<hr>
+developer: misspo<br>
+phone: 89194810550<br>
+e-mail: misspo.ru@gmail.com<br>
+Vk: https://vk.com/missporu
+production project: //newgame.misspo.ru
