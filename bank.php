@@ -1,5 +1,12 @@
 <?php
-$_GET['case']=isset($_GET['case'])?htmlspecialchars($_GET['case']):NULL;
+$title = 'Банк';
+require_once "system/up.php";
+$user->_Reg();
+
+
+
+
+/* $_GET['case']=isset($_GET['case'])?htmlspecialchars($_GET['case']):NULL;
 if($_GET['case']=='donat'){
 $titles=' | Банк';
 }elseif($_GET['case']=='obmen'){
@@ -183,4 +190,5 @@ Qiwi - кошелек (в любом терминале) - +79194810550 <br>
 </div></div><?
 break;
 }
-require_once('system/down.php');
+require_once('system/down.php'); */
+require_once "system/foot.php";

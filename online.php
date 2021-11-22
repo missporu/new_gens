@@ -2,25 +2,23 @@
 $title = 'Онлайн';
 require_once('system/up.php');
 $user->_Reg();
+
 try {
     if($user->getBlock()) {
-        throw new Exception('Вы заблокированы администрацией проекта!');
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
-    $superadmin = new Admin('1983');
-    $admin = new Admin('5');
-    $stModer = new Admin('4');
-    $moder = new Admin('3'); ?>
+    $admin = new Admin(); ?>
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
                 <h3 class="text-center text-info"><?= $title ?></h3>
             </div>
-            <div class="clearfix"></div><?
+            <div class="clearfix"></div><?php
             $online_int = $sql->getOne("select count(id) from users where online > ?i", time()-600);
             if($online_int > 0) {
-                $online = $sql->getAll("select mesto, login, id from users where online > ?i", time()-600);
+                $online = $sql->getAll("select mesto, login, id from users where online > ?i order by id desc", time()-600);
                 foreach ($online as $onl) {
-                    $mesto = explode('.', $onl['mesto']);
+                    $mesto = explode(separator: '.', string: $onl['mesto']);
                     if ($mesto[0] == 'admin') {$m = 'Админка';}
                     elseif ($mesto[0] == 'menu') {$m = 'Главная';}
                     elseif ($mesto[0] == 'online') {$m = 'Онлайн';}
@@ -51,7 +49,7 @@ try {
                 <?= $e->getMessage() ?>
             </h3>
             <p class="green">
-                До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?>
+                До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?>
             </p>
         </div>
     </div>

@@ -6,19 +6,23 @@ $user->_noReg();
 if (isset($_POST['reg'])) {
     $gold = 10;
     $baks = 100;
-    $userDoubleIp = $sql->getRow("select login, pass, email, ip from users where ip = ?s limit ?i", $site->getIp(), 1);
+    $userDoubleIp = $sql->getRow("select login, pass, email, ip from users where ip = ?s limit ?i", Site::getIp(), 1);
+
     /**
      * Рефералам
      */
+
     $referal = 0;
     if (isset($_POST['ref']) && !empty($_POST['ref'])) {
-        $ref = $filter->clearFullSpecialChars($_POST['ref']);
-        if (!empty($ref) || trim($ref) == "" || strlen(trim($ref)) < 3) {
+        $ref = Filter::clearFullSpecialChars(string: $_POST['ref']);
+        if (!empty($ref) || trim(string: $ref) == "" || strlen(string: trim(string: $ref)) < 3) {
             $ref = "";
         }
-        if ($site->getIp() == $userDoubleIp['ip']) {
-            $site->session_inf("Себя приглашать нельзя");
+
+        if (Site::getIp() == $userDoubleIp['ip']) {
+            Site::session_empty(type: 'error', text: "Себя приглашать нельзя");
         }
+
         $referal = $sql->getRow("select id from users where login = ?s limit ?i", $ref, 1);
         $gold = 30;
         $baks = 300;
@@ -27,67 +31,82 @@ if (isset($_POST['reg'])) {
     /**
      * Проверка имени
      */
+
     if (!empty($_POST['login'])) {
-        if (strlen(trim($_POST['login'])) < 3 || trim($_POST['login']) == "") {
-            $site->session_inf("Поле 'Имя' должно быть от 3х символов");
+
+        if (strlen(string: trim(string: $_POST['login'])) < 3 || trim(string: $_POST['login']) == "") {
+            Site::session_empty(type: 'error', text: "Поле 'Имя' должно быть от 3х символов");
         }
-        $name = trim($filter->clearFullSpecialChars($_POST['login']));
+
+        $name = trim(string: Filter::clearFullSpecialChars(string: $_POST['login']));
         if (is_numeric($name)) {
-            $site->session_inf("В имени не могут быть только цифры");
+            Site::session_empty(type: 'error', text: "В имени не могут быть только цифры");
         }
+
         $usr = $sql->getRow("select login from users where login = ?s limit ?i", $name, 1);
         if ($name == $usr['login']) {
-            $site->session_inf("Это имя занято");
+            Site::session_empty(type: 'error', text: "Это имя занято");
         }
+
     } else {
         $name = null;
-        $site->session_inf("Не заполнено поле 'Логин'");
+        Site::session_empty(type: 'error', text: "Не заполнено поле 'Логин'");
     }
 
     /**
      * Проверка паролей
      */
+
     if (!empty($_POST['pass']) || !empty($_POST['pass2'])) {
         if ($_POST['pass'] != $_POST['pass2']) {
-            $site->session_inf("Пароли не совпадают!");
+            Site::session_empty(type:'error', text: "Пароли не совпадают!");
         }
-        if (strlen($_POST['pass']) < 7 || trim($_POST['pass']) == "" || strlen($_POST['pass2']) < 7 || trim($_POST['pass2']) == "") {
-            $site->session_inf("Поле 'Пароль' должно быть от 7 символов");
+
+        if (strlen(string: $_POST['pass']) < 7 || trim(string: $_POST['pass']) == "" || strlen(string: $_POST['pass2']) < 7 || trim(string: $_POST['pass2']) == "") {
+            Site::session_empty(type: 'error', text: "Поле 'Пароль' должно быть от 7 символов");
         }
-        $pass2 = $filter->clearFullSpecialChars($_POST['pass2']);
-        $pass = $filter->clearFullSpecialChars($_POST['pass']);
-        $pass = password_hash($pass, PASSWORD_DEFAULT);
+
+        $pass2 = Filter::clearFullSpecialChars(string: $_POST['pass2']);
+        $pass = Filter::clearFullSpecialChars(string: $_POST['pass']);
+        $pass = password_hash(password: $pass, algo: PASSWORD_DEFAULT);
     } else {
         $pass = null;
-        $site->session_inf("Не заполнено поле 'Пароль'");
+        Site::session_empty(type: 'error', text: "Не заполнено поле 'Пароль'");
     }
 
     if ($name == $pass) {
-        $site->session_inf("Логин и пароль не должны совпадать");
+        Site::session_empty(type: 'error', text: "Логин и пароль не должны совпадать");
     }
 
     /**
      * Проверка мыла на валидность
      */
-    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-        $email_b = $filter->clearFullSpecialChars($_POST['email']);
+
+    if (filter_var(value: $_POST['email'], filter: FILTER_VALIDATE_EMAIL)) {
+
+        $email_b = Filter::clearFullSpecialChars(string: $_POST['email']);
         $usm = $sql->getRow("select email from users where email = ?s limit ?i", $email_b, 1);
+
         if ($email_b == $usm['email']) {
-            $site->session_inf("Эта почта уже используется");
+            Site::session_empty(type: 'error', text: "Эта почта уже используется");
         }
+
     } else {
         $email_b = null;
-        $site->session_inf("E-mail адрес указан неверно.");
+        Site::session_empty(type: 'error', text: "E-mail адрес указан неверно.");
     }
-    $sex = $_POST['sex'];
-    $sql->query("insert into users set login = ?s, pass = ?s, email = ?s, ip = ?s, browser = ?s, referal = ?i, refer = ?s, data_reg = ?s, time_reg = ?s, sex = ?s, prava = ?i, last_date_visit = ?s, last_time_visit = ?s, mesto = ?s, start = ?i, online = ?i, hp_up = ?i, mp_up = ?i, udar_up = ?i, skill = ?i, exp = ?i, lvl = ?i, gold = ?i, baks = ?i, baks_hran = ?i, raiting = ?i, diplomat = ?i, diplomat_max = ?i, diplomat_cena = ?i, zheton = ?i, uho = ?i, wins = ?i, loses = ?i, kills = ?i, dies = ?i, build_up = ?i, dohod = ?i, soderzhanie = ?i, chistaya = ?i, build_energy =?i, krit = ?i, uvorot = ?i, id_vrag = ?i, raiting_loses = ?i, raiting_wins = ?i, pomiloval = ?i, sanctions = ?i, sanction_status = ?i, donat_bonus = ?i, ofclub_veteran_time_up = ?i, ofclub_veteran_chislo = ?i, news = ?i, unit_hp = ?i, refer_gold = ?i, refer_baks = ?i, slovo = ?s", $name, $pass, $email_b, $site->getIp(), $site->getBrowser(), $referal['id'], $site->getHttpReferer(), $site->getDate(), $site->getTime(), $sex, 1, $site->getDate(), $site->getTime(), $site->fileName(), 0, time(), time(), time(), time(), 3, 0, 1, $gold, $baks, 0, 0, 2, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $_POST['pass2']);
+
+    $sex = Filter::clearFullSpecialChars(string: $_POST['sex']);
+
+    $sql->query("insert into users set login = ?s, pass = ?s, email = ?s, ip = ?s, browser = ?s, referal = ?i, refer = ?s, data_reg = ?s, time_reg = ?s, sex = ?s, prava = ?i, last_date_visit = ?s, last_time_visit = ?s, mesto = ?s, start = ?i, online = ?i, hp_up = ?i, mp_up = ?i, udar_up = ?i, skill = ?i, exp = ?i, lvl = ?i, gold = ?i, baks = ?i, baks_hran = ?i, raiting = ?i, diplomat = ?i, diplomat_max = ?i, diplomat_cena = ?i, zheton = ?i, uho = ?i, wins = ?i, loses = ?i, kills = ?i, dies = ?i, build_up = ?i, dohod = ?i, soderzhanie = ?i, chistaya = ?i, build_energy =?i, krit = ?i, uvorot = ?i, id_vrag = ?i, raiting_loses = ?i, raiting_wins = ?i, pomiloval = ?i, sanctions = ?i, sanction_status = ?i, donat_bonus = ?i, ofclub_veteran_time_up = ?i, ofclub_veteran_chislo = ?i, news = ?i, unit_hp = ?i, refer_gold = ?i, refer_baks = ?i, slovo = ?s", $name, $pass, $email_b, Site::getIp(), Site::getBrowser(), $referal['id'], Site::getHttpReferer(), Times::setDate(), Times::setTime(), $sex, 1, Times::setDate(), Times::setTime(), Site::fileName(), 0, time(), time(), time(), time(), 3, 0, 1, $gold, $baks, 0, 0, 2, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, $_POST['pass2']);
+
     setcookie('login', $name, time() + 86400 * 365, '/');
     setcookie('IDsess', $pass, time() + 86400 * 365, '/');
-    $site->session_inf("Регистрация прошла успешно! Приятной игры!", "bonus.php");
+    Site::session_empty(type: 'ok', text: "Регистрация прошла успешно! Приятной игры!", location: "bonus.php");
 } else {
     $ref = "";
     if (!empty($_GET['ref'])) {
-        $ref = $filter->clearFullSpecialChars($_GET['ref']);
+        $ref = Filter::clearFullSpecialChars(string: $_GET['ref']);
     } ?>
     <div class="container">
     <div class="row">

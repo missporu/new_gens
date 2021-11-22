@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\NoReturn;
+
 class Site {
     /**
      * @var string
@@ -8,19 +10,21 @@ class Site {
     /**
      * @var string
      */
-    public string $title;
+    public string $title = "";
+
+    public $switch = null;
 
     public function __construct() {
         $siteStatus = (new SafeMySQL())->getRow("select * from setting_game where id = ?i", 1);
         try {
             if ($_SERVER['SCRIPT_NAME'] != '/index.php') {
                 if ($siteStatus['site_status'] == 'off') {
-                    throw new Exception("Сайт закрыт!");
+                    throw new Exception(message: "Сайт закрыт!");
                 }
             }
             if ($_SERVER['SCRIPT_NAME'] == '/reg.php') {
                 if ($siteStatus['registration'] == 'off') {
-                    throw new Exception("Регистрация закрыта");
+                    throw new Exception(message: "Регистрация закрыта");
                 }
             }
         } catch (Exception $e) { ?>
@@ -31,11 +35,12 @@ class Site {
             </div><?php
             exit();
         }
+
         $title = "";
         $this->title = $title;
     }
 
-    public function lineHrInContainer() { ?>
+    public static function lineHrInContainer() { ?>
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
@@ -45,51 +50,50 @@ class Site {
         </div><?php
     }
 
-    public function PrintMiniLine() { ?>
+    public static function PrintMiniLine() { ?>
         <div class="clearfix"></div>
         <div class="separ"></div>
         <div class="clearfix"></div><?php
     }
 
-    public function fileName() {
+    public static function fileName() {
         $fileName = $_SERVER['PHP_SELF'];
-        $fileName = explode('/', $fileName);
+        $fileName = explode(separator: '/', string: $fileName);
         return $fileName[1];
     }
 
     /**
      * @return mixed
      */
-    public function getDomen()
-    {
+    public static function getDomen(): mixed {
         return $_SERVER['HTTP_HOST'];
     }
 
     /**
      * @return mixed
      */
-    public function getUserAgent() {
+    public static function getUserAgent(): mixed {
         return $_SERVER['HTTP_USER_AGENT'];
     }
 
     /**
      * @return mixed
      */
-    public function getScriptURI() {
+    public static function getScriptURI(): mixed {
         return $_SERVER['SCRIPT_URI'];
     }
 
     /**
      * @return mixed
      */
-    public function getServerAddrIP() {
+    public static function getServerAddrIP(): mixed {
         return $_SERVER['SERVER_ADDR'];
     }
 
     /**
      * @return string
      */
-    public function getServerAdmin() {
+    public static function getServerAdmin(): string {
         $_SERVER['SERVER_ADMIN'] = "misspo.ru@gmail.com";
         return $_SERVER['SERVER_ADMIN'];
     }
@@ -97,7 +101,7 @@ class Site {
     /**
      * @return string
      */
-    public function getIp() {
+    public static function getIp(): string {
         $keys = [
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED_FOR',
@@ -105,8 +109,9 @@ class Site {
         ];
         foreach ($keys as $key) {
             if (!empty($_SERVER[$key])) {
-                $ip = trim(end(explode(',', $_SERVER[$key])));
-                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                $array = explode(separator: ',', string: $_SERVER[$key]);
+                $ip = trim(string: end(array: $array));
+                if (filter_var(value: $ip, filter: FILTER_VALIDATE_IP)) {
                     return $ip;
                 }
             }
@@ -116,106 +121,74 @@ class Site {
     /**
      * @return mixed
      */
-    public function getBrowser() {
-        return $browser = Filter::clearString($_SERVER['HTTP_USER_AGENT']);
+    public static function getBrowser(): mixed {
+        return Filter::clearString($_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
      * @return mixed
      */
-    public function getHttpReferer(): mixed {
+    public static function getHttpReferer(): mixed {
         if (isset($_SERVER['HTTP_REFERER'])) {
-            $referer = Filter::clearFullSpecialChars($_SERVER['HTTP_REFERER']);
+            $referer = Filter::clearFullSpecialChars(string: $_SERVER['HTTP_REFERER']);
         } else {
-            $referer = Filter::clearFullSpecialChars('//'.$_SERVER['HTTP_HOST']);
+            $referer = Filter::clearFullSpecialChars(string: '//'.$_SERVER['HTTP_HOST']);
         }
         return $referer;
     }
 
     public function errorLog($kto, $text, $type) {
-        (new SafeMySQL())->query("insert into logi set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $this->fileName(), $type, $this->getTime(), $this->getDate(), $this->getUserAgent(), $this->getIp());
+        (new SafeMySQL())->query("insert into logi set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, Site::fileName(), $type, Times::setTime(), Times::setDate(), Site::getUserAgent(), Site::getIp());
     }
 
     public function adminLog($kto, $text, $type) {
-        (new SafeMySQL())->query("insert into admin_log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, $this->fileName(), $type, $this->getTime(), $this->getDate(), $this->getUserAgent(), $this->getIp());
+        (new SafeMySQL())->query("insert into admin_log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", $kto, $text, Site::fileName(), $type, Times::setTime(), Times::setDate(), Site::getUserAgent(), Site::getIp());
     }
 
     /**
+     * @param string $type
      * @param string $text
      * @param string $location
      */
-    public function session_inf($text = "", $location = "?") {
+    public static function session_empty(string $type = "inf", string $text = "", string $location = "?") {
         if (!empty($text)) {
-            $_SESSION['info'] = Filter::output($text);
+            $_SESSION[$type] = nl2br(string: $text);
         }
-        $this->_location($location);
-    }
-
-    /**
-     * @param string $text
-     * @param string $location
-     */
-    public function session_err($text = "", $location = "?") {
-        if (!empty($text)) {
-            $_SESSION['error'] = Filter::output(string: $text);
-        }
-        $this->_location(location: $location);
-    }
-
-    /**
-     * @param string $text
-     * @param string $location
-     */
-    public function session_ok($text = "", $location = "?") {
-        if (!empty($text)) {
-            $_SESSION['ok'] = Filter::output($text);
-        }
-        $this->_location($location);
+        Site::_location(location: $location);
     }
 
     /**
      * @param $location
      */
-    public function _location ($location) {
-        header("Location: ".Filter::clearFullSpecialChars($location)."");
+    #[NoReturn]
+    public static function _location ($location) {
+        header(header: "Location: " . Filter::clearFullSpecialChars(string: $location) . "");
         exit;
     }
 
     /**
      * @return mixed
      */
-    public function getTime() {
-        return Times::setTime();
-    }
-
-    public static function getDate() {
-        return Times::setDate();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDateRus() {
-        $d = date("d F");
-        $d = str_replace("January","января",$d);
-        $d = str_replace("February","февраля",$d);
-        $d = str_replace("March","марта",$d);
-        $d = str_replace("April","апреля",$d);
-        $d = str_replace("May","мая",$d);
-        $d = str_replace("June","июня",$d);
-        $d = str_replace("July","июля",$d);
-        $d = str_replace("August","августа",$d);
-        $d = str_replace("September","сентября",$d);
-        $d = str_replace("October","октября",$d);
-        $d = str_replace("November","ноября",$d);
-        $d = str_replace("December","декабря",$d);
-        $dater = Filter::clearString($d);
-        return $dater;
+    public static function getDateRus(): mixed {
+        $d = date(format: "d F");
+        $d = str_replace(search: "January", replace: "января", subject: $d);
+        $d = str_replace(search: "February", replace: "февраля", subject: $d);
+        $d = str_replace(search: "March", replace: "марта", subject: $d);
+        $d = str_replace(search: "April", replace: "апреля", subject: $d);
+        $d = str_replace(search: "May", replace: "мая", subject: $d);
+        $d = str_replace(search: "June", replace: "июня", subject: $d);
+        $d = str_replace(search: "July", replace: "июля", subject: $d);
+        $d = str_replace(search: "August", replace: "августа", subject: $d);
+        $d = str_replace(search: "September", replace: "сентября", subject: $d);
+        $d = str_replace(search: "October", replace: "октября", subject: $d);
+        $d = str_replace(search: "November", replace: "ноября", subject: $d);
+        $d = str_replace(search: "December", replace: "декабря", subject: $d);
+        return Filter::clearString(string: $d);
     }
 
     public function lastDay() {
-        $tomorrow  = mktime(0, 0, 0, date("m")  , date("d")-1, date("Y"));
-        $lastmonth = mktime(0, 0, 0, date("m")-1, date("d"),   date("Y"));
+        $tomorrow  = mktime(hour: 0, minute: 0, second: 0, month: date(format: "m")  , day: date(format: "d")-1, year: date(format: "Y"));
+        $lastmonth = mktime(hour: 0, minute: 0, second: 0, month: date(format: "m")-1, day: date(format: "d"), year: date(format: "Y"));
     }
 
     /**
@@ -223,14 +196,29 @@ class Site {
      * @param string $dataToggle
      * @param string $link
      * @param string $text
-     * @return string
      */
-    public function linkToSiteAdd(array $class, string $dataToggle, string $link, string $text) {
+    public function linkToSiteAdd(array $class, string $dataToggle, string $link, string $text): void {
         foreach ($class as $item) {
-            return $item . " ";
+            $item .= $item . " ";
         } ?>
-        <a href="<?= $link ?>" class="<?= $class ?>" data-toggle="<?= $dataToggle ?>>"><?= $text ?></a><?php
+        <a href="<?= $link ?>" class="<?= $item ?>" data-toggle="<?= $dataToggle ?>>"><?= $text ?></a><?php
     }
 
+    public function getSwitch() {
+        return $this->switch;
+    }
+
+    public function setSwitch($a) {
+        $this->switch = isset($_GET[$a]) ? Filter::clearFullSpecialChars($_GET[$a]) : null;
+    }
+
+    /**
+     * @param $class
+     * @param $src
+     * @param $alt
+     */
+    public static function returnImage($class, $src, $alt) { ?>
+        <img class="img-responsive <?= $class ?>" src="images/<?= $src ?>" alt="<?= $alt ?>"><?php
+    }
 
 }

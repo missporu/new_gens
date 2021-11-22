@@ -1,14 +1,18 @@
 <?php
 $title = 'Профиль';
 require_once "system/up.php";
-$user->_Reg(); ?>
+
+$user->_Reg();
+$site->setSwitch('a'); ?>
+
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
                 <nav class="navbar navbar-black" role="navigation">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse"
+                                data-target=".navbar-ex1-collapse">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
@@ -28,7 +32,8 @@ $user->_Reg(); ?>
                         </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Донат<b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Донат<b
+                                            class="caret"></b></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#">Купить золото</a></li>
                                     <li><a href="#">VIP аккаунт</a></li>
@@ -40,39 +45,39 @@ $user->_Reg(); ?>
             </div>
         </div>
     </div>
-    <?= $site->lineHrInContainer(); ?>
+<?= Site::lineHrInContainer(); ?>
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12"><?
-                switch ($switch) {
-                    default: ?>
+    <div class="row">
+        <div class="col-xs-12"><?php
+            switch ( $site->switch ) {
+                default: ?>
                     <div class="col-xs-12">
-                        <img src="images/flags/<?= $user->user('side') ?>.png" alt="Флаг"/>
-                        <?= $user->user('login') ?> (<?= $user->user('lvl') ?> lvl) Ал. <?= number_format($user->user_alliance + 1) ?>
-                    </div>
-                    <?
-                        break;
+                    <img src="images/flags/<?= $user->user(key: 'side') ?>.png" alt="Флаг"/>
+                    <?= $user->user(key: 'login') ?> (<?= $user->user(key: 'lvl') ?> lvl)
+                    Ал. <?= number_format(num: $user->user_alliance + 1) ?>
+                    </div><?
+                    break;
 
-                    case 'trofei':
-                        echo "Трофеи в разработке";
-                        break;
+                case 'trofei':
+                    echo "Трофеи в разработке";
+                    break;
 
-                    case 'sklad':
-                        echo "Склад в разработке";
-                        break;
+                case 'sklad':
+                    echo "Склад в разработке";
+                    break;
 
-                    case 'navik':
-                        echo "Навыки в разработке";
-                        break;
-                } ?>
-            </div>
+                case 'navik':
+                    echo "Навыки в разработке";
+                    break;
+            } ?>
         </div>
+    </div>
     </div><?php
 /*
 switch ($_GET['case']) {
 default:
 
-<span style="color: #fffabd;">Ал.</span> <?=number_format($user_alliance+1)?>, <span style="color: #fffabd;"> Рейтинг</span> <?=$set['raiting']?></small></div><div class="mini-line"></div>
+<span style="color: #fffabd;"> Рейтинг</span> <?=$set['raiting']?></small></div><div class="mini-line"></div>
 <hr>Ваш игровой статус: <?=$set['status'] ?> <a href="set.php?case=status">Смена статуса</a><br><?php
 
 $left = _FetchAssoc("SELECT * FROM `user_reg` WHERE `id` = '".$fataliti_user['uho1_kto']."' LIMIT 1");

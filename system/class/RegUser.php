@@ -17,12 +17,13 @@ class RegUser {
      */
     private ?string $pass;
     public int $user_alliance;
+    private $user_id;
 
     public function __construct() {
         if (isset($_COOKIE['login']) && isset($_COOKIE['IDsess'])) {
-            if (!empty(trim($_COOKIE['login'])) && !empty(trim($_COOKIE['IDsess']))) {
-                $this->login = trim(Filter::clearFullSpecialChars($_COOKIE['login']));
-                $this->pass = trim(Filter::clearFullSpecialChars($_COOKIE['IDsess']));
+            if (!empty(trim(string: $_COOKIE['login'])) && !empty(trim(string: $_COOKIE['IDsess']))) {
+                $this->login = trim(string: Filter::clearFullSpecialChars(string: $_COOKIE['login']));
+                $this->pass = trim(string: Filter::clearFullSpecialChars(string: $_COOKIE['IDsess']));
             }
         } else {
             $this->login = null;
@@ -38,9 +39,6 @@ class RegUser {
         }
     }
 
-    /**
-     * @return int|null|
-     */
     protected function userID() {
         if (isset($this->login) AND isset($this->pass)) {
             $users = (new SafeMySQL())->getOne("select count(id) from users where login = ?s and pass = ?s limit ?i", $this->login, $this->pass, 1);
@@ -57,7 +55,7 @@ class RegUser {
      * @return bool
      */
     public function getUser(): bool {
-        if(is_numeric($this->userID()) || $this->userID() <> null) {
+        if(is_numeric(value: $this->userID()) || $this->userID() <> null) {
             return true;
         } else return false;
     }
@@ -77,7 +75,7 @@ class RegUser {
      * @return int
      */
     public function setUserBonus() {
-        $bon = (new SafeMySQL())->getOne("select count(id) from user_bonus where id_user = ?i limit ?i", $this->user('id'), 1);
+        $bon = (new SafeMySQL())->getOne("select count(id) from user_bonus where id_user = ?i limit ?i", $this->user(key: 'id'), 1);
         return $bon;
     }
 
@@ -85,25 +83,25 @@ class RegUser {
      * @param $value
      * @return mixed
      */
-    public function userBonus($value) {
+    public function userBonus($value): mixed {
         if ($this->setUserBonus() == 1) {
             $data = (new SafeMySQL())->getRow("select * from user_bonus where id_user = ?i limit ?i", $this->userID(), 1);
             return $data[$value];
         } else {
-            (new SafeMySQL())->query("insert into user_bonus set time = ?i, id_user = ?i, status_day = ?i, last_date = ?s", time(), $this->user('id'), 1, (new Site())->getDate());
-            (new Site())->_location('?');
+            (new SafeMySQL())->query("insert into user_bonus set time = ?i, id_user = ?i, status_day = ?i, last_date = ?s", time(), $this->user(key: 'id'), 1, Times::setDate());
+            Site::_location(location: '?');
         }
     }
 
     public function _Reg() {
-        if($this->getUser() == false){
-            (new Site())->session_inf("Вы не авторизованы!", "index.php");
+        if ($this->getUser() == false) {
+            Site::session_empty(type: 'info', text: "Вы не авторизованы!", location: "index.php");
         }
     }
 
     public function _noReg() {
-        if($this->getUser() == true) {
-            (new Site())->_location("menu.php");
+        if ($this->getUser() == true) {
+            Site::_location(location: "menu.php");
         }
     }
 
@@ -114,8 +112,8 @@ class RegUser {
     /**
      * @return bool
      */
-    public function getBlock() {
-        if($this->user('block') == 1 && $this->user('block_time') > time()) {
+    public function getBlock(): bool {
+        if($this->user(key: 'block') == 1 && $this->user(key: 'block_time') > time()) {
             return true;
         } else {
             return false;
@@ -125,8 +123,8 @@ class RegUser {
 
     public function setBan() {
         try {
-            if($this->user('ban') == 1 && $this->user('ban_time') > time()) {
-                throw new Exception('Вы забанены администрацией проекта!');
+            if($this->user(key: 'ban') == 1 && $this->user(key: 'ban_time') > time()) {
+                throw new Exception(message: 'Вы забанены администрацией проекта!');
             }
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -139,10 +137,10 @@ class RegUser {
      */
     public function addMoney($key, $value) {
         try {
-            $addMoney = $this->user($key) + $value;
-            $addMoney = round( (new Filter())->clearInt( $addMoney ) );
+            $addMoney = $this->user(key: $key) + $value;
+            $addMoney = round( num: Filter::clearInt( string: $addMoney ) );
             if ($addMoney > 999999999) {
-                throw new Exception("Вы превысили лимит (999999999)");
+                throw new Exception(message: "Вы превысили лимит (999999999)");
             }
             (new SafeMySQL())->query("update users set $key = ?i where login = ?s limit ?i", $addMoney, $this->user('login'), 1);
         } catch (Exception $e) {
@@ -167,10 +165,10 @@ class RegUser {
      * @param $admin
      */
     public function UserErrorEnterFromModer($text, $type, $admin) {
-        if ($this->user('dostup') <= $admin) {
-            (new Site())->errorLog($this->user('name'), $text, $type);
-            $this->add_narushenie($this->user('id'));
-            (new Site())->session_inf("Запрет входа. Админ получил письмо. Бан выехал", "menu.php");
+        if ($this->user(key: 'dostup') <= $admin) {
+            (new Site())->errorLog($this->user(key: 'name'), $text, $type);
+            $this->add_narushenie($this->user(key: 'id'));
+            Site::session_empty(type: 'info', text: "Запрет входа. Админ получил письмо. Бан выехал", location: "menu.php");
         }
     }
 
@@ -179,19 +177,19 @@ class RegUser {
      */
     public function exitReg() {
         (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", 0, $this->userID(), 1);
-        setcookie("login", '', time()-3600);
-        setcookie("IDsess", '', time()-3600);
+        setcookie(name: "login", value: '', expires_or_options: time()-3600);
+        setcookie(name: "IDsess", value: '', expires_or_options: time()-3600);
         session_destroy();
-        (new Site())->_location("index.php");
+        Site::_location(location: "index.php");
     }
 
     /**
      * @param $value
      * @return bool
      */
-    public function mdAmdFunction($value) {
-        if($this->user('prava') > $value) {
+    public function mdAmdFunction($value): bool {
+        if($this->user(key: 'prava') > $value) {
             return true;
-        }
+        } else return false;
     }
 }

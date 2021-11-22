@@ -3,17 +3,20 @@ $title='Просмотр';
 require_once('system/up.php');
 
 $user->_Reg();
+
 try {
     if($user->getBlock()) {
-        throw new Exception('Вы заблокированы администрацией проекта!');
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
-    $smott = isset($_GET['user']) ? $filter->clearFullSpecialChars($_GET['user']) : NULL;
+
+    $smott = isset($_GET['user']) ? Filter::clearFullSpecialChars(string: $_GET['user']) : NULL;
     $smotr = $sql->getRow("SELECT * FROM users WHERE login = ?s LIMIT ?i", $smott, 1); ?>
+
     <div class="container">
     <div class="row">
         <div class="col-xs-12">
             <p>
-                <?= $smotr['login'] ?> | <?= $smotr['baks'] ?>
+                <?= $smotr['login'] ?> | <?= $smotr['lvl'] ?> lvl
             </p>
         </div>
     </div>
@@ -25,7 +28,7 @@ try {
             <h3 class="red">
                 <?= $e->getMessage() ?>
             </h3>
-            <p class="green">До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?></p>
+            <p class="green">До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?></p>
         </div>
     </div>
     </div><?php

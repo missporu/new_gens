@@ -1,24 +1,23 @@
 <?php
-$title='Главная';
+$title = 'Главная';
 require_once ('system/up.php');
 $user->_Reg();
-$admin1983 = new Admin('1983');
-$admin5 = new Admin('5');
 
 try {
     if($user->getBlock()) {
-        throw new Exception('Вы заблокированы администрацией проекта!');
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
-    switch ($switch) {
+
+    switch ($site->switch) {
         default: ?>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
                             Сражения
                         </h5>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
@@ -29,11 +28,11 @@ try {
                             </ul>
                         </div>
 
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
                             Торговля
                         </h5>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
@@ -41,6 +40,7 @@ try {
                                         <span>Рынок ресурсов</span>
                                     </a>
                                 </li>
+                                <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
                                     <a class="btn btn-block btn-dark" href="blackmarket.php">
                                         <span>Черный рынок</span>
@@ -49,18 +49,33 @@ try {
                             </ul>
                         </div>
 
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
                             Персонаж
                         </h5>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <div class="col-xs-12">
-                            <ul class="list-group">
+                            <ul class="list-group"><?
+                                if($user->userBonus(value: 'time') < time() + 5) { ?>
+                                    <li class="list-group-item">
+                                        <a class="btn btn-block btn-danger" href="bonus.php">
+                                            <span>Ежедневный бонус!</span>
+                                        </a>
+                                    </li><?php
+                                    Site::PrintMiniLine();
+                                } ?>
                                 <li class="list-group-item">
                                     <a class="btn btn-block btn-dark" href="pers.php">
                                         <span>Профиль</span>
                                     </a>
                                 </li>
+                                <? Site::PrintMiniLine() ?>
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="bank.php">
+                                        <span>Банк</span>
+                                    </a>
+                                </li>
+                                <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
                                     <a class="btn btn-block btn-dark" href="clan.php">
                                         <span>Клан</span>
@@ -69,11 +84,11 @@ try {
                             </ul>
                         </div>
 
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
                             Общение
                         </h5>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
@@ -81,24 +96,37 @@ try {
                                         <span>Чат</span>
                                     </a>
                                 </li>
+                                <? Site::PrintMiniLine() ?>
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="mail.php">
+                                        <span>Почта</span>
+                                    </a>
+                                </li>
+                                <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
                                     <a class="btn btn-block btn-dark" href="forum.php">
-                                        <span>форум</span>
+                                        <span>Форум</span>
                                     </a>
                                 </li>
                             </ul>
                         </div>
 
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
                             Разное
                         </h5>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
                                     <a class="btn btn-block btn-dark" href="help.php">
                                         <span>Поддержка</span>
+                                    </a>
+                                </li>
+                                <? Site::PrintMiniLine() ?>
+                                <li class="list-group-item">
+                                    <a class="btn btn-block btn-dark" href="news.php">
+                                        <span>Новости</span>
                                     </a>
                                 </li>
                             </ul>
@@ -222,7 +250,7 @@ try {
                     <?= $e->getMessage() ?>
                 </h3>
                 <p class="green">
-                    До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?>
+                    До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?>
                 </p>
             </div>
         </div>

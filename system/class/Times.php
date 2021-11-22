@@ -4,25 +4,24 @@ class Times {
      * @param int $time
      * @return string
      */
-    public static function timeHours($time = 0) {
-        $h = floor($time / 60 / 60);
-        $i = floor($time / 60) - $h * 60;
+    public static function timeHours(int $time = 0): string {
+        $h = floor(num: $time / 60 / 60);
+        $i = floor(num: $time / 60) - $h * 60;
         $s = $time - $h * 60 * 60 - $i * 60;
-        $h = (strlen($h) == 1 ? '0' . $h : $h);
-        $i = (strlen($i) == 1 ? '0' . $i : $i);
-        $s = (strlen($s) == 1 ? '0' . $s : $s);
-        $out = "{$h}:{$i}:{$s}";
-        return $out;
+        $h = (strlen(string: $h) == 1 ? '0' . $h : $h);
+        $i = (strlen(string: $i) == 1 ? '0' . $i : $i);
+        $s = (strlen(string: $s) == 1 ? '0' . $s : $s);
+        return "{$h}:{$i}:{$s}";
     }
 
     /**
-     * @param $i
+     * @param int $i
      * @return string
      */
-    public static function timeInDate($i) {
-        $d  = floor($i / 86400);
-        $h  = floor(($i / 3600) - $d * 24);
-        $m  = floor(($i - $h * 3600 - $d * 86400) / 60);
+    public static function timeInDate(int $i): string {
+        $d  = floor(num: $i / 86400);
+        $h  = floor(num: ($i / 3600) - $d * 24);
+        $m  = floor(num: ($i - $h * 3600 - $d * 86400) / 60);
         $s  = $i - ($m * 60 + $h * 3600 + $d * 86400);
         $h = ($h > 0 ? ($h < 10 ? '0':'').$h:'00');
         $m = ($m > 0 ? ($m < 10 ? '0':'').$m:'00');
@@ -39,11 +38,11 @@ class Times {
         return $result;
     }
 
-    public static function setDate() {
-        return (new Filter())->clearFullSpecialChars(date("d.m.Y"));
+    public static function setDate(): mixed {
+        return Filter::clearFullSpecialChars(string: date(format: "d.m.Y"));
     }
 
-    public static function setTime() {
-        return (new Filter())->clearFullSpecialChars(date("H:i:s"));
+    public static function setTime(): mixed {
+        return Filter::clearFullSpecialChars(string: date(format:"H:i:s"));
     }
 }

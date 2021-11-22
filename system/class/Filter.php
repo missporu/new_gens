@@ -7,7 +7,7 @@ class Filter {
     }
 
     static public function output($string): string {
-        return nl2br(string: self::clearFullSpecialChars(string: $string));
+        return self::clearFullSpecialChars(string: $string);
     }
 
     static public function clearString($string): mixed {
@@ -15,6 +15,6 @@ class Filter {
     }
 
     static public function clearInt($string): int {
-        return intval(value: abs(filter_var(value: $string, filter: FILTER_SANITIZE_NUMBER_INT)));
+        return intval(value: abs(num: filter_var(value: $string, filter: FILTER_SANITIZE_NUMBER_INT)));
     }
 }

@@ -13,25 +13,25 @@ $title = "Черный рынок {$titles}";
 require_once "system/up.php";
 $user->_Reg();
 
-$site->linkToSiteAdd(array('btn', 'btn-block', 'btn-dark'), 'modal', '?a=test', 'test');
+// $site->linkToSiteAdd(array('btn', 'btn-block', 'btn-dark'), dataToggle: 'modal', link: '?a=test', text: 'test');
 switch ($switch) {
     default: ?>
         <div class="container">
             <div class="row"><?php
-                if ($user->user('logo') == 'on') { ?>
+                if ($user->user(key: 'logo') == 'on') { ?>
                     <div class="col-md-12 text-center">
                         <img src="images/logotips/blackmarket.jpg" alt="Чёрный рынок" class="img-responsive">
                     </div><?php
-                    $site->PrintMiniLine();
+                    Site::PrintMiniLine();
                 } ?>
                 <div class="col-md-12">
                     <div class="col-xs-12">
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a class="btn btn-block btn-dark" data-toggle="modal" href="#marketVars"><span>Военторг</span></a>
-                                <? $site->PrintMiniLine(); ?>
+                                <? Site::PrintMiniLine(); ?>
                                 <a class="btn btn-block btn-dark" data-toggle="modal" href="#specGroup"><span>Наёмники</span></a>
-                                <? $site->PrintMiniLine(); ?>
+                                <? Site::PrintMiniLine(); ?>
                                 <a class="btn btn-block btn-dark" data-toggle="modal" href="#laboratory"><span>Лаборатория</span></a>
                             </li>
                         </ul>
@@ -89,7 +89,7 @@ switch ($switch) {
                                     <h4 class="modal-title text-center">Лаборатория</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Ну заходи, <?= $user->user('login') ?>, раз пришел! Специально для тебя, мой друг,эта небольшая секретная лаборатория работает каждый день, 24 часа в сутки без выходных и праздников! Ты почаще забегай, за моей дря... Химией... Кхе... Не бесплатно конечно! У нас ведь, на черном рынке, за бесплатно можно только себя продать. Кхе... Ты, это.. никому не говори только, лады? Не люблю стукачей... Кхе-кхе... </p>
+                                    <p>Ну заходи, <?= $user->user(key: 'login') ?>, раз пришел! Специально для тебя, мой друг,эта небольшая секретная лаборатория работает каждый день, 24 часа в сутки без выходных и праздников! Ты почаще забегай, за моей дря... Химией... Кхе... Не бесплатно конечно! У нас ведь, на черном рынке, за бесплатно можно только себя продать. Кхе... Ты, это.. никому не говори только, лады? Не люблю стукачей... Кхе-кхе... </p>
                                 </div>
                                 <div class="modal-footer">
                                     <div class="col-xs-12">
@@ -99,7 +99,7 @@ switch ($switch) {
                             </div><!-- /.modal-content -->
                         </div><!-- /.modal-dialog -->
                     </div><!-- /.modal -->
-                    <? $site->PrintMiniLine() ?>
+                    <? Site::PrintMiniLine() ?>
                 </div>
             </div>
         </div><?php

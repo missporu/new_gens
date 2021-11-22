@@ -1,7 +1,7 @@
 <?php
 session_start();
 ob_start();
-$timeregen = microtime(TRUE); ?>
+$timeregen = microtime(as_float: TRUE); ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -24,30 +24,30 @@ $timeregen = microtime(TRUE); ?>
     <meta property="og:title" content="<?= $title ?>"/>
     <meta property="og:description"
           content="Новая браузерная онлайн-игра, в которую можно играть с компьютера и мобильного телефона!"/>
-    <meta property="og:image" content="//<?= $site->getDomen() ?>/images/logotips/logo.jpg"/>
+    <meta property="og:image" content="//<?= Site::getDomen() ?>/images/logotips/logo.jpg"/>
     <meta property="og:image:type" content="image/jpeg"/>
     <meta property="og:image:width" content="400"/>
     <meta property="og:image:height" content="300"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="//<?= $site->getDomen() ?>"/>
-    <meta property="og:image:secure_url" content="https://<?= $site->getDomen() ?>"/>
+    <meta property="og:url" content="//<?= Site::getDomen() ?>"/>
+    <meta property="og:image:secure_url" content="https://<?= Site::getDomen() ?>"/>
 
     <!-- Bootstrap core CSS -->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="//<?= $site->getDomen() ?>/style/style.css">
-    <link rel="stylesheet" href="//<?= $site->getDomen() ?>/style/standart/style.css">
+    <link rel="stylesheet" href="//<?= Site::getDomen() ?>/style/style.css">
+    <link rel="stylesheet" href="//<?= Site::getDomen() ?>/style/standart/style.css">
 
     <!-- IE 10 css -->
-    <link rel="stylesheet" href="//<?= $site->getDomen() ?>/style/ie10-viewport-bug-workaround.css">
+    <link rel="stylesheet" href="//<?= Site::getDomen() ?>/style/ie10-viewport-bug-workaround.css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <script type="text/javascript" src="//<?= $site->getDomen() ?>/add.js"></script>
+    <script type="text/javascript" src="//<?= Site::getDomen() ?>/add.js"></script>
 </head>
 <body>

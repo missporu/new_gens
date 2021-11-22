@@ -1,6 +1,6 @@
 <?php
 require_once('sys.php');
-$site->lineHrInContainer(); ?>
+Site::lineHrInContainer(); ?>
 <div class="container">
     <div class="row">
         <div class="col-xs-2">
@@ -18,26 +18,26 @@ $site->lineHrInContainer(); ?>
         </div>
     </div>
 </div><?php
-$site->lineHrInContainer();
+Site::lineHrInContainer();
 if ($user->getUser()) { ?>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 text-center">
                 <ul class="list-inline">
                     <li class="text-info">
-                        <?= $user->user('lvl') ?> lvl
+                        <?= $user->user(key: 'lvl') ?> lvl
                     </li>
                     <li class="green">
-                        <?= $user->user('baks') ?> <? imageBaks() ?>
+                        <?= $user->user(key: 'baks') ?> <? imageBaks() ?>
                     </li>
                     <li class="yellow">
-                        <?= $user->user('gold') ?> <? imageGold() ?>
+                        <?= $user->user(key: 'gold') ?> <? imageGold() ?>
                     </li>
                 </ul>
             </div>
         </div>
     </div><?php
-    $site->lineHrInContainer();
+    Site::lineHrInContainer();
 }
 if (isset($_SESSION['info'])) { ?>
     <div class="container">

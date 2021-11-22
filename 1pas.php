@@ -1,45 +1,38 @@
 <?php
-
-/**
- * Class User
- * Class Times
- * Просто чтобы на странице сработал шаблон
- * Все классы написаны за 5 минут и не явдяются продакшном
- * autor: misspo
- * phone: +79194810550
- * e-mail: misspo.ru@gmail.com
- *
- */
+/*
 class User {
     public function __construct() {}
 
-    /**
-     * @return bool
-     */
     public function getBlock()
     {
         return true;
     }
 
-    /**
-     * @param $value
-     * @return int
-     */
-    public function user($value): int
+    public function user($key): int
     {
         $set = array(
-            $value => 1699999999,
+            $key => 1699999999,
         );
-        return $set[$value];
+        return $set[$key];
     }
-}
 
+    public function addAitomaticBlock(int $timeDay)
+    {
+    }
+
+    public function addNarushenieAdmin(int $userID)
+    {
+    }
+
+    public function _Reg()
+    {
+    }
+
+}
+*/
+/*
 class Times
 {
-    /**
-     * @param $i
-     * @return string
-     */
     public function timeHours($i)
     {
         $d = floor($i / 86400);
@@ -68,9 +61,12 @@ $times = new Times();
 /**
  * Шаблон на страницы
  */
+/*
 try {
-    if ($user->getBlock()) {
-        throw new Exception('Вы заблокированы администрацией проекта!');
+    if (!$user->getBlock()) {
+
+    } else {
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
 } catch (Exception $e) { ?>
     <div class="container">
@@ -80,13 +76,13 @@ try {
                 <?= $e->getMessage() ?>
             </h3>
             <p class="green">
-                До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?>
+                До автоматической разблокировки осталось <?= $times->timeHours(time: $user->user(key: 'block_time') - time()) ?>
             </p>
         </div>
     </div>
     </div><?php
 }
-
+*/
 /**
  * Модаль на BS-3
  *

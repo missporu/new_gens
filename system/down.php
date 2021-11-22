@@ -1,10 +1,9 @@
 <?php
 if ($user->getUser()) {
-    if ($user->mdAmdFunction('1') == true) {
-        $admin5 = new Admin(5);
-        $admin1983 = new Admin(1983);
-        if ($admin1983->returnAdmin() or $admin5->returnAdmin()) {
-            $site->lineHrInContainer(); ?>
+    if ($user->mdAmdFunction(value: '1') == true) {
+        $admin = new Admin();
+        if ($admin->setAdmin(admin: 1983)->returnAdmin() or $admin->setAdmin(admin: 5)->returnAdmin()) {
+            Site::lineHrInContainer(); ?>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 text-center">
@@ -14,10 +13,10 @@ if ($user->getUser()) {
                     </div>
                 </div>
             </div><?php
-            $site->lineHrInContainer();
+            Site::lineHrInContainer();
         }
     }
-    $site->lineHrInContainer(); ?>
+    Site::lineHrInContainer(); ?>
     <div class="container">
         <div class="row">
             <div class="col-xs-6">
@@ -34,6 +33,6 @@ if ($user->getUser()) {
             <div class="clearfix"></div>
         </div>
     </div><?php
-    $site->lineHrInContainer();
+    Site::lineHrInContainer();
 }
 require_once "foot.php";

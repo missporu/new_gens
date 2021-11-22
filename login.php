@@ -4,26 +4,29 @@ require_once('./system/up.php');
 $user->_noReg();
 
 echo'<div class="cont">';
-
     if (isset($_POST['send'])) {
-        $name = $filter->clearFullSpecialChars(trim($_POST['login']));
-        $pass = $filter->clearFullSpecialChars($_POST['pass']);
-        if (empty($name) || trim($name) == "" || strlen(trim($name)) < 3) {
-            $site->session_err("Не заполнено поле логин");
+        $name = Filter::clearFullSpecialChars(string: trim(string: $_POST['login']));
+        $pass = Filter::clearFullSpecialChars(string: $_POST['pass']);
+
+        if (empty($name) || trim(string: $name) == "" || strlen(string: trim(string: $name)) < 3) {
+            Site::session_empty(type: 'error', text: "Не заполнено поле логин");
         }
-        if (empty($pass) || trim($pass) == "" || strlen(trim($pass)) < 5) {
-            $site->session_err("Не заполнено поле пароль");
+
+        if (empty($pass) || trim(string: $pass) == "" || strlen(string: trim(string: $pass)) < 5) {
+            Site::session_empty(type: 'error', text: "Не заполнено поле пароль");
         }
+
         $usr = $sql->getRow("select pass, ip, login from users where login = ?s limit ?i", $name, 1);
         $hash = $usr['pass'];
-        $pass_get = password_verify($pass, $hash);
+        $pass_get = password_verify(password: $pass, hash: $hash);
+
         if ($pass_get == TRUE and $name = $usr['login']) {
-            setcookie('login', $name, time() + 86400 * 365, '/');
-            setcookie('IDsess', $hash, time() + 86400 * 365, '/');
-            $site->session_inf("Добро пожаловать!<br>Текущий ip {$site->getIp()}, последний вход был с {$usr['ip']}", "menu.php");
+            setcookie(name: 'login', value: $name, expires_or_options: time() + 86400 * 365, path: '/');
+            setcookie(name: 'IDsess', value: $hash, expires_or_options: time() + 86400 * 365, path: '/');
+            Site::session_empty(type: 'info', text: "Добро пожаловать!<br>Текущий ip {Site::getIp()}, последний вход был с {$usr['ip']}", location: "menu.php");
         } else {
-            $site->adminLog($_POST['login'], "пытался зайти на сайт {$pass}", 'admin1983');
-            $site->session_inf("Неверные данные");
+            $site->adminLog(kto: $_POST['login'], text: "пытался зайти на сайт {$pass}", type: 'admin1983');
+            Site::session_empty(type: 'error', text: "Неверные данные");
         }
     } ?>
     <div class="container">
@@ -71,11 +74,7 @@ echo'<div class="cont">';
                 </form>
             </div>
         </div>
-    </div><?
-    if (isset($_SESSION['rec'])) {
-        echo '' . $_SESSION['rec'] . '';
-        $_SESSION['rec'] = NULL;
-    } ?>
+    </div>
 </div>
 <div class="clearfix"></div><?
 require_once('system/down.php');

@@ -3,27 +3,22 @@ $title = 'Админ-панель';
 require_once('system/up.php');
 $user->_Reg();
 
-$admin1983 = new Admin('1983');
-$admin5 = new Admin('5');
+$admin = new Admin();
 
 try {
-    if($user->getBlock() and $admin1983->returnAdmin() == false) {
-        throw new Exception('Вы заблокированы администрацией проекта!');
+    if($user->getBlock() and $admin->setAdmin(1983)->returnAdmin() == false) {
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
-    if($user->user('prava') < 1983 || $user->user('prava') > 1983) {
-        if ($user->user('prava') <> 5) {
-            if($user->user('narushenie_admin') > 1) {
-                $narushenie = $filter->clearInt($user->user('narushenie'));
-                if($narushenie == 0) {
-                    $narushenie = 1;
-                }
+    if($user->user(key: 'prava') < 1983 || $user->user(key: 'prava') > 1983) {
+        if ($user->user(key: 'prava') <> 5) {
+            if($user->user(key: 'narushenie_admin') > 1) {
+                $narushenie = Filter::clearInt(string: $user->user(key: 'narushenie'));
+                if ($narushenie == 0) $narushenie = 1;
                 $timeBlock = 1 * $narushenie;
-                $user->addAitomaticBlock($narushenie);
-                $site->session_inf("У вас кончились бесплатные попытки входа в админку! Ваш аккаунт автоматически заблокирован! Любые жалобы будут рассмотрены в обычном порядке", 'menu.php');
-            } else {
-                $user->addNarushenieAdmin($user->user('id'));
-            }
-            $site->session_inf("Нет доступа! На третьей попытке входа без доступа произойдет автоматическая блокировка до выяснения. Уведомление о попытке входа ушло на почту админу. Приятной игры", 'menu.php');
+                $user->addAitomaticBlock(timeDay: $narushenie);
+                Site::session_empty(type: 'error', text: "У вас кончились бесплатные попытки входа в админку! Ваш аккаунт автоматически заблокирован! Любые жалобы будут рассмотрены в обычном порядке", location: 'menu.php');
+            } else $user->addNarushenieAdmin(userID: $user->user(key: 'id'));
+            Site::session_empty(type: 'error', text: "Нет доступа! На третьей попытке входа без доступа произойдет автоматическая блокировка до выяснения. Уведомление о попытке входа ушло на почту админу. Приятной игры", location: 'menu.php');
         }
     }
 
@@ -32,12 +27,12 @@ try {
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12"><?
-                        if ($admin1983->returnAdmin()) { ?>
-                            <? $site->PrintMiniLine() ?>
+                        if ($admin->setAdmin(admin: 1983)->returnAdmin()) { ?>
+                            <? Site::PrintMiniLine() ?>
                             <h5 class="text-info text-center">
                                 Разработчику
                             </h5>
-                            <? $site->PrintMiniLine() ?>
+                            <? Site::PrintMiniLine() ?>
                             <ul class="list-group">
                                 <li class="list-group-item">
                                     <a class="btn btn-block btn-dark" href="?a=adminLogi">Смотреть логи</a>
@@ -45,11 +40,11 @@ try {
                             </ul><?php
                         } ?>
                         <div class="clearfix"></div>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
                             Админка
                         </h5>
-                        <? $site->PrintMiniLine() ?>
+                        <? Site::PrintMiniLine() ?>
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <a class="btn btn-block btn-dark" href="?a=spisokUser"><span>Все пользователи</span></a>
@@ -65,16 +60,16 @@ try {
             break;
 
         case 'adminLogi':
-            if (!$admin1983->returnAdmin()) {
-                $site->adminLog($user->user('login'), "пытался зайти в админ логи разраба", 'admin1983');
-                $site->session_err("Вам сюда нельзя");
+            if ($admin->setAdmin(admin: 1983)->returnAdmin() == false) {
+                $site->adminLog($user->user(key: 'login'), text: "пытался зайти в админ логи разраба", type: 'admin1983');
+                Site::session_empty(type: 'error', text: "Вам сюда нельзя");
             }
             $adminLogs = $sql->getAll("select * from admin_log where tip = ?s order by id desc", 'admin1983');
             foreach ($adminLogs as $log) { ?>
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12">
-                            <?= $log['kto'] ?> | <?= $log['text'] ?> | <?= $log['gde'] ?> | <?= $log['r_time'] ?> | <?= $log['r_date'] ?><? $site->PrintMiniLine() ?>
+                            <?= Filter::clearFullSpecialChars(string: $log['kto']) ?> | <?= Filter::output(string: $log['text']) ?> | <?= $log['gde'] ?> | <?= $log['r_time'] ?> | <?= $log['r_date'] ?><? Site::PrintMiniLine() ?>
                         </div>
                     </div>
                 </div><?php
@@ -82,15 +77,15 @@ try {
             break;
 
         case 'redUser':
-            if (!$admin1983->returnAdmin()) {
-                $site->adminLog($user->user('login'), "пытался зайти в редактор юзера", 'admin1983');
-                $site->session_err("Вам сюда нельзя");
+            if ($admin->setAdmin(admin: 1983)->returnAdmin() == false) {
+                $site->adminLog(kto: $user->user(key: 'login'), text: "пытался зайти в редактор юзера", type: 'admin1983');
+                Site::session_empty(type: 'error', text: "Вам сюда нельзя");
             }
-            $userID = $filter->clearInt($_GET['id']);
+            $userID = Filter::clearInt(string: $_GET['id']);
             $redUser = $sql->getRow("select * from users where id = ?i limit ?i", $userID, 1);
 
             if (isset($_GET['enter'])) {
-                $login = $filter->clearString($_POST['login']);
+                $login = Filter::clearString(string: $_POST['login']);
             } else {
                 $ol = $sql->getAll("SELECT COLUMN_NAME, COLUMN_COMMENT, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?s;", 'users'); ?>
                 <div class="container">
@@ -119,17 +114,17 @@ try {
             <div class="container">
                 <div class="row">
                     <h3 class="text-center text-info">Список пользователей</h3><?
-                    $site->PrintMiniLine();
+                    Site::PrintMiniLine();
                     foreach ($allUser as $all) {
-                        if ($admin1983->returnAdmin()) { ?>
+                        if ($admin->setAdmin(admin: 1983)->returnAdmin()) { ?>
                             <div class="col-xs-9"><?
                         }
-                        if ($admin5->returnAdmin()) { ?>
+                        if ($admin->setAdmin(admin: 5)->returnAdmin()) { ?>
                             <div class="col-xs-12"><?
                         } ?>
                         <small class="orange"><?= $all['id'] ?>)</small>
                         <small class="orange"><a href="view.php?user=<?= $all['login'] ?>"><?= $all['login'] ?></a> :</small><?
-                        if ($admin1983->returnAdmin()) {
+                        if ($admin->setAdmin(admin: 1983)->returnAdmin()) {
                             echo " <small class='text-danger'>[{$all['slovo']}]</small> ";
                         } ?>
                         | <small class="text-warning"><?= $all['email'] ?></small>
@@ -138,12 +133,12 @@ try {
                         | <small class="yellow"><?= $all['gold'] ?> G</small>
                         |
                         </div><?
-                        if ($admin1983->returnAdmin()) { ?>
+                        if ($admin->setAdmin(admin: 1983)->returnAdmin()) { ?>
                             <div class="col-xs-3">
                                 <a class="btn btn-block btn-dark" href="?a=redUser&id=<?= $all['id'] ?>">Ред</a>
                             </div><?
                         }
-                        $site->PrintMiniLine();
+                        Site::PrintMiniLine();
                     } ?>
                 </div>
             </div><?php
@@ -157,7 +152,7 @@ try {
                 <?= $e->getMessage() ?>
             </h3>
             <p class="green">
-                До автоматической разблокировки осталось <?= $times->timeHours($user->user('block_time') - time()) ?>
+                До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?>
             </p>
         </div>
     </div>
@@ -428,7 +423,7 @@ $id=isset($_GET['id'])?_NumFilter($_GET['id']):NULL;
 $data  = _FetchAssoc("SELECT * FROM `user_reg` WHERE `id`='" . $id . "' LIMIT 1");
 $data_set  = _FetchAssoc("SELECT * FROM `user_set` WHERE `id`='" . $id . "' LIMIT 1");
 
-?><div class="block_zero">Возможные мульты игрока: <a href="view.php?smotr=<?=$data['id']?>"><?=$data['login']?></a></div><div class="mini-line"></div><?
+?><div class="block_zero">Возможные мульты игрока: <a href="view.php?smotr=<?=$data['id']?>"><?=$data['login']?></a></div><dformativ class="mini-line"></div><?
 
 $dubl_ip_browser=mysql_query("SELECT * FROM `user_reg` WHERE `browser`='".$data['browser']."'  AND `id`!='".$id."' ORDER BY `id` ASC");
 
