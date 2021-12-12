@@ -6,3 +6,6 @@
 *.sass
 .idea
 *.htaccess
+/admin
+admin.php
+moder.php
