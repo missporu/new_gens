@@ -24,9 +24,7 @@ if ($user->getUser())
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <a class="btn btn-block btn-success" href="moder">
-                            Модер - панель
-                        </a>
+                        <? Site::linkToSiteAdd('btn btn-block btn-success', '', 'moder', 'Модер - панель'); ?>
                     </div>
                 </div>
             </div><?php
@@ -37,12 +35,12 @@ if ($user->getUser())
     <div class="container">
         <div class="row">
             <div class="col-xs-6">
-                <a class="btn btn-primary btn-block" href="menu.php?a=exit">
-                    <img src="images/icons/exit.png" alt="Выход"/> Выход
+                <a class="btn btn-primary btn-block" href="//<?= Site::getDomen() ?>/menu.php?a=exit">
+                    <img src="//<?= Site::getDomen() ?>/images/icons/exit.png" alt="Выход"/> Выход
                 </a>
             </div>
             <div class="col-xs-6 text-right">
-                <a class="btn btn-primary btn-block" href="set.php">Настройки <img src="images/icons/settings.png"
+                <a class="btn btn-primary btn-block" href="//<?= Site::getDomen() ?>/set">Настройки <img src="//<?= Site::getDomen() ?>/images/icons/settings.png"
                                                                                    alt="Настройки"/></a>
             </div>
             <div class="clearfix"></div>

@@ -222,7 +222,13 @@ class Site
         if (is_string(value: $dataToggle) && trim(string: $dataToggle) != "" && strlen(string: trim(string: $dataToggle)) > 0) {
             $dataToggle = "data-toggle=\"{$dataToggle}\"";
         } ?>
-        <a href="<?= $link ?>" class="<?= $class ?>" <?= $dataToggle ?>><?= $text ?></a><?php
+        <a href="//<?= Site::getDomen() . "/" . $link ?>" class="<?= $class ?>" <?= $dataToggle ?>><?= $text ?></a><?php
+    }
+
+    public static function linkToWeb($class = "", $link = "", $text = "") {
+        if (is_string($text) && trim($text) <> "" && trim($link) <> "" && strlen(trim($link)) > 0) { ?>
+                <a href="//<?= $link ?>" class="<?= $class ?>" target="_blank"><?= $text ?></a><?php
+        }
     }
 
     public function getSwitch()
@@ -244,7 +250,7 @@ class Site
     public static function returnImage(string $class = 'img-responsive', string $src = '?', string $alt = "", string $text = "")
     { ?>
         <img class="<?= Filter::clearFullSpecialChars($class) ?>"
-             src="images/<?= Filter::clearFullSpecialChars($src) ?>"
+             src="//<?= Site::getDomen() ?>/images/<?= Filter::clearFullSpecialChars($src) ?>"
              alt="<?= Filter::clearFullSpecialChars($alt) ?>"/>
         <?= Filter::clearFullSpecialChars($text) ?><?php
     }

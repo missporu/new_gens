@@ -11,12 +11,12 @@
             <small>
                 <span id="server_time"><?= Times::setTime() ?></span> | <?= Times::setDate() ?> |<?
                 if ($user->getUser()) { ?>
-                    <b style="color: #fff;"><a href="online.php">Онлайн
-                        (<?php echo $sql->getOne("select count(id) from users where online > ?i", time() - 600); ?>)</a>
+                    <b style="color: #fff;">
+                        <? Site::linkToSiteAdd(link: 'online', text: "Онлайн (".RegUser::allOnline().")"); ?>
                     </b><?
                 } else { ?>
                     <b style="color: #fff;">
-                    Онлайн: <?php echo $sql->getOne("select count(id) from users where online > ?i", time() - 600); ?></b><?
+                    Онлайн: <?= RegUser::allOnline() ?></b><?
                 } ?>
             </small>
         </div>
@@ -38,7 +38,7 @@
         </div>
         <? Site::PrintMiniLine() ?>
         <div class="col-xs-12 text-center">
-            <p class="small">Разработка сайтов - <a href="//misspo.ru">misspo</a> &copy; 2016 - <?= date("Y"); ?>.</p>
+            <p class="small">Разработка сайтов - <? Site::linkToWeb('', 'misspo.ru', 'misspo'); ?> &copy; 2016 - <?= date("Y"); ?>.</p>
         </div>
         <? Site::PrintMiniLine() ?>
         <div class="col-xs-12 text-center small">
@@ -50,7 +50,7 @@
         </div>
     </div>
 </div>
-<script src="../js/moscow-time.js"></script>
+<script src="//<?= Site::getDomen() ?>/js/moscow-time.js"></script>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->

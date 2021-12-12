@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set('Asia/Yekaterinburg');
+date_default_timezone_set('Europe/Moscow');
 session_start();
 ob_start();
 $timeregen = microtime(as_float: TRUE);
@@ -11,13 +11,11 @@ require_once "sys.php"; ?>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description"
-          content="Новая браузерная онлайн-игра, в которую можно играть с компьютера и мобильного телефона!">
-    <meta name="keywords"
-          content="войнушка, онлайн-игра, игра онлайн, онлайн, игра, компьютера, мобильного, телефона, играть, браузерная, новая, игрок, ролевая, стратегия"/>
+    <meta name="description" content="Новая браузерная онлайн-игра, в которую можно играть с компьютера и мобильного телефона!">
+    <meta name="keywords" content="войнушка, онлайн-игра, игра онлайн, онлайн, игра, компьютера, мобильного, телефона, играть, браузерная, новая, игрок, ролевая, стратегия"/>
     <meta name="robots" content="all"/>
     <meta name="author" content="misspo">
-    <link rel="icon" href="/war-game.ico"><?php
+    <link rel="icon" href="//<?= Site::getDomen() ?>/war-game.ico"><?php
     $page = new Page();
     if (empty($title)) {
         $page->title = $page->name;

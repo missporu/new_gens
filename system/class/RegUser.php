@@ -213,4 +213,8 @@ class RegUser
             return true;
         } else return false;
     }
+
+    public static function allOnline() {
+        return (new SafeMySQL())->getOne("select count(id) from users where online > ?i", time() - 600);
+    }
 }

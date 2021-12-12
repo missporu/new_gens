@@ -55,10 +55,16 @@ $site->setSwitch(get: 'a'); ?>
             switch ($site->switch) {
                 default: ?>
                     <div class="col-xs-12">
-                    <img src="images/flags/<?= $user->user(key: 'side') ?>.png" alt="Флаг"/>
-                    <?= $user->user(key: 'login') ?> (<?= $user->user(key: 'lvl') ?> lvl)
-                    Ал. <?= number_format(num: $user->user_alliance + 1) ?>
-                    </div><?
+                        <img src="images/flags/<?= $user->user(key: 'side') ?>.png" alt="Флаг"/>
+                        <?= $user->user(key: 'login') ?> (<?= $user->user(key: 'lvl') ?> lvl)
+                        Ал. <?= number_format(num: $user->user_alliance + 1) ?>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-xs-12">
+                        Статус: <?= $user->user('status') ?>
+                    </div>
+
+                    <?
                     break;
 
                 case 'trofei':

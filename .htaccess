@@ -15,3 +15,5 @@ RewriteRule ^marketplace$ marketplace.php
 RewriteRule ^arena$ arena.php
 RewriteRule ^admin/$ admin.php
 RewriteRule ^moder$ moder.php
+RewriteRule ^set$ set.php
+RewriteRule ^online$ online.php

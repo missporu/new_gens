@@ -1,9 +1,13 @@
 <?php
 $title = 'Настройки';
 require_once('system/up.php');
+$user = new RegUser();
 $user->_Reg();
+$site = new Site();
 
-switch ($switch) {
+
+$site->setSwitch('a');
+switch ($site->switch) {
     default: ?>
         <a href="set.php?a=nick">Сменить имя</a> |
         <a href="set.php?a=flag">Сменить флаг </a><?php
