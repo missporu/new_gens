@@ -8,7 +8,7 @@ v.1.0.1 - уже рабочая с небольшими обновлениями
 
 <hr>
 developer: misspo<br>
-phone: 89194810550<br>
+phone: +7(919)48-10-550<br>
 e-mail: misspo.ru@gmail.com<br>
-Vk: https://vk.com/missporu
-production project: //newgame.misspo.ru
+Vk: https://vk.com/missporu<br>
+project production: //newgame.misspo.ru
