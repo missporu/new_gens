@@ -1,19 +1,16 @@
 <?php
 $title = 'Админ-панель';
-require_once 'system/up.php';
-$sql = new SafeMySQL();
+require_once __DIR__.'/system/up.php';
 $user = new RegUser();
+$user->_Reg();
+$sql = new SafeMySQL();
 $admin = new Admin();
 $site = new Site();
-
-$user->_Reg();
-$site->setSwitch(get: 'a');
 
 try {
     if($user->getBlock() and $admin->setAdmin(admin: 1983)->returnAdmin() == false) {
         throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
-
     if($user->user(key: 'prava') < 1983 || $user->user(key: 'prava') > 1983) {
         if ($user->user(key: 'prava') <> 5) {
             if($user->user(key: 'narushenie_admin') >= 1) {
@@ -26,7 +23,7 @@ try {
             Site::session_empty(type: 'error', text: "Нет доступа! На третьей попытке входа без доступа произойдет автоматическая блокировка до выяснения. Уведомление о попытке входа ушло на почту админу. Приятной игры", location: 'menu.php');
         }
     }
-
+    $site->setSwitch(get: 'a');
     switch ($site->switch) {
         default: ?>
             <div class="container">
@@ -39,8 +36,8 @@ try {
                             </h5>
                             <? Site::PrintMiniLine() ?>
                             <ul class="list-group">
-                                <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="?a=adminLogi">Смотреть логи</a>
+                                <li class="list-group-item"><?
+                                Site::linkToSiteSwitch(class: 'btn btn-block btn-dark', link: '?a=adminLogi', text: 'Смотреть логи'); ?>
                                 </li>
                             </ul><?php
                         } ?>
@@ -51,11 +48,11 @@ try {
                         </h5>
                         <? Site::PrintMiniLine() ?>
                         <ul class="list-group">
-                            <li class="list-group-item">
-                                <a class="btn btn-block btn-dark" href="?a=spisokUser"><span>Все пользователи</span></a>
+                            <li class="list-group-item"><?
+                                Site::linkToSiteSwitch(class: 'btn btn-block btn-dark', link: '?a=spisokUser', text: 'Все пользователи'); ?>
                             </li>
-                            <li class="list-group-item">
-                                <a class="btn btn-block btn-dark" href="?a=">?</a>
+                            <li class="list-group-item"><?
+                                Site::linkToSiteSwitch(class: 'btn btn-block btn-dark', link: '?a=add_news', text: 'Добавить новость'); ?>
                             </li>
                         </ul>
                     </div>
@@ -73,7 +70,8 @@ try {
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-12">
-                            <?= Filter::clearFullSpecialChars(string: $log['kto']) ?> | <?= Filter::output(string: $log['text']) ?> | <?= $log['gde'] ?> | <?= $log['r_time'] ?> | <?= $log['r_date'] ?><? Site::PrintMiniLine() ?>
+                            <?= Filter::clearFullSpecialChars(string: $log['kto']) ?> | <?= Filter::output(string: $log['text']) ?> | <?= $log['gde'] ?> | <?= $log['r_time'] ?> | <?= $log['r_date'] ?><?
+                            Site::PrintMiniLine(); ?>
                         </div>
                     </div>
                 </div><?php
@@ -88,7 +86,10 @@ try {
             $redUser = $sql->getRow("select * from users where id = ?i limit ?i", $_GET['id'], 1);
 
             if (isset($_POST['enter'])) {
-                $sql->query("update users set login = ?s, prava = ?i, email = ?s, ip = ?s, referal = ?i, sex = ?s, side = ?s, logo = ?s, fon = ?s, hp = ?i, mp = ?i, udar = ?i, max_hp = ?i, max_mp = ?i, max_udar = ?i, skill = ?i, exp = ?i, lvl = ?i, gold = ?i, baks = ?i, baks_hran = ?i, raiting = ?i, diplomat = ?i, diplomat_max = ?i, diplomat_cena = ?i, avatar = ?s, zvanie = ?s, zheton = ?i, uho = ?i, wins = ?i, loses = ?i, kills = ?i, dies = ?i, dohod = ?i, soderzhanie = ?i, chistaya = ?i, build_energy =?i, krit = ?i, uvorot = ?i, id_vrag = ?i, raiting_loses = ?i, raiting_wins = ?i, pomiloval = ?i, sanctions = ?i, sanction_status = ?i, donat_bonus = ?i, ofclub_veteran_chislo = ?i, news = ?i, unit_hp = ?i, refer_gold = ?i, refer_baks = ?i, slovo = ?s, block = ?i, block_time = ?i, ban = ?i, ban_time = ?i, narushenie = ?i, narushenie_admin = ?i, status = ?s where id = ?i", $_POST['login'], $_POST['prava'], $_POST['email'], $_POST['ip'], $_POST['referal'], $_POST['sex'], $_POST['side'], $_POST['logo'], $_POST['fon'], $_POST['hp'], $_POST['mp'], $_POST['udar'], $_POST['max_hp'], $_POST['max_mp'], $_POST['max_udar'], $_POST['skill'], $_POST['exp'], $_POST['lvl'], $_POST['gold'], $_POST['baks'], $_POST['baks_hran'], $_POST['raiting'], $_POST['diplomat'], $_POST['diplomat_max'], $_POST['diplomat_cena'], $_POST['avatar'], $_POST['zvanie'], $_POST['zheton'], $_POST['uho'], $_POST['wins'], $_POST['loses'], $_POST['kills'], $_POST['dies'], $_POST['dohod'], $_POST['soderzhanie'], $_POST['chistaya'], $_POST['build_energy'], $_POST['krit'], $_POST['uvorot'], $_POST['id_vrag'], $_POST['raiting_loses'], $_POST['raiting_wins'], $_POST['pomiloval'], $_POST['sanctions'], $_POST['sanction_status'], $_POST['donat_bonus'], $_POST['ofclub_veteran_chislo'], $_POST['news'], $_POST['unit_hp'], $_POST['refer_gold'], $_POST['refer_baks'], $_POST['slovo'], $_POST['block'], $_POST['block_time'], $_POST['ban'], $_POST['ban_time'], $_POST['narushenie'], $_POST['narushenie_admin'], $_POST['status'], $_GET['id']);
+                $sql->query("update users set login = ?s, prava = ?i, email = ?s, ip = ?s, side = ?s, logo = ?s, ");
+
+
+                //$sql->query("update users set login = ?s, prava = ?i, email = ?s, ip = ?s, referal = ?i, sex = ?s, side = ?s, logo = ?s, fon = ?s, hp = ?i, mp = ?i, udar = ?i, max_hp = ?i, max_mp = ?i, max_udar = ?i, skill = ?i, exp = ?i, lvl = ?i, gold = ?i, baks = ?i, baks_hran = ?i, raiting = ?i, diplomat = ?i, diplomat_max = ?i, diplomat_cena = ?i, avatar = ?s, zvanie = ?s, zheton = ?i, uho = ?i, wins = ?i, loses = ?i, kills = ?i, dies = ?i, dohod = ?i, soderzhanie = ?i, chistaya = ?i, build_energy =?i, krit = ?i, uvorot = ?i, id_vrag = ?i, raiting_loses = ?i, raiting_wins = ?i, pomiloval = ?i, sanctions = ?i, sanction_status = ?i, donat_bonus = ?i, ofclub_veteran_chislo = ?i, news = ?i, unit_hp = ?i, refer_gold = ?i, refer_baks = ?i, slovo = ?s, block = ?i, block_time = ?i, ban = ?i, ban_time = ?i, narushenie = ?i, narushenie_admin = ?i, status = ?s where id = ?i", $_POST['login'], $_POST['prava'], $_POST['email'], $_POST['ip'], $_POST['referal'], $_POST['sex'], $_POST['side'], $_POST['logo'], $_POST['fon'], $_POST['hp'], $_POST['mp'], $_POST['udar'], $_POST['max_hp'], $_POST['max_mp'], $_POST['max_udar'], $_POST['skill'], $_POST['exp'], $_POST['lvl'], $_POST['gold'], $_POST['baks'], $_POST['baks_hran'], $_POST['raiting'], $_POST['diplomat'], $_POST['diplomat_max'], $_POST['diplomat_cena'], $_POST['avatar'], $_POST['zvanie'], $_POST['zheton'], $_POST['uho'], $_POST['wins'], $_POST['loses'], $_POST['kills'], $_POST['dies'], $_POST['dohod'], $_POST['soderzhanie'], $_POST['chistaya'], $_POST['build_energy'], $_POST['krit'], $_POST['uvorot'], $_POST['id_vrag'], $_POST['raiting_loses'], $_POST['raiting_wins'], $_POST['pomiloval'], $_POST['sanctions'], $_POST['sanction_status'], $_POST['donat_bonus'], $_POST['ofclub_veteran_chislo'], $_POST['news'], $_POST['unit_hp'], $_POST['refer_gold'], $_POST['refer_baks'], $_POST['slovo'], $_POST['block'], $_POST['block_time'], $_POST['ban'], $_POST['ban_time'], $_POST['narushenie'], $_POST['narushenie_admin'], $_POST['status'], $redUser['id']);
                 Site::session_empty('ok', 'Ok!');
             } else {
                 $ol = $sql->getAll("SELECT COLUMN_NAME, COLUMN_COMMENT, COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ?s;", 'users'); ?>
@@ -147,6 +148,37 @@ try {
                     } ?>
                 </div>
             </div><?php
+            break;
+
+        case 'add_news':
+            if (isset($_POST['enter'])) {
+                $name = Filter::clearFullSpecialChars($_POST['name']);
+                $text = Filter::clearFullSpecialChars($_POST['komm']);
+                $sql->query("insert into news set 
+                     data = ?s, 
+                     time = ?s, 
+                     avtor = ?i, 
+                     tema = ?s, 
+                     text = ?s, 
+                     status = ?i",
+                     Times::setDate(),
+                     Times::setTime(),
+                     $user->user('prava'),
+                     $name,
+                     $text,
+                     1);
+                $sql->query("update users set news = ?i", 1);
+                Site::session_empty('ok', 'Новость добавлена!', '../news');
+            } else { ?>
+                <form action="?a=add_news" method="post">
+                    <input class="col-xs-12" type="text" name="name" placeholder="Название">
+                    <? Site::PrintMiniLine(); ?>
+                    <textarea class="col-xs-12" name="komm" required></textarea>
+                    <? Site::PrintMiniLine(); ?>
+                    <input class="btn btn-block btn-success" name="enter" type="submit" value="Добавить новость">
+                    <? Site::PrintMiniLine(); ?>
+                </form><?php
+            }
             break;
     }
 } catch (Throwable $e) { ?>
@@ -588,4 +620,4 @@ $data_setler = mysql_fetch_array($data_set); ?>
         break;
 }
 echo '</div>'; */
-require_once 'system/down.php';
+require_once __DIR__ . '/system/down.php';

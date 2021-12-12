@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Copyright (c) 2022.
+ * Autor: misspo
+ * Site: misspo.ru
+ * Phone: +7 (919) 48-10-550
+ * E-mail: misspo.ru@gmail.com
+ */
+
 use JetBrains\PhpStorm\NoReturn;
 
 class Site
@@ -19,8 +27,7 @@ class Site
 
     public $switch = null;
 
-    public function __construct()
-    {
+    public function __construct() {
         $siteStatus = (new SafeMySQL())->getRow("select * from setting_game where id = ?i", 1);
         try {
             if ($_SERVER['SCRIPT_NAME'] != '/index.php') {
@@ -35,16 +42,19 @@ class Site
             }
         } catch (Exception $e) { ?>
             <div class="text-center">
-            <p style="color: red">
-                <?= $e->getMessage(); ?>
-            </p>
+                <p style="color: red">
+                    <?= $e->getMessage(); ?>
+                </p>
             </div><?php
             exit();
         }
     }
 
-    public static function lineHrInContainer()
-    { ?>
+    /**
+     * container>row>col-xs-12>hr
+     * @link https://misspo.ru
+     */
+    public static function lineHrInContainer(): void { ?>
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
@@ -54,15 +64,16 @@ class Site
         </div><?php
     }
 
-    public static function PrintMiniLine()
-    { ?>
+    public static function PrintMiniLine() { ?>
         <div class="clearfix"></div>
         <div class="separ"></div>
         <div class="clearfix"></div><?php
     }
 
-    public static function fileName()
-    {
+    /**
+     * @return mixed|string
+     */
+    public static function fileName() {
         $fileName = $_SERVER['PHP_SELF'];
         $fileName = explode(separator: '/', string: $fileName);
         return $fileName[1];
@@ -71,40 +82,36 @@ class Site
     /**
      * @return mixed
      */
-    public static function getDomen(): mixed
-    {
+    public static function getDomen(): mixed {
         return $_SERVER['HTTP_HOST'];
     }
 
     /**
      * @return mixed
      */
-    public static function getUserAgent(): mixed
-    {
+    public static function getUserAgent(): mixed {
         return $_SERVER['HTTP_USER_AGENT'];
     }
 
     /**
+     * $_SERVER['SCRIPT_URI']
      * @return mixed
      */
-    public static function getScriptURI(): mixed
-    {
+    public static function getScriptURI(): mixed {
         return $_SERVER['SCRIPT_URI'];
     }
 
     /**
      * @return mixed
      */
-    public static function getServerAddrIP(): mixed
-    {
+    public static function getServerAddrIP(): mixed {
         return $_SERVER['SERVER_ADDR'];
     }
 
     /**
      * @return string
      */
-    public static function getServerAdmin(): string
-    {
+    public static function getServerAdmin(): string {
         $_SERVER['SERVER_ADMIN'] = "misspo.ru@gmail.com";
         return $_SERVER['SERVER_ADMIN'];
     }
@@ -112,8 +119,7 @@ class Site
     /**
      * @return string
      */
-    public static function getIp(): string
-    {
+    public static function getIp(): string {
         $keys = [
             'HTTP_CLIENT_IP',
             'HTTP_X_FORWARDED_FOR',
@@ -133,16 +139,14 @@ class Site
     /**
      * @return mixed
      */
-    public static function getBrowser(): mixed
-    {
+    public static function getBrowser(): mixed {
         return Filter::clearString($_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
      * @return mixed
      */
-    public static function getHttpReferer(): mixed
-    {
+    public static function getHttpReferer(): mixed {
         if (isset($_SERVER['HTTP_REFERER'])) {
             $referer = Filter::clearFullSpecialChars(string: $_SERVER['HTTP_REFERER']);
         } else {
@@ -151,13 +155,16 @@ class Site
         return $referer;
     }
 
-    public function errorLog($kto, $text, $type)
-    {
+    public function errorLog($kto, $text, $type) {
         (new SafeMySQL())->query("insert into logi set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", Filter::clearFullSpecialChars($kto), Filter::clearFullSpecialChars($text), Site::fileName(), Filter::clearFullSpecialChars($type), Times::setTime(), Times::setDate(), Site::getUserAgent(), Site::getIp());
     }
 
-    public function adminLog($kto, $text, $type)
-    {
+    /**
+     * @param $kto
+     * @param $text
+     * @param $type
+     */
+    public function adminLog($kto, $text, $type) {
         (new SafeMySQL())->query("insert into admin_log set kto = ?s, text = ?s, gde = ?s, tip = ?s, r_time = ?s, r_date = ?s, soft = ?s, ip = ?s", Filter::clearFullSpecialChars($kto), Filter::clearFullSpecialChars($text), Site::fileName(), Filter::clearFullSpecialChars($type), Times::setTime(), Times::setDate(), Site::getUserAgent(), Site::getIp());
     }
 
@@ -166,8 +173,7 @@ class Site
      * @param string $text
      * @param string $location
      */
-    public static function session_empty(string $type = "info", string $text = "", string $location = "?")
-    {
+    public static function session_empty(string $type = "info", string $text = "", string $location = '?') {
         if (!empty($text)) {
             $_SESSION[$type] = nl2br(string: $text);
         }
@@ -178,17 +184,15 @@ class Site
      * @param $location
      */
     #[NoReturn]
-    public static function _location($location)
-    {
-        header(header: "Location: " . Filter::clearFullSpecialChars(string: $location) . "");
+    public static function _location($location) {
+        header(header: "Location: " . $location . "");
         exit;
     }
 
     /**
      * @return mixed
      */
-    public static function getDateRus(): mixed
-    {
+    public static function getDateRus(): mixed {
         $d = date(format: "d F");
         $d = str_replace(search: "January", replace: "января", subject: $d);
         $d = str_replace(search: "February", replace: "февраля", subject: $d);
@@ -205,49 +209,96 @@ class Site
         return Filter::clearString(string: $d);
     }
 
-    public function lastDay()
-    {
+    public function lastDay() {
         $tomorrow = mktime(hour: 0, minute: 0, second: 0, month: date(format: "m"), day: date(format: "d") - 1, year: date(format: "Y"));
         $lastmonth = mktime(hour: 0, minute: 0, second: 0, month: date(format: "m") - 1, day: date(format: "d"), year: date(format: "Y"));
     }
 
     /**
-     * @param string $class
-     * @param string $dataToggle
-     * @param string $link
-     * @param string $text
+     * Add URL to the Site <br>
+     * Добавить урлы на этом же сайте
+     * @param string $class = ""
+     * @param string $dataToggle = ""
+     * @param string $link = "?"
+     * @param string $text = ""
      */
-    public static function linkToSiteAdd($class = "", $dataToggle = "", $link = "?", $text = ""): void
+    public static function linkToSiteAdd(string $class = "",
+                                         string $dataToggle = "",
+                                         string $link = "?",
+                                         string $text = ""): void
     {
-        if (is_string(value: $dataToggle) && trim(string: $dataToggle) != "" && strlen(string: trim(string: $dataToggle)) > 0) {
+        if (is_string(value: $dataToggle)
+            && trim(string: $dataToggle) != ""
+            && strlen(string: trim(string: $dataToggle)) > 0)
+        {
             $dataToggle = "data-toggle=\"{$dataToggle}\"";
         } ?>
         <a href="//<?= Site::getDomen() . "/" . $link ?>" class="<?= $class ?>" <?= $dataToggle ?>><?= $text ?></a><?php
     }
 
-    public static function linkToWeb($class = "", $link = "", $text = "") {
-        if (is_string($text) && trim($text) <> "" && trim($link) <> "" && strlen(trim($link)) > 0) { ?>
-                <a href="//<?= $link ?>" class="<?= $class ?>" target="_blank"><?= $text ?></a><?php
+    /**
+     * Add URL to switch() or to file (Site::fileName) <br>
+     * Добавить урлы в тот же файл или в switch
+     * @param string $class
+     * @param string $dataToggle
+     * @param string $link
+     * @param string $text
+     */
+    public static function linkToSiteSwitch (string $class = "btn btn-block",
+                                             string $dataToggle = "",
+                                             string $link = "?",
+                                             string $text = "")
+    {
+        if (is_string(value: $dataToggle)
+            && trim(string: $dataToggle) != ""
+            && strlen(string: trim(string: $dataToggle)) > 0)
+        {
+            $dataToggle = "data-toggle=\"{$dataToggle}\"";
+        } ?>
+        <a href="<?= Site::getScriptURI() . $link ?>" class="<?= $class ?>" <?= $dataToggle ?>><?= $text ?></a><?php
+    }
+
+    /**
+     * Add URL to left Web Site
+     * Добавить урлы левого сайта
+     * @param string $class
+     * @param string $link
+     * @param string $text
+     */
+    public static function linkToWeb(string $class = "",
+                                     string $link = "",
+                                     string $text = "")
+    {
+        if (is_string($text)
+            && trim($text) != ""
+            && trim($link) != ""
+            && strlen(trim($link)) > 0)
+        { ?>
+            <a href="//<?= $link ?>" class="<?= $class ?>" target="_blank"><?= $text ?></a><?php
         }
     }
 
-    public function getSwitch()
-    {
+    public function getSwitch() {
         return $this->switch;
     }
 
-    public function setSwitch($get)
-    {
+    /**
+     * @param $get
+     */
+    public function setSwitch($get) {
         $this->switch = isset($_GET[$get]) ? Filter::clearFullSpecialChars($_GET[$get]) : null;
     }
 
     /**
-     * @param string $class
-     * @param string $src
-     * @param string $alt
-     * @param string $text
+     * @param string $class = img-responsive
+     * @param string $src = ?
+     * @param string $alt = null
+     * @param string $text = null
      */
-    public static function returnImage(string $class = 'img-responsive', string $src = '?', string $alt = "", string $text = "")
+    public static function returnImage(string $class = 'img-responsive',
+                                       string $src = '?',
+                                       string $alt = "",
+                                       string $text = "")
     { ?>
         <img class="<?= Filter::clearFullSpecialChars($class) ?>"
              src="//<?= Site::getDomen() ?>/images/<?= Filter::clearFullSpecialChars($src) ?>"
@@ -255,8 +306,12 @@ class Site
         <?= Filter::clearFullSpecialChars($text) ?><?php
     }
 
-    public static function navig3($page, $get, $pages)
-    {
+    /**
+     * @param $page
+     * @param $get
+     * @param $pages
+     */
+    public static function navig3($page, $get, $pages) {
         $pervpage = "";
         $nextpage = "";
         $page3left = "";
@@ -320,10 +375,13 @@ class Site
         }
     }
 
-    public function pagin1($count)
-    {
+    /**
+     * @param $count
+     * @return float|int
+     */
+    public function pagin1($count) {
         if ($count > 0) {
-            $this->pages = ceil($count / 10);
+            $this->pages = ceil(num: $count / 10);
             if (isset($_GET['page'])) {
                 $this->page = abs(intval($_GET['page']));
             } else {

@@ -139,3 +139,16 @@ button.close {
     top: 20vh;
     padding-right: 0 !important;
 }
+
+.silver {
+    color: #c0c0c0;
+}
+
+.neft {
+    color: #4f1720;
+    text-shadow: 1px 1px 1px #c0c0c0;
+}
+
+.gaz {
+    color: #48D1CC;
+}

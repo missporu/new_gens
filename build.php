@@ -1,4 +1,164 @@
 <?php
+
+/*
+ * Copyright (c) 2022.
+ * Autor: misspo
+ * Site: misspo.ru
+ * Phone: +7 (919) 48-10-550
+ * E-mail: misspo.ru@gmail.com
+ */
+
+$title = 'Постройки';
+require_once __DIR__ . "/system/up.php";
+$user = new RegUser();
+$user->_Reg();
+
+$sql = new SafeMySQL();
+$site = new Site();
+$page = new Page();
+$page->setTitle($title);
+
+try {
+    if($user->getBlock()) {
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
+    }
+    $site->setSwitch(get: 'a'); ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="text-center"><?= $page->getTitle() ?></h2>
+            </div><?php
+            Site::PrintMiniLine();
+
+            switch ($site->switch) {
+                /**
+                 * Главная
+                 */
+                default:
+
+                    $my_build = $sql->getOne("select count(id) from build_user where id_user = ?i", $user->user(key: 'id'));
+                    $stroy = $sql->getOne("select count(time_stroy) from build_user where id_user = ?i and time_stroy > ?i", $user->user(key: 'id'), time());
+                    $bitton_text = "Улучшить";
+                    $class = "btn btn-block btn-danger";
+                    if ($stroy > 0) {
+                        $bitton_text = "Идет стройка...";
+                        $class = "btn btn-block btn-danger disabled";
+                    }
+                    if ($my_build > 0) {
+                        $my_build = $sql->getAll("select * from build_user where id_user = ?i", $user->user('id'));
+                        foreach ($my_build as $b) { ?>
+                            <div class="col-xs-4 text-center">
+                                <strong class="red"><?= $b['name'] ?></strong><br><?
+                                if ($b['bonus'] > 0) { ?>
+                                    bonus: <?= $b['bonus'] ?><br><?php
+                                }
+                                if ($b['time_stroy'] > time()) { ?>
+                                    <strong class="red">Строится <?= $b['lvl'] ?> ур.</strong><br><?php
+                                    echo "(" . Times::timeHours(time: $b['time_stroy'] - time()) . ")";
+                                } else { ?>
+                                    <strong class="red">Ур.: <?= $b['lvl'] ?></strong><br><?php
+                                } ?>
+                            </div>
+                            <div class="col-xs-4">
+                                <strong class="silver">Серебро: <?= $b['serebro'] ?></strong><br>
+                                <strong class="neft">Нефть: <?= $b['neft'] ?></strong><br>
+                                <strong class="gaz">Газ: <?= $b['gaz'] ?></strong><br>
+                                <strong class="yellow">Энергия: <?= $b['energy'] ?></strong><br>
+                            </div>
+                            <div class="col-xs-4 text-center"><?php
+                            Site::linkToSiteSwitch(class: $class, link: "?a=up&id={$b['id']}", text: $bitton_text); ?>
+                            </div><?php
+                            Site::PrintMiniLine();
+                        }
+                        Site::linkToSiteSwitch(class: 'btn btn-block btn-dark', link: '?a=stroy', text: 'Построить');
+                    } else {
+                        Site::linkToSiteSwitch(class: 'btn btn-block btn-dark', link: '?a=stroy', text: 'Построить');
+                    }
+                    break;
+
+
+                /**
+                 * Улучшения
+                 */
+                case 'up':
+
+                    break;
+
+                case 'stroy': ?>
+                    <div class="col-xs-12"><?php
+                        $ee = $sql->query("select * from build where tip = ?i", 1);
+
+                        $stroy = $sql->getOne("select count(time_stroy) from build_user where id_user = ?i and time_stroy > ?i", $user->user(key: 'id'), time());
+                        $bitton_text = "Построить";
+                        $class = "btn btn-block btn-danger";
+                        if ($stroy > 0) {
+                            $bitton_text = "Идет стройка...";
+                            $class = "btn btn-block btn-danger disabled";
+                        }
+
+                        while ($w = $sql->fetch($ee)) {
+                            $ss = $sql->getRow("select * from build_user where id_user = ?i and id_build = ?i", $user->user(key: 'id'), $w['id']);
+                            if (!is_array($ss)) { ?>
+                                <div class="col-xs-4 text-center">
+                                    <strong class="red"><?= $w['name'] ?></strong><br><?
+                                    if ($w['bonus'] > 0) { ?>
+                                        Бонус: <?= $w['bonus'] ?><br><?php
+                                    } ?>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong class="silver">Серебро: <?= $w['serebro'] ?></strong><br>
+                                    <strong class="neft">Нефть: <?= $w['neft'] ?></strong><br>
+                                    <strong class="gaz">Газ: <?= $w['gaz'] ?></strong><br>
+                                    <strong class="yellow">Энергия: <?= $w['energy'] ?></strong><br>
+                                </div>
+                                <div class="col-xs-4 text-center">
+                                <? Site::linkToSiteSwitch(class: $class, link: "?a=build&id={$w['id']}", text: $bitton_text); ?>
+                                </div><?php
+                                Site::PrintMiniLine();
+                            }
+                        } ?>
+                    </div><?php
+                    break;
+
+
+                /**
+                 * Стройка
+                 */
+                case 'build':
+                    $id = Filter::clearInt($_GET['id']);
+                    $build = $sql->getRow("select * from build where id = ?i limit ?i", $id, 1);
+
+                    if ($build) {
+                        $my_build = $sql->getRow("select * from build_user where id_build = ?i and id_user = ?i limit ?i", $build['id'], $user->user('id'), 1);
+                        if ($my_build) {
+                            Site::session_empty(text: 'Это здание уже построено!');
+                        }
+                        $sql->query("insert into build_user set id_build = ?i, id_user = ?i, name = ?s, tip = ?i, lvl = ?i, time_up = ?i, bonus = ?i, serebro = ?i, neft = ?i, gaz = ?i, energy = ?i, ku = ?i, time_stroy = ?i", $build['id'], $user->user('id'), $build['name'], $build['tip'], 1, $build['time_up'], $build['bonus'], $build['serebro'], $build['neft'], $build['gaz'], $build['energy'], $build['ku'], time()+$build['time_up']);
+                        Site::session_empty('ok', 'Вы начали стройку!', '?');
+                    } else {
+                        Site::session_empty('error', 'Нет такого здания!', '?');
+                    }
+                    break;
+            } ?>
+        </>
+    </div><?php
+} catch (Exception $e) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="red">
+                <?= $e->getMessage() ?>
+            </h3>
+            <p class="green">
+                До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?>
+            </p>
+        </div>
+    </div>
+    </div><?php
+}
+require_once __DIR__ . "/system/down.php";
+/**
+<?php
 $title = 'Постройки';
 require_once('system/up.php');
 _Reg();
@@ -14,6 +174,8 @@ switch ($_GET['case']) {
         }
 ?><div class="menuList"><li><a href="build.php?case=pokupka&tip=1"><img src="images/icons/arrow.png" alt="*"/>Доходные</a></li><li><a href="build.php?case=pokupka&tip=2"><img src="images/icons/arrow.png" alt="*"/>Защитные</a></li><li><a href="build.php?case=pokupka&tip=3"><img src="images/icons/arrow.png" alt="*"/>Энергитические</a></li></div><div class="mini-line"></div><ul class="hint"><li>Стоимость каждой следующей постройки одного вида после покупки увеличивается от изначальной ее стоимости на 10%.</li><li>С достижением новых уровней открывается новая постройка, доступная к строительству.</li><li>Постройки невозможно уничтожить или удалить.</li><li>В игре нет возможности строить более одной энергетической постройки одного вида.</li></ul></div></div></div><?
         break;
+ *
+ *
     case 'pokupka':
         $tip = _NumFilter($_GET['tip']);
         if ($tip < 1 OR $tip > 3) {
@@ -73,10 +235,9 @@ switch ($_GET['case']) {
             $_SESSION['ok'] = 'Постройка успешно завершена,<br/>построено ' . ($i - 1) . ' ед.';
             header('Location: build.php?case=pokupka&tip=' . $data_pokupka['tip'] . '');
             exit();
-        }
-?><div class="main"><div class="block_zero"><span style="color: #999;"><small><?php
-        if ($tip == 1) { 
-?>
+        } ?>
+        <div class="main"><div class="block_zero"><span style="color: #999;"><small><?php
+        if ($tip == 1) { ?>
             Стройте больше этих построек, чтобы повысить Вашу прибыль и покрывать расходы на технику.
             </div>
             <div class="dot-line"></div>
@@ -123,4 +284,4 @@ switch ($_GET['case']) {
         break;
 }
 require_once('system/down.php');
-?>
+*/

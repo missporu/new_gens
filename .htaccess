@@ -17,3 +17,9 @@ RewriteRule ^admin/$ admin.php
 RewriteRule ^moder$ moder.php
 RewriteRule ^set$ set.php
 RewriteRule ^online$ online.php
+RewriteRule ^pers$ pers.php
+RewriteRule ^view$ view.php
+RewriteRule ^lab$ lab.php
+RewriteRule ^feet$ feet.php
+RewriteRule ^build$ build.php
+RewriteRule ^reiting$ reiting.php

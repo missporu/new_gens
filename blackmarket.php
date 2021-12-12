@@ -8,7 +8,6 @@ $site = new Site();
 $site->setSwitch(get: 'a');
 $user->_Reg();
 
-
 switch ($site->switch) {
     default: ?>
         <div class="container">
@@ -46,7 +45,7 @@ switch ($site->switch) {
                                 </div>
                                 <div class="modal-footer">
                                     <div class="col-xs-12"><?
-                                        Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', dataToggle: '', link: '?a=marketVars', text: 'Перейти'); ?>
+                                        Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', link: '?a=marketVars', text: 'Перейти'); ?>
                                     </div>
                                 </div>
                             </div><!-- /.modal-content -->
@@ -67,6 +66,7 @@ switch ($site->switch) {
                                 </div>
                                 <div class="modal-footer">
                                     <div class="col-xs-12">
+                                        <? Site::linkToSiteSwitch('btn btn-block btn-minidark', '', '?a=specGroup', 'Перейти'); ?>
                                         <a class="btn btn-block btn-minidark" href="?a=specGroup">Перейти</a>
                                     </div>
                                 </div>
@@ -88,7 +88,7 @@ switch ($site->switch) {
                                 </div>
                                 <div class="modal-footer">
                                     <div class="col-xs-12"><?
-                                        Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', dataToggle: '', link: '?a=laboratory', text: 'Перейти'); ?>
+                                        Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', link: '?a=laboratory', text: 'Перейти'); ?>
                                     </div>
                                 </div>
                             </div><!-- /.modal-content -->
@@ -184,7 +184,7 @@ switch($_GET['case']) {
 			exit();
 		} elseif($_GET['log']==20) {
 			mysql_query("UPDATE `user_set` SET `gold`=`gold`-'" . $sum . "' WHERE `id`='" . $user_id . "' LIMIT 1");
-			mysql_query("UPDATE `user_naemniki` SET `time_up`='" . (time()+259200) . "', `status`='1' WHERE `id_user`='" . $user_id . "' AND `id_naemnik`='" . $naem . "' IMIT 1");
+			mysql_query("UPDATE `user_naemniki` SET `time_up`='" . (time()+259200) . "', `status`='1' WHERE `id_user`='" . $user_id . "' AND `id_naemnik`='" . $naem . "' LIMIT 1");
 			mysql_query("INSERT INTO `logi`(`id`, `id_user`, `text`, `tip`, `time`) VALUES (NULL,'".$set['id']."','".$logi_text_naem."','1',NULL)");
 			$_SESSION['ok'] = 'Вы наняли наёмника на 3 дня!';
 			header('Location: blackmarket.php?case=naemniki');

@@ -1,39 +1,40 @@
 <?php
 $title = "Вход";
-require_once './system/up.php';
+require_once __DIR__ . '/system/up.php';
 $user = new RegUser();
+$user->_noReg();
 $sql = new SafeMySQL();
 $site = new Site();
 
-$user->_noReg();
 
-echo'<div class="cont">';
-    if (isset($_POST['send'])) {
-        $name = Filter::clearFullSpecialChars(string: trim(string: $_POST['login']));
-        $pass = Filter::clearFullSpecialChars(string: $_POST['pass']);
+if (isset($_POST['send'])) {
+    $name = Filter::clearFullSpecialChars(string: trim(string: $_POST['login']));
+    $pass = Filter::clearFullSpecialChars(string: $_POST['pass']);
 
-        if (empty($name) || trim(string: $name) == "" || strlen(string: trim(string: $name)) < 3) {
-            Site::session_empty(type: 'error', text: "Не заполнено поле логин");
-        }
+    if (empty($name) || trim(string: $name) == "" || strlen(string: trim(string: $name)) < 3) {
+        Site::session_empty(type: 'error', text: "Не заполнено поле логин");
+    }
 
-        if (empty($pass) || trim(string: $pass) == "" || strlen(string: trim(string: $pass)) < 5) {
-            Site::session_empty(type: 'error', text: "Не заполнено поле пароль");
-        }
+    if (empty($pass) || trim(string: $pass) == "" || strlen(string: trim(string: $pass)) < 5) {
+        Site::session_empty(type: 'error', text: "Не заполнено поле пароль");
+    }
 
-        $usr = $sql->getRow("select pass, ip, login from users where login = ?s limit ?i", $name, 1);
-        $hash = $usr['pass'];
-        $pass_get = password_verify(password: $pass, hash: $hash);
-        $ip = Site::getIp();
+    $usr = $sql->getRow("select id, pass, ip, login from users where login = ?s limit ?i", $name, 1);
+    $st_ip = $usr['ip'];
+    $hash = $usr['pass'];
+    $pass_get = password_verify(password: $pass, hash: $hash);
+    $ip = Site::getIp();
 
-        if ($pass_get == TRUE and $name = $usr['login']) {
-            setcookie(name: 'login', value: $name, expires_or_options: time() + 86400 * 365, path: '/');
-            setcookie(name: 'IDsess', value: $hash, expires_or_options: time() + 86400 * 365, path: '/');
-            Site::session_empty(type: 'info', text: "Добро пожаловать!<br>Текущий ip {$ip}, последний вход был с {$usr['ip']}", location: "menu.php");
-        } else {
-            $site->adminLog(kto: $_POST['login'], text: "пытался зайти на сайт {$pass}", type: 'admin1983');
-            Site::session_empty(type: 'error', text: "Неверные данные");
-        }
-    } ?>
+    if ($pass_get == TRUE and $name = $usr['login']) {
+        setcookie(name: 'login', value: $name, expires_or_options: time() + 86400 * 365, path: '/');
+        setcookie(name: 'IDsess', value: $hash, expires_or_options: time() + 86400 * 365, path: '/');
+        $sql->query("update users set ip = ?s where id = ?i limit ?i", $ip, $usr['id'], 1);
+        Site::session_empty(type: 'info', text: "Добро пожаловать!<br>Текущий ip {$ip}, последний вход был с {$st_ip}", location: "menu");
+    } else {
+        $site->adminLog(kto: $_POST['login'], text: "пытался зайти на сайт {$pass}", type: 'admin1983');
+        Site::session_empty(type: 'error', text: "Неверные данные");
+    }
+} ?>
     <div class="container">
         <div class="row">
             <div class="col-md-12 form-login">
@@ -54,7 +55,8 @@ echo'<div class="cont">';
                             <label for="inputPassword"><i class="fa fa-lock"></i></label>
                         </div>
                         <div class="col-xs-11">
-                            <input type="password" class="form-control" id="inputPassword" name="pass" placeholder="Пароль">
+                            <input type="password" class="form-control" id="inputPassword" name="pass"
+                                   placeholder="Пароль">
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,4 +84,4 @@ echo'<div class="cont">';
     </div>
 </div>
 <div class="clearfix"></div><?
-require_once 'system/down.php';
+require_once __DIR__ . '/system/down.php';

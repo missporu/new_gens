@@ -11,6 +11,7 @@ $user->_noReg(); ?>
             <p class="lead text-info">Oнлайн игра для твоего мобильного!</p>
             <p class="text-warning">Построй свою армию и приведи её к победе любыми способами!</p>
             <p class="text-warning">Тысячи генералов уже ведут военные действия! Не упусти свой шанс!</p>
+            <p class="text-info">В игре уже <?= $sql->getOne("select count(id) from users"); ?> игроков!</p>
         </div>
         <div class="clearfix"></div><div class="separ"></div>
         <div class="col-xs-12">

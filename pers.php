@@ -1,11 +1,12 @@
 <?php
 $title = 'Профиль';
-require_once "system/up.php";
-$user = new RegUser();
-$site = new Site();
+require_once __DIR__."/system/up.php";
 
+$user = new RegUser();
 $user->_Reg();
-$site->setSwitch(get: 'a'); ?>
+
+$sql = new SafeMySQL();
+$site = new Site(); ?>
 
     <div class="container">
         <div class="row">
@@ -50,37 +51,90 @@ $site->setSwitch(get: 'a'); ?>
 
 <? Site::lineHrInContainer() ?>
     <div class="container">
-    <div class="row">
-        <div class="col-xs-12"><?php
-            switch ($site->switch) {
-                default: ?>
-                    <div class="col-xs-12">
-                        <img src="images/flags/<?= $user->user(key: 'side') ?>.png" alt="Флаг"/>
-                        <?= $user->user(key: 'login') ?> (<?= $user->user(key: 'lvl') ?> lvl)
-                        Ал. <?= number_format(num: $user->user_alliance + 1) ?>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="col-xs-12">
-                        Статус: <?= $user->user('status') ?>
-                    </div>
+        <div class="row">
+            <div class="col-xs-12"><?php
+                $site->setSwitch(get: 'a');
+                switch ($site->switch) {
+                    default: ?>
+                        <div class="col-xs-4">
+                            <img src="images/flags/<?= $user->user(key: 'side') ?>.png" alt="Флаг"/>
+                            <?= $user->user(key: 'login') ?>
+                        </div>
+                        <div class="col-xs-4 text-center">
+                            <b class="text-info"><i class="fa fa-bar-chart" aria-hidden="true"></i> <?= $user->getRaiting($user->user('id')) ?></b> | <b class="text-warning"><i class="fa fa-users" aria-hidden="true"></i> <?= number_format(num: $user->user_alliance + 1) ?></b>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <b class="text-danger"><i class="fa fa-bullhorn" aria-hidden="true"></i> <?= $user->user(key: 'status') ?></b>
+                        </div>
+                        <? Site::PrintMiniLine(); ?>
+                        <div class="col-xs-4"><?
+                            if ($user->user('avatar') == 0) {
+                                Site::returnImage(src: 'usersAvatars/noFoto.jpg', alt: 'ava');
+                            } else {
+                                Site::returnImage(src: 'usersAvatars/'.$user->user('avatar'), alt: 'ava');
+                            } ?>
+                        </div>
+                        <div class="col-xs-8">
+                            <p class="green">
+                                <i class="fa fa-usd" aria-hidden="true"></i> Баксов:
+                                <span class="pull-right"><?= $user->user('baks') ?></span>
+                            </p>
+                            <p class="silver">
+                                <i class="fa fa-codepen" aria-hidden="true"></i> Серебра:
+                                <span class="pull-right"><?= $user->user('silver') ?></span>
+                            </p>
+                            <p class="neft">
+                                <i class="" aria-hidden="true">&#128738;</i> Нефти:
+                                <span class="pull-right"><?= $user->user('neft') ?></span>
+                            </p>
+                            <p class="gaz">
+                                <i class="fa fa-fire" aria-hidden="true"></i> Газа:
+                                <span class="pull-right"><?= $user->user('gaz') ?></span>
+                            </p>
+                            <p class="yellow">
+                                <i class="fa fa-battery-half" aria-hidden="true"></i> Энергии:
+                                <span class="pull-right"><?= $user->user('energy') ?></span>
+                            </p>
+                            <p class="yellow">
+                                <i class="fa fa-money" aria-hidden="true"></i> Денег: <i class="text-info"><? Site::linkToSiteAdd(class: 'red', link: 'bank', text: '[Пополнить]'); ?></i>
+                                <span class="pull-right"><?= $user->user('gold') ?></span>
+                            </p>
+                            <p>
+                                <i class="fa fa-bar-chart" aria-hidden="true"></i> Рейтинг:
+                                <span class="pull-right"><?= $user->getRaiting($user->user('id')) ?></span>
+                            </p>
+                            <p>
+                                <i class="fa fa-users" aria-hidden="true"></i> Альянс:
+                                <span class="pull-right"><?= number_format(num: $user->user_alliance + 1) ?></span>
+                            </p>
+                            <p>
+                                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Побед:
+                                <span class="pull-right"><?= $user->user('wins') ?></span>
+                            </p>
+                            <p>
+                                <i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Поражений:
+                                <span class="pull-right"><?= $user->user('loses') ?></span>
+                            </p>
+                        </div><?php
+                        break;
 
-                    <?
-                    break;
+                    /* ТРОФЕИ */
+                    case 'trofei':
+                        echo "Трофеи в разработке.";
+                        break;
 
-                case 'trofei':
-                    echo "Трофеи в разработке.";
-                    break;
+                    /* СКЛАД */
+                    case 'sklad':
+                        echo "Склад в разработке";
+                        break;
 
-                case 'sklad':
-                    echo "Склад в разработке";
-                    break;
-
-                case 'navik':
-                    echo "Навыки в разработке";
-                    break;
-            } ?>
+                    /* НАВЫКИ */
+                    case 'navik':
+                        echo "Навыки в разработке";
+                        break;
+                } ?>
+            </div>
         </div>
-    </div>
     </div><?php
 /*
 switch ($_GET['case']) {
@@ -99,21 +153,6 @@ $uho = '_1';
 $uho = '_1';
 } else {
 $uho = FALSE;
-}
-if ($set['prava']>=4) {
-    if (isset($_POST['zp_sebe'])) {
-        $zipp_text = 'Выдал зп персонажу '.$set['user'].' в кол-ве 250 золота';
-        mysql_query("UPDATE `user_set` SET `gold`=`gold`+250 WHERE `id` = '".$set['id']."' LIMIT 1");
-        mysql_query("INSERT INTO `admin_logi` SET `id_user`='".$set['id']."', `user`='".$set['user']."', `text`='".$zipp_text."' ");
-        $_SESSION['ok'] = 'Вы успешно выдали себе 250 золота';
-        header("Location: ?");
-        exit();
-    } else { ?>
-        Персонаж <?=$set['user'] ?>
-        <form method="POST" action="<?php echo $SCRIPT_NAME ?>">
-            <input type="submit" name="zp_sebe" value="Выдать з/п">
-        </form><br><hr><?php
-    }
 }
 echo'<table width="100%"><tr><td width="25%">';
 
@@ -822,17 +861,5 @@ case 'pokupka_navik':
             </form><?php 
         } // end of form
     break;
-
-
-
-
-
-
-
-
-
-
-
-
 } */
-require_once('system/down.php');
+require_once __DIR__.'/system/down.php';

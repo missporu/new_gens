@@ -49,6 +49,31 @@ try {
 
                         <? Site::PrintMiniLine() ?>
                         <h5 class="text-info text-center">
+                            База
+                        </h5>
+                        <? Site::PrintMiniLine() ?>
+                        <div class="col-xs-12">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'build', text: 'Постройки') ?>
+                                </li><?php
+                                Site::PrintMiniLine(); ?>
+                                <li class="list-group-item">
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'lab', text: 'Наука') ?>
+                                </li><?php
+                                Site::PrintMiniLine(); ?>
+                                <li class="list-group-item">
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'feet', text: 'Армия') ?>
+                                </li><?php
+                                Site::PrintMiniLine(); ?>
+                                <li class="list-group-item">
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: '?', text: 'Оборона') ?>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <? Site::PrintMiniLine() ?>
+                        <h5 class="text-info text-center">
                             Персонаж
                         </h5>
                         <? Site::PrintMiniLine() ?>
@@ -61,9 +86,7 @@ try {
                                     Site::PrintMiniLine();
                                 } ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="pers.php">
-                                        <span>Профиль</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'pers', text: 'Профиль') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
@@ -105,11 +128,21 @@ try {
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'help', text: 'Поддержка') ?>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'reiting', text: 'Рейтинги') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'news', text: 'Новости') ?>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'help', text: 'Поддержка') ?>
+                                </li>
+                                <? Site::PrintMiniLine() ?>
+                                <li class="list-group-item"><?
+                                    if ($user->user('news') == 1) {
+                                        $class = "btn btn-block btn-warning";
+                                    } else {
+                                        $class = "btn btn-block btn-dark";
+                                    }
+                                    ?>
+                                    <? Site::linkToSiteAdd(class: $class, link: 'news', text: '<i class="fa fa-rss" aria-hidden="true"></i> Новости') ?>
                                 </li>
                             </ul>
                         </div>
@@ -228,4 +261,4 @@ try {
         </div>
     </div><?php
 }
-require_once ('system/down.php');
+require_once 'system/down.php';

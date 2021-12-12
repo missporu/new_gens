@@ -14,26 +14,29 @@ try {
 
     if (isset($_GET['user'])) {
         $smott = isset($_GET['user']) ? Filter::clearFullSpecialChars(string: $_GET['user']) : null;
-        if ($smott != null) {
-            $smotr = $sql->getRow("select * from users where login = ?s limit ?i", $smott, 1);
-        }
+        if ($smott != false || $smott != null) {
+            $smotri = $sql->getOne("select count(id) from users where login = ?s limit ?i", $smott, 1);
+            if ($smotri == 1) {
+                $smotr = $sql->getRow("select * from users where login = ?s limit ?i", $smott, 1);
+            } else {
+                Site::session_empty(type: 'error', text: 'Ошибка! Такого пользователя нет!', location: 'menu');
+            }
+        } else {}
     }
 
-    $site->setSwitch('a');
-
+    $site->setSwitch(get: 'a');
     switch ($site->switch) {
         default: ?>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
-                        <p>
-                            <?= $smotr['login'] ?> | <?= $smotr['lvl'] ?> lvl
-                        </p>
+                        <p><?= $smotr['login'] ?></p>
                     </div>
                 </div>
             </div><?php
+            break;
     }
-} catch (Exception $e) {?>
+} catch (Exception $e) { ?>
     <div class="container">
     <div class="row">
         <div class="col-xs-12 text-center">
@@ -45,9 +48,6 @@ try {
     </div>
     </div><?php
 }
-
-
-
 /*
 if ($set['block']==1) {
     header("Location: blok.php");

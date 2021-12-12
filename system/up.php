@@ -1,5 +1,5 @@
 <?php
-require_once('head.php');
+require_once 'head.php';
 Site::lineHrInContainer(); ?>
 <div class="container">
     <div class="row">
@@ -25,13 +25,34 @@ if ($user->getUser()) { ?>
             <div class="col-xs-12 text-center">
                 <ul class="list-inline">
                     <li class="text-info">
-                        <?= $user->user(key: 'lvl') ?> lvl
+                        <?= $user->getRaiting($user->user('id')) ?> <i class="fa fa-bar-chart" aria-hidden="true"></i>
                     </li>
-                    <li class="green">
-                        <?= $user->user(key: 'baks') ?> <? imageBaks() ?>
+                    <li>
+                        <a class="green" href="pers"><?= $user->user(key: 'baks') ?> <i class="fa fa-usd" aria-hidden="true"></i></a>
                     </li>
-                    <li class="yellow">
-                        <?= $user->user(key: 'gold') ?> <? imageGold() ?>
+                    <li>
+                        <a class="silver" href="pers"><?= $user->user(key: 'silver') ?> <i class="fa fa-codepen" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a class="neft" href="pers"><?= $user->user(key: 'neft') ?> <i class="" aria-hidden="true">&#128738;</i></a>
+                    </li>
+                    <li>
+                        <a class="gaz" href="pers"><?= $user->user(key: 'gaz') ?> <i class="fa fa-fire" aria-hidden="true"></i></a>
+                    </li>
+                    <li><?php
+                        if ($user->user(key: 'energy') <= 0) {
+                            $fa = "fa-battery-empty";
+                        } elseif ($user->user(key: 'energy') <= 500) {
+                            $fa = "fa-battery-quarter";
+                        } elseif ($user->user(key: 'energy') <= 5000) {
+                            $fa = "fa-battery-half";
+                        } elseif ($user->user(key: 'energy') <= 15000) {
+                            $fa = "fa-battery-quarters";
+                        } else $fa = "fa-battery-full"; ?>
+                        <a class="yellow" href="pers"><?= $user->user(key: 'energy') ?> <i class="fa <?= $fa ?>" aria-hidden="true"></i></a>
+                    </li>
+                    <li>
+                        <a class="yellow" href="bank"><?= $user->user(key: 'gold') ?> <i class="fa fa-money" aria-hidden="true"></i></a>
                     </li>
                 </ul>
             </div>
@@ -81,5 +102,5 @@ if (isset($_SESSION['ok'])) { ?>
     $_SESSION['ok'] = NULL;
 }
 if ($user->getUser()) {
-    $sql->query("update users set mesto = ?s where id = ?i limit ?i", $page->title, $user->user('id'), 1);
+    $sql->query("update users set mesto = ?s where id = ?i limit ?i", $page->title, $user->user(key: 'id'), 1);
 }

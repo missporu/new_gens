@@ -21,7 +21,7 @@ require_once "sys.php"; ?>
         $page->title = $page->name;
     } else $page->setTitle($title);
 
-    echo '<title>' . $page->title . '</title>'; ?>
+    echo '<title>' . $page->title . ' </title>'; ?>
 
     <meta property="og:title" content="<?= $page->title ?>"/>
     <meta property="og:description"

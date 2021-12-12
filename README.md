@@ -12,3 +12,13 @@ phone: +7(919)48-10-550<br>
 e-mail: misspo.ru@gmail.com<br>
 Vk: https://vk.com/missporu<br>
 project production: //newgame.misspo.ru
+
+<hr>
+
+торговля для $ (бывшие альянсы - каждый член ала +10$/час)
+
+бонусы от зданий :
+- серебро
+- нефть
+- газ
+- энергия

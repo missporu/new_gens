@@ -1,15 +1,16 @@
 <?php
 $title = 'Онлайн';
-require_once('system/up.php');
-$site = new Site();
+require_once __DIR__.'/system/up.php';
 $user = new RegUser();
 $user->_Reg();
 $sql = new SafeMySQL();
+$site = new Site();
 
 try {
     if($user->getBlock()) {
         throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
+
     $admin = new Admin(); ?>
     <div class="container">
         <div class="row">
@@ -17,13 +18,12 @@ try {
                 <h3 class="text-center text-info"><?= $page->title ?></h3>
             </div>
             <div class="clearfix"></div><?php
-            $online_int = $sql->getOne("select count(id) from users where online > ?i", time()-600);
-            if($online_int > 0) {
+            if (RegUser::allOnline() > 0) {
                 $online = $sql->getAll("select mesto, login, id from users where online > ?i order by id desc", time()-600);
                 foreach ($online as $onl) {
                     Site::PrintMiniLine(); ?>
                     <div class="col-xs-6">
-                        <a href="view.php?user=<?= $onl['login'] ?>"><?= $onl['login'] ?></a>
+                        <a href="view?user=<?= $onl['login'] ?>"><?= $onl['login'] ?></a>
                     </div>
                     <div class="col-xs-6 text-right">
                         <?= $onl['mesto'] ?>
@@ -173,4 +173,4 @@ case 'search':
         ?><div class="mini-line"></div><div class="block_zero">Введите никнейм:<form action="online.php?case=search" method="post"><input class="text" type="text" name="login" size="30"/><br/><span class="btn"><span class="end"><input class="label" type="submit" name="send" value="Найти"></span></span> </a></form></div><div class="mini-line"></div><ul class="hint"><li>Здесь можно найти нужного игрока по его никнейму.</li></div><?        
         break;
 } */
-require_once('system/down.php');
+require_once __DIR__. '/system/down.php';

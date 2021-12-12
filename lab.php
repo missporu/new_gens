@@ -1,9 +1,18 @@
 <?php
-$title = 'Арена';
+/*
+ * Copyright (c) 2022.
+ * Autor: misspo
+ * Site: misspo.ru
+ * Phone: +7 (919) 48-10-550
+ * E-mail: misspo.ru@gmail.com
+ */
+
+$title = 'Лаборатория';
 require_once "system/up.php";
 $user = new RegUser();
 $user->_Reg();
 
+$sql = new SafeMySQL();
 $site = new Site();
 $page = new Page();
 $page->setTitle($title);
@@ -14,19 +23,21 @@ try {
     }
     $site->setSwitch(get: 'a'); ?>
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12">
-                <h2 class="text-center"><?= $page->getTitle() ?></h2>
-            </div><?php
-    switch ($site->switch) {
-        default:
-            Site::PrintMiniLine();
-            Site::linkToSiteSwitch(link: '?a=123', text: '123');
-            break;
+        <div class="row"><?php
+            switch ($site->switch) {
+                default: ?>
+                    <div class="col-xs-12">
+                        <h2 class="text-center"><?= $page->getTitle() ?></h2>
+                    </div><?php Site::PrintMiniLine(); ?>
+                    <div class="col-xs-12"><?
 
-        case '123':
-            break;
-    } ?>
+                        ?>
+                    </div><?
+                    break;
+
+                case '123':
+                    break;
+            } ?>
         </div>
     </div><?php
 } catch (Exception $e) { ?>

@@ -1,60 +1,126 @@
 <?php
 $title = 'Новости';
-require_once 'system/up.php';
+require_once __DIR__ . "/system/up.php";
 $user = new RegUser();
 $user->_Reg();
 
+$sql = new SafeMySQL();
+$site = new Site();
+$page = new Page();
+$page->setTitle($title);
 
-/*
-
-
-_Reg();
-?><div class="main"><?
-if ($set['logo'] == 'on') {
-?><img src="images/logotips/news.jpg" width="100%" alt="Новости"/><div class="mini-line"></div><?
-}
-switch ($_GET['case']) {
-    default:
-        if (empty($_GET['page']) || $_GET['page'] == 0 || $_GET['page'] < 0) {
-            $_GET['page'] = 0;
-        }
-        $next = _NumFilter($_GET['page'] + 1);
-        $back = $_GET['page'] - 1;
-        $num  = $_GET['page'] * 10;
-        if ($_GET['page'] == 0) {
-            $i = 1;
-        } else {
-            $i = ($_GET['page'] * 10) + 1;
-        }
-        $viso   = _NumRows("SELECT * FROM `news`");
-        $puslap = floor($viso / 10);
-        $past_news = _FetchAssoc("SELECT * FROM `news` ORDER BY `id` DESC LIMIT 1");
-        $all_news  = mysql_query("SELECT * FROM `news` ORDER BY `id` DESC LIMIT $num, 10");
-?><div class="menuList"><?
-        while ($news = mysql_fetch_assoc($all_news)) {
-            if ($set['news'] == 1 AND $past_news['id'] == $news['id']) {
-?><li><b><a href="news.php?case=read&id=<?= $news['id'] ?>"><img src="images/icons/arrow.png" alt="*" /><?= $news['tema'] ?><span style="float: right;"><small><?= $news['data'] ?></small></span></a></b></li><?
-            } else {
-?><li><a href="news.php?case=read&id=<?= $news['id'] ?>"><img src="images/icons/arrow.png" alt="*" /><span style="color: #999;"><?= $news['tema'] ?><span style="float: right;"><small><?= $news['data'] ?></small></span></span></a></li><?
+try {
+    if($user->getBlock()) {
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
+    }
+    $sql->query("update users set news = ?i where id = ?i limit ?i", 0, $user->user(key: 'id'), 1);
+    $site->setSwitch(get: 'a'); ?>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2 class="text-center"><?= $page->getTitle() ?></h2>
+            </div><?php
+            Site::PrintMiniLine();
+    switch ($site->switch) {
+        default:
+            $count = $sql->getOne("select count(id) from news where status = ?i", 1);
+            if ($count > 0) {
+                $site->pagin1($count);
+                $news = $sql->getAll("select * from news where status = ?i order by id desc limit ?i, ?i", 1, $site->fromPagin, 10);
+                foreach ($news as $n) {
+                    $news_id = "?a=news&id={$n['id']}"; ?>
+                    <div class="col-xs-12"><?php
+                        Site::linkToSiteSwitch(class: 'btn btn-block btn-success',link: $news_id,text: $n['tema']);
+                        Site::PrintMiniLine(); ?>
+                    </div><?php
+                }
+                Site::navig3(page: $site->page, get: 'page', pages: $site->pages);
+            } else { ?>
+                <div class="col-xs-12">
+                    <p class="text-center text-info">
+                        Новостей нет
+                    </p>
+                </div><?php
             }
-        }
-         echo'</div><div class="mini-line"></div>';
-         echo '<div class="block_zero center">';
-        if ($_GET['page'] > 0) {
-            echo '<small><b><a href="news.php?page=' . $back . '"><< Назад </a></small></b>';
-        }
-        if (empty($_GET['page']) || $_GET['page'] == 0 || $_GET['page'] < $puslap) {
-            echo '<small><b><a href="news.php?page=' . $next . '"> Вперёд >></a></small></b>';
-        }
-        break;
-    case 'read':
-        $id         = isset($_GET['id']) ? _NumFilter($_GET['id']) : NULL;
-        $read_news  = _FetchAssoc("SELECT * FROM `news` WHERE `id`='" . $id . "' LIMIT 1");
-        $avtor_news = _FetchAssoc("SELECT * FROM `user_reg` WHERE `id`='" . $read_news['avtor'] . "' LIMIT 1");
-        mysql_query("UPDATE `user_set` SET `news`='0' WHERE `id`='" . $user_id . "'");        
-        $text = nl2br($read_news['text']);
-?><div class="menuList"><li><a href="news.php"><img src="images/icons/arrow.png" alt="*" />Новости</a></li></div><div class="mini-line"></div><div class="block_zero"><b><span style="color: #ffd555;"><?= $read_news['tema'] ?><span style="float: right;"><small><?= $read_news['data'] ?></small></span></span></b></div><div class="dot-line"><div class="block_zero"><small><span style="color: #999;">Автор:</span> <a href="view.php?smotr=<?= $avtor_news['id'] ?>"><?= $avtor_news['login'] ?></a><span style="float: right;"><span style="color: #999;">Добавлено в:</span> <span style="color: #9c9;"><?= $read_news['time'] ?></small></span></span></div><div class="mini-line"></div><div class="block_zero"><span style="color: #9cc;"><?= $text ?></span><?
-        break;
+            break;
+
+        case 'news':
+            $id = Filter::clearInt($_GET['id']);
+            $news = $sql->getRow("select * from news where id = ?i and status = ?i", $id, 1);
+            if ($news) { ?>
+                <div class="col-xs-12">
+                    <?= $news['text'] ?>
+                </div>
+                <div class="col-xs-6 col-xs-offset-6"><?
+                    if ($news['avtor'] == 3) $avtor = 'Модератор';
+                    if ($news['avtor'] == 4) $avtor = 'Старший Модератор';
+                    if ($news['avtor'] == 5) $avtor = 'Администратор';
+                    if ($news['avtor'] == 1983) $avtor = 'Разработчик'; ?>
+                    <p class="yellow">Автор новости: <strong><?= $avtor ?></strong></p>
+                </div><?php
+                Site::PrintMiniLine(); ?>
+                <div class="col-xs-12"><?php
+                    if (isset($_POST['enter'])) {
+                        $komments = Filter::clearFullSpecialChars($_POST['komm']);
+                        $sql->query("insert into news_komments set id_news = ?i, id_user = ?i, name_user = ?s, text = ?s, status = ?i, time_komm = ?s, date_komm = ?s", $id, $user->user(key: 'id'), $user->user(key: 'login'), $komments, 1, Times::setTime(), Times::setDate());
+                        $location = "?a=news&id={$_GET['id']}";
+                        Site::session_empty(type: 'ok', text: 'Комментарий добавлен!', location: $location);
+                    } else { ?>
+                        <div class="col-xs-12 text-center text-info">
+                            <h3>
+                                Комментарии:
+                            </h3>
+                        </div>
+                        <? Site::PrintMiniLine() ?>
+                        <form action="?a=news&id=<?= $id ?>" method="post">
+                            <textarea class="col-xs-12" name="komm" required></textarea>
+                            <? Site::PrintMiniLine(); ?>
+                            <input class="btn btn-block btn-success" name="enter" type="submit" value="Комментировать">
+                        </form><?php
+                        Site::PrintMiniLine();
+                        $count = $sql->getOne("select count(id) from news_komments where id_news = ?i and status = ?i", $id, 1);
+                        if ($count > 0) {
+                            $site->pagin1($count);
+                            $news = $sql->getAll("select * from news_komments where id_news = ?i and status = ?i order by id desc limit ?i, ?i", $id, 1, $site->fromPagin, 10);
+                            foreach ($news as $ne) { ?>
+                                <div class="col-xs-4">
+                                    <?= Site::linkToSiteAdd(link: "view?user={$ne['name_user']}", text: $ne['name_user']); ?><br>
+                                    <?= $ne['time_komm'] ?><br>
+                                    <?= $ne['date_komm'] ?>
+                                </div>
+                                <div class="col-xs-8">
+                                    <?= $ne['text'] ?>
+                                </div><?php
+                                Site::PrintMiniLine();
+                            }
+                            Site::navig3(page: $site->page, get: 'page', pages: $site->pages);
+                        } else { ?>
+                            <div class="col-xs-12">
+                                <p class="text-center text-danger">Комментариев нет</p>
+                            </div><?php
+                        }
+                    } ?>
+                </div><?php
+            } else {
+                Site::session_empty(type: 'error', text: 'Error 1');
+            }
+            break;
+    } ?>
+        </div>
+    </div><?php
+} catch (Exception $e) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="red">
+                <?= $e->getMessage() ?>
+            </h3>
+            <p class="green">
+                До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?>
+            </p>
+        </div>
+    </div>
+    </div><?php
 }
-?></div></div></div></div><? */
-require_once 'system/down.php';
+
+require_once __DIR__ . '/system/down.php';

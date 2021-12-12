@@ -45,11 +45,12 @@
             <?= round(num: microtime(as_float: 1) - $timeregen, precision: 4); ?> сек.
         </div>
         <? Site::PrintMiniLine() ?>
-        <div class="col-xs-12 text-center">
-            <a href="//l2.misspo.ru">Недописанная игра с чатом)</a>
+        <div class="col-xs-12 text-center"><?
+            Site::linkToWeb(link: 'l2.misspo.ru', text: 'Недописанная игра с чатом'); ?>
         </div>
     </div>
 </div>
+<?php Site::lineHrInContainer(); ?>
 <script src="//<?= Site::getDomen() ?>/js/moscow-time.js"></script>
 <!-- Bootstrap core JavaScript
 ================================================== -->

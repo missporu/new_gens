@@ -3,6 +3,7 @@ $title = 'Регистрация';
 require_once('system/up.php');
 $user = new RegUser();
 $user->_noReg();
+$sql = new SafeMySQL();
 
 if (isset($_POST['reg'])) {
     $gold = 10;
