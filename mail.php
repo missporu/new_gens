@@ -1,17 +1,53 @@
 <?php
-$title='Почта';
-require_once('system/up.php');
-_Reg();
+$title = 'Почта';
+require_once 'system/up.php';
+$user = new RegUser();
+$user->_Reg();
+$sql = new SafeMySQL();
+$site = new Site();
+$admin = new Admin();
+
+try {
+    if ($user->getBlock() and $admin->setAdmin(admin: 1983)->returnAdmin() == false) {
+        throw new Exception(message: 'Вы заблокированы администрацией проекта!');
+    }
+    $site->setSwitch(get: 'a');
+
+    switch ($site->switch) {
+        default:
+
+            break;
+    }
+
+} catch (Exception $e) { ?>
+    <div class="container">
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <h3 class="red">
+                <?= $e->getMessage() ?>
+            </h3><?
+            if ($user->getBlock()) { ?>
+                <p class="green">
+                До автоматической разблокировки осталось <?= Times::timeHours(time: $user->user(key: 'block_time') - time()) ?>
+                </p><?
+            } ?>
+        </div>
+    </div>
+    </div><?php
+}
+
+
+/*
 if ($set['ban']==1) {
 	$_SESSION['err']='Вы забанены на общение.';
 	header("Location: menu.php");
 	exit();
 }
-/*if ($set['block']==1) {
+if ($set['block']==1) {
 	$_SESSION['err']='Вы заблокированы';
 	header("Location: blok.php");
 	exit();
-}*/
+}
 ?><div class="main"><?
 if($set['logo'] == 'on'){
 ?><img src="images/logotips/mail.jpg" width="100%" alt="Почта"/><div class="mini-line"></div><?
@@ -315,6 +351,5 @@ echo '</div><div class="mini-line"></div><div class="block_zero center">';
 echo'</div></div>';
 break;
 
-}
-require_once('system/down.php');
-?>
+} */
+require_once 'system/down.php';

@@ -1,6 +1,6 @@
 function moscowTime() {
     var d = new Date();
-    d.setHours( d.getHours() + 3, d.getMinutes() + d.getTimezoneOffset() );
+    d.setHours( d.getHours() + 2, d.getMinutes() + d.getTimezoneOffset() );
     return d.toTimeString().substring( 0, 8 );
 }
 

@@ -1,14 +1,31 @@
 <?php
-if ($user->getUser()) {
-    if ($user->mdAmdFunction(value: '1') == true) {
+if ($user->getUser())
+{
+    if ($user->mdAmdFunction(value: '1') == true)
+    {
         $admin = new Admin();
-        if ($admin->setAdmin(admin: 1983)->returnAdmin() or $admin->setAdmin(admin: 5)->returnAdmin()) {
+        if ($admin->setAdmin(admin: 1983)->returnAdmin() or
+                $admin->setAdmin(admin: 5)->returnAdmin())
+        {
             Site::lineHrInContainer(); ?>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 text-center">
-                        <a class="btn btn-block btn-success" href="admin.php">
-                            Админ - панель
+                        <? Site::linkToSiteAdd('btn btn-block btn-success', '', 'admin', 'Админ - панель'); ?>
+                    </div>
+                </div>
+            </div><?php
+            Site::lineHrInContainer();
+        }
+        if ($admin->setAdmin(admin: 4)->returnAdmin() or
+                $admin->setAdmin(admin: 3)->returnAdmin())
+        {
+            Site::lineHrInContainer(); ?>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <a class="btn btn-block btn-success" href="moder">
+                            Модер - панель
                         </a>
                     </div>
                 </div>

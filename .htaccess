@@ -1,6 +1,17 @@
 RewriteEngine On
 
-RewriteRule ^unit$ /game/unit.php
-RewriteRule ^voina$ /game/war.php
-RewriteRule ^rooms$ /game/chat.php
-RewriteRule ^mail$ /game/mail.php
+RewriteRule ^index$ index.php
+RewriteRule ^menu$ menu.php
+RewriteRule ^chat$ chat.php
+RewriteRule ^mail$ mail.php
+RewriteRule ^forum$ forum.php
+RewriteRule ^help$ help.php
+RewriteRule ^news$ news.php
+RewriteRule ^clan$ clan.php
+RewriteRule ^bank$ bank.php
+RewriteRule ^bonus$ bonus.php
+RewriteRule ^blackmarket$ blackmarket.php
+RewriteRule ^marketplace$ marketplace.php
+RewriteRule ^arena$ arena.php
+RewriteRule ^admin/$ admin.php
+RewriteRule ^moder$ moder.php

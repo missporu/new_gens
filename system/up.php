@@ -1,5 +1,5 @@
 <?php
-require_once('sys.php');
+require_once('head.php');
 Site::lineHrInContainer(); ?>
 <div class="container">
     <div class="row">
@@ -79,4 +79,7 @@ if (isset($_SESSION['ok'])) { ?>
         </div>
     </div><?php
     $_SESSION['ok'] = NULL;
+}
+if ($user->getUser()) {
+    $sql->query("update users set mesto = ?s where id = ?i limit ?i", $page->title, $user->user('id'), 1);
 }

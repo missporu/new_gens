@@ -1,6 +1,10 @@
 <?php
 $title = "Вход";
-require_once('./system/up.php');
+require_once './system/up.php';
+$user = new RegUser();
+$sql = new SafeMySQL();
+$site = new Site();
+
 $user->_noReg();
 
 echo'<div class="cont">';
@@ -19,11 +23,12 @@ echo'<div class="cont">';
         $usr = $sql->getRow("select pass, ip, login from users where login = ?s limit ?i", $name, 1);
         $hash = $usr['pass'];
         $pass_get = password_verify(password: $pass, hash: $hash);
+        $ip = Site::getIp();
 
         if ($pass_get == TRUE and $name = $usr['login']) {
             setcookie(name: 'login', value: $name, expires_or_options: time() + 86400 * 365, path: '/');
             setcookie(name: 'IDsess', value: $hash, expires_or_options: time() + 86400 * 365, path: '/');
-            Site::session_empty(type: 'info', text: "Добро пожаловать!<br>Текущий ip {Site::getIp()}, последний вход был с {$usr['ip']}", location: "menu.php");
+            Site::session_empty(type: 'info', text: "Добро пожаловать!<br>Текущий ip {$ip}, последний вход был с {$usr['ip']}", location: "menu.php");
         } else {
             $site->adminLog(kto: $_POST['login'], text: "пытался зайти на сайт {$pass}", type: 'admin1983');
             Site::session_empty(type: 'error', text: "Неверные данные");
@@ -54,7 +59,7 @@ echo'<div class="cont">';
                     </div>
                     <div class="form-group">
                         <div class="col-xs-6">
-                            <a href="rec.php"><font color=#0f0>Забыли пароль?</font></a>
+                            <? Site::linkToSiteAdd('', '', 'rec.php', 'Забыли пароль?') ?>
                         </div>
                         <div class="col-xs-6">
                             <div class="col-xs-2">
@@ -77,4 +82,4 @@ echo'<div class="cont">';
     </div>
 </div>
 <div class="clearfix"></div><?
-require_once('system/down.php');
+require_once 'system/down.php';

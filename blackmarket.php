@@ -1,38 +1,33 @@
 <?php
-$titles = "";
-if (isset($_GET['a'])) {
-    $switch = $_GET['a'];
-    if ($switch == 'marketVars') $titles = " | Военторг";
-    if ($switch == 'specGroup') $titles = " | Наёмники";
-    if ($switch == 'laboratory') $titles = " | Лаборатория";
-} else {
-    $switch = null;
-}
-
-$title = "Черный рынок {$titles}";
+$title = "Черный рынок";
 require_once "system/up.php";
+$user = new RegUser();
+$sql = new SafeMySQL();
+$site = new Site();
+
+$site->setSwitch(get: 'a');
 $user->_Reg();
 
-// $site->linkToSiteAdd(array('btn', 'btn-block', 'btn-dark'), dataToggle: 'modal', link: '?a=test', text: 'test');
-switch ($switch) {
+
+switch ($site->switch) {
     default: ?>
         <div class="container">
             <div class="row"><?php
                 if ($user->user(key: 'logo') == 'on') { ?>
                     <div class="col-md-12 text-center">
-                        <img src="images/logotips/blackmarket.jpg" alt="Чёрный рынок" class="img-responsive">
+                        <? Site::returnImage(class: 'img-responsive', src: 'logotips/blackmarket.jpg', alt: 'Чёрный рынок'); ?>
                     </div><?php
                     Site::PrintMiniLine();
                 } ?>
                 <div class="col-md-12">
                     <div class="col-xs-12">
                         <ul class="list-group">
-                            <li class="list-group-item">
-                                <a class="btn btn-block btn-dark" data-toggle="modal" href="#marketVars"><span>Военторг</span></a>
-                                <? Site::PrintMiniLine(); ?>
-                                <a class="btn btn-block btn-dark" data-toggle="modal" href="#specGroup"><span>Наёмники</span></a>
-                                <? Site::PrintMiniLine(); ?>
-                                <a class="btn btn-block btn-dark" data-toggle="modal" href="#laboratory"><span>Лаборатория</span></a>
+                            <li class="list-group-item"><?php
+                                Site::linkToSiteAdd(class: 'btn btn-block btn-dark', dataToggle: 'modal', link: '#marketVars', text: 'Военторг');
+                                Site::PrintMiniLine();
+                                Site::linkToSiteAdd(class: 'btn btn-block btn-dark', dataToggle: 'modal', link: '#specGroup', text: 'Наёмники');
+                                Site::PrintMiniLine();
+                                Site::linkToSiteAdd(class: 'btn btn-block btn-dark', dataToggle: 'modal', link: '#laboratory', text: 'Лаборатория'); ?>
                             </li>
                         </ul>
                     </div>
@@ -50,8 +45,8 @@ switch ($switch) {
                                     <p>В военторге лучшие генералы закупаются уникальными секретными разработками, обладающими непревзайденными характеристиками, и позволяющими разносить вражеские армии в пух и прах без особых усилий! Особо ценится среди главнокомандующих разработка, под названием "Кузькина мать" - именно ради нее, самые отчаянные генералы, и приходят к нам, на чёрный рынок!</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <div class="col-xs-12">
-                                        <a class="btn btn-block btn-minidark" href="?a=marketVars">Перейти</a>
+                                    <div class="col-xs-12"><?
+                                        Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', dataToggle: '', link: '?a=marketVars', text: 'Перейти'); ?>
                                     </div>
                                 </div>
                             </div><!-- /.modal-content -->
@@ -92,8 +87,8 @@ switch ($switch) {
                                     <p>Ну заходи, <?= $user->user(key: 'login') ?>, раз пришел! Специально для тебя, мой друг,эта небольшая секретная лаборатория работает каждый день, 24 часа в сутки без выходных и праздников! Ты почаще забегай, за моей дря... Химией... Кхе... Не бесплатно конечно! У нас ведь, на черном рынке, за бесплатно можно только себя продать. Кхе... Ты, это.. никому не говори только, лады? Не люблю стукачей... Кхе-кхе... </p>
                                 </div>
                                 <div class="modal-footer">
-                                    <div class="col-xs-12">
-                                        <a class="btn btn-block btn-minidark" href="?a=laboratory">Перейти</a>
+                                    <div class="col-xs-12"><?
+                                        Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', dataToggle: '', link: '?a=laboratory', text: 'Перейти'); ?>
                                     </div>
                                 </div>
                             </div><!-- /.modal-content -->

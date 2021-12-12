@@ -1,25 +1,34 @@
 <?php
+
 $title = 'Курс молодого бойца';
 require_once 'system/up.php';
+
+$user = new RegUser();
+$site = new Site();
+$sql = new SafeMySQL();
+
 $user->_Reg();
 
-$site->setSwitch(a: 'a');
-
+$site->setSwitch(get: 'a');
 if (isset($site->switch)) {
-    if (!is_numeric($site->switch)) {
+    if (is_null($site->switch)) {
         $site->switch = 0;
-        $start_text = $sql->getRow("select * from start where case = ?i limit ?i", $site->switch, 1);
     }
 }
+$start_text = $sql->getRow("select * from start where step = ?i", $site->switch);
 
 if ($site->switch > $user->user(key: 'start')) {
     Site::session_empty(type: 'error', text: 'Вы не закончили обучение!', location: "?a={$user->user(key: 'start')}");
 }
+if ($user->user(key: 'start') > $site->switch) {
+    Site::session_empty(type: 'error', text: 'Вы уже прошли то обучение, продолжайте!', location: "?a={$user->user(key: 'start')}");
+}
+
 switch ($site->switch) {
     default:
-        if ($user->user(key: 'start') > 0) {
-            Site::session_empty(type: 'error', text: 'Вы уже прошли то обучение, продолжайте!', location: "?a={$user->user(key: 'start')}");
-        }
+        Site::_location(location: '?a=0');
+
+    case '0':
         if (isset($_GET['log']) and $_GET['log'] == 'ataka') {
             $sql->query("update users set
                     exp = exp + ?i, 
@@ -32,173 +41,241 @@ switch ($site->switch) {
         } ?>
         <div class="container">
             <div class="row">
+                <div class="col-xs-6 text-center">
+                    <? Site::returnImage(class: 'img-responsive text-center', src: 'start/start.jpg', alt: 'Обучение'); ?>
+                </div>
+                <div class="col-xs-6">
+                    <b class="text-danger">Майор:</b> <i class="text-warning"><?= $start_text['text'] ?></i>
+                </div>
+                <div class="clearfix"></div>
+                <? Site::PrintMiniLine() ?>
                 <div class="col-xs-12 text-center">
-                    <?= Site::returnImage(class: '', src: 'start/start.jpg', alt: 'Обучение') ?>
-                    <img src="images/start/start.jpg" width="100%" alt="Обучение"/>
+                    <h1 class="yellow">Война</h1>
+                </div>
+                <? Site::PrintMiniLine() ?>
+                <div class="col-xs-12">
+                    <div class="col-xs-6">
+                        <span class="green">
+                            <? Site::returnImage(class: "", src: "flags/a.png", alt: "Флаг", text: 'Генерал Ричардс'); ?>
+                        </span>
+                        <span class="text-info">
+                             (1 lvl)
+                        </span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <? Site::linkToSiteAdd(class: 'btn btn-block btn-danger', link: '?a=0&log=ataka', text: 'Атаковать'); ?>
+                    </div>
+                </div>
+                <? Site::PrintMiniLine() ?>
+            </div>
+        </div><?php
+        break;
+
+    case '1':
+        if (isset($_GET['log']) and $_GET['log'] == 'ataka') {
+            $sql->query("update users set 
+                    exp = exp + ?i, 
+                    baks = baks + ?i, 
+                    hp = hp - ?i, 
+                    start = ?i where 
+                    id = ?i",
+                5, 100, 10, 2, $user->user(key: 'id'));
+            Site::_location(location: '?a=2');
+        } ?>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="col-xs-6">
+                        <? Site::returnImage(class: 'img-responsive text-center', src: 'start/1.jpg', alt: 'Обучение'); ?>
+                    </div>
+                    <div class="col-xs-6">
+                        <b class="text-danger">Майор:</b> <i class="text-warning"><?= $start_text['text'] ?></i>
+                    </div>
+                    <div class="clearfix"></div>
+                    <? Site::PrintMiniLine() ?>
+                    <div class="col-xs-12 text-center">
+                        <h1 class="yellow">Война</h1>
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="col-xs-12">
+                            <h5 class="green text-center">Победа!</h5>
+                            <p class="green">Нанесено: 20 урона</p>
+                            <p class="text-danger">Получено: 10 урона</p>
+                            <p class="green">Награблено: 100 $</p>
+                            <p class="green">Заработано: 5 опыта</p>
+                        </div>
+                    </div>
+                    <? Site::PrintMiniLine() ?>
+                    <div class="col-xs-12">
+                        <div class="col-xs-6">
+                        <span class="green">
+                            <? Site::returnImage(class: "", src: "flags/a.png", alt: "Флаг", text: 'Генерал Ричардс'); ?>
+                        </span>
+                            <span class="text-info">
+                             (1 lvl)
+                        </span>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <? Site::linkToSiteAdd(class: 'btn btn-block btn-danger', link: '?a=1&log=ataka', text: 'Атаковать'); ?>
+                        </div>
+                    </div>
+                    <? Site::PrintMiniLine() ?>
                 </div>
             </div>
-        </div>
-
-
-
-    <?php
+        </div><?php
         break;
 
-    case '0':
-        echo "0";
+    case '2':
+        if (isset($_GET['log']) and $_GET['log'] == 'do') {
+            $sql->query("update users set start = ?i where id = ?i", 3, $user->user(key: 'id'));
+            Site::_location(location: '?a=3');
+        } ?>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 text-center">
+                    <? Site::returnImage(class: 'img-responsive text-center', src: 'start/2.jpg', alt: 'Обучение'); ?>
+                </div>
+                <div class="col-xs-6">
+                    <b class="text-danger">Майор:</b> <i class="text-warning"><?= $start_text['text'] ?></i>
+                </div>
+                <div class="clearfix"></div>
+                <? Site::PrintMiniLine() ?>
+                <div class="col-xs-12 text-center">
+                    <h1 class="yellow">Война</h1>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-12">
+                        <h5 class="green text-center">Победа!</h5>
+                        <p class="green">Нанесено: 20 урона</p>
+                        <p class="text-danger">Получено: 10 урона</p>
+                        <p class="green">Награблено: 100 $</p>
+                        <p class="green">Заработано: 5 опыта</p>
+                    </div>
+                </div>
+                <? Site::PrintMiniLine() ?>
+                <div class="col-xs-12">
+                    <div class="col-xs-6">
+                        <span class="green">
+                            <? Site::returnImage(class: "", src: "flags/a.png", alt: "Флаг", text: 'Генерал Ричардс'); ?>
+                        </span>
+                        <span class="text-info">
+                             (1 lvl)
+                        </span>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <? Site::linkToSiteAdd(class: 'btn btn-block btn-warning', link: '?a=2&log=do', text: 'Техника'); ?>
+                    </div>
+                </div>
+                <? Site::PrintMiniLine() ?>
+            </div>
+        </div><?php
         break;
 
+    case '3':
+        $unit_start = $sql->getRow("select * from unit where lvl = ?i limit ?i", 2, 1);
+
+        if (isset($_GET['log']) and $_GET['log'] == 'take') {
+            $sql->query("update users set baks = baks - ?i, start = ?i where id = ?i", $unit_start['cena'], 4, $user->user(key: 'id'));
+            $sql->query("update user_unit set kol = kol+?i where id_user = ?i and id_unit = ?i", 1, $user->user(key: 'id'), $unit_start['id_unit']);
+            $sql->query("insert into voina_unit id_user = ?i, id_unit = ?i, tip = ?i, ataka = ?i, zaschita = ?i", $user->user(key: 'id'), $unit_start['id_unit'], $unit_start['tip'], $unit_start['ataka'], $unit_start['zaschita']);
+            Site::_location(location: '?a=4');
+        } ?>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6 text-center">
+                    <? Site::returnImage(class: 'img-responsive text-center', src: 'start/3.jpg', alt: 'Обучение'); ?>
+                </div>
+                <div class="col-xs-6">
+                    <b class="text-danger">Майор:</b> <i class="text-warning"><?= $start_text['text'] ?></i>
+                </div>
+                <div class="clearfix"></div>
+                <? Site::PrintMiniLine() ?>
+                <div class="col-xs-12 text-center">
+                    <h1 class="yellow">Техника</h1>
+                </div>
+                <div class="col-xs-12">
+                    <div class="col-xs-3">
+                        <? Site::returnImage(src: "units/{$unit_start['id']}.png", alt: "Техника"); ?>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="col-xs-6">
+                            Атака
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <?= $unit_start['ataka'] ?>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-xs-6">
+                            Защита
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <?= $unit_start['zaschita'] ?>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-xs-6">
+                            Содержание
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <?= $unit_start['soderzhanie'] ?>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-xs-6">
+                            Цена
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <?= $unit_start['cena'] ?> <? imageBaks() ?>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <? Site::PrintMiniLine() ?>
+                <div class="col-xs-12">
+                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-danger', link: '?a=3&log=take', text: 'Взять'); ?>
+                </div>
+                <? Site::PrintMiniLine() ?>
+            </div>
+        </div><?php
+        break;
+
+    case '4':
+        echo "4";
+        break;
+
+    case '5':
+        echo '5';
+        break;
+
+    case '6':
+        echo '6';
+        break;
+
+    case '7':
+        echo '7';
+        break;
+
+    case '8':
+        echo '8';
+        break;
+
+    case '9':
+        echo '9';
+        break;
+
+    case '10':
+        echo '10';
+        break;
+
+    case '11':
+        echo '11';
+        break;
+
+    case '12':
+        echo '12';
+        break;
     /*
-
-
-
-
-
-    <div class="main"><img src="images/start/start.jpg" width="100%" alt="Обучение"/>
-    <div class="mini-line"></div>
-    <div class="block_zero"><b><span style="color: #9c9;">Майор:</span></b> <?= $start_text['text'] ?>
-        <div class="separ"></div>
-        <div class="block_zero center"><h1 class="yellow">Война</h1></div>
-        <div class="block_zero"><img src="images/flags/a.png" alt="Флаг"/><span style="color: #9c9;"> Генерал Ричардс</span><span
-                    style="float: right;"><a class="btn" href="start.php?log=ataka"><span class="end"><span
-                                class="label"><span
-                                    class="dred">Атаковать</span></span></span></a></span><br/><small><span
-                        style="color: #fffabd;">Ур.</span> 1</small>
-            <div class="layer1">
-                <div class="layer2"><img src="images/start/a.png" alt="Стрелка"/></div>
-            </div>
-        </div>
-    </div></div><?
-    break;
-
-case '1';
-    if ($set['start'] > 1) {
-        $_SESSION['err'] = 'Вы уже прошли то обучение, продолжайте!';
-        header("Location: start.php?case=" . $set['start'] . "");
-        exit();
-    }
-    if (isset($_GET['log']) and $_GET['log'] == 'ataka') {
-        mysql_query("UPDATE `user_set` SET `exp`=`exp`+'5', `baks`=`baks`+'100', `hp`=`hp`-'10', `hp_up`='" . time() . "' WHERE `id`='" . $user_id . "'");
-        mysql_query("UPDATE `user_set` SET `start`='2' WHERE `id`='" . $user_id . "'");
-        header('Location: start.php?case=2');
-        exit();
-    }
-    ?>
-    <style>
-        .layer1 {
-            position: relative;
-            background: #f0f0f0;
-        }
-
-        .layer2 {
-            position: absolute;
-            bottom: 30px;
-            right: 40px;
-            line-height: 1px;
-        }
-    </style>
-    <div class="main"><img src="images/start/1.jpg" width="100%" alt="Обучение"/>
-        <div class="mini-line"></div>
-        <div class="block_zero"><b><span style="color: #9c9;">Майор:</span></b> <?= $start_text['text'] ?>
-            <div class="separ"></div>
-            <div class="block_zero center"><h1 class="yellow">Война</h1></div>
-            <div class="block_zero center"><span style="color: #9c9;">Победа!</span></div>
-            <div class="block_zero">Нанесено:<span style="color: #9c9;"> 20</span> урона<br/>Получено:<span
-                        style="color: #c66;"> 10</span> урона<br/>Награблено:<span
-                        style="color: #9c9;"> 100</span><br/>Заработано:<span style="color: #9c9;"> 5</span> опыта
-            </div>
-        </div>
-        <div class="mini-line"></div>
-        <div class="block_zero"><img src="images/flags/a.png" alt="Флаг"/><span style="color: #9c9;"> Генерал Ричардс</span><span
-                    style="float: right;"><a class="btn" href="start.php?case=1&log=ataka"><span class="end"><span
-                                class="label"><span
-                                    class="dred">Атаковать</span></span></span></a></span><br/><small><span
-                        style="color: #fffabd;">Ур.</span> 1</small>
-            <div class="layer1">
-                <div class="layer2"><img src="images/start/b.png" alt="Стрелка"/></div>
-            </div>
-        </div>
-    </div></div><?
-    break;
-
-case '2':
-    if ($set['start'] > 2) {
-        $_SESSION['err'] = 'Вы уже прошли то обучение, продолжайте!';
-        header("Location: start.php?case=" . $set['start'] . "");
-        exit();
-    }
-    if (isset($_GET['log']) and $_GET['log'] == 'do') {
-        mysql_query("UPDATE `user_set` SET `start`='3' WHERE `id`='" . $user_id . "'");
-        header('Location: start.php?case=3');
-        exit();
-    }
-    ?>
-    <style>
-        .layer1 {
-            position: relative;
-            background: #f0f0f0;
-        }
-
-        .layer2 {
-            position: absolute;
-            bottom: -35px;
-            right: 35px;
-            line-height: 1px;
-        }
-    </style>
-    <div class="main"><img src="images/start/2.jpg" width="100%" alt="Обучение"/>
-        <div class="mini-line"></div>
-        <div class="block_zero"><b><span style="color: #9c9;">Майор:</span></b> <?= $start_text['text'] ?>
-            <div class="separ"></div>
-            <div class="block_zero center"><h1 class="yellow">Война</h1></div>
-            <div class="block_zero center"><span style="color: #9c9;">Победа!</span></div>
-            <div class="block_zero">Нанесено:<span style="color: #9c9;"> 20</span> урона<br/>Получено:<span
-                        style="color: #c66;"> 10</span> урона<br/>Награблено:<span
-                        style="color: #9c9;"> 100</span><br/>Заработано:<span style="color: #9c9;"> 5</span> опыта
-            </div>
-        </div>
-        <div class="mini-line"></div>
-        <div class="block_zero"><img src="images/flags/a.png" alt="Флаг"/><span style="color: #c66;"> Генерал Ричардс</span><span
-                    style="float: right;"><a class="btn" href="start.php?case=2&log=do"><span class="end"><span
-                                class="label"><span
-                                    class="dgreen">Техника</span></span></span></a></span><br/><small><span
-                        style="color: #fffabd;">Ур.</span> 1</small>
-            <div class="layer1">
-                <div class="layer2"><img src="images/start/c.png" alt="Стрелка"/></div>
-            </div>
-        </div>
-    </div></div><?
-    break;
-
-case '3':
-    if ($set['start'] > 3) {
-        $_SESSION['err'] = 'Вы уже прошли то обучение, продолжайте!';
-        header("Location: start.php?case=" . $set['start'] . "");
-        exit();
-    }
-    $unit_start = _FetchAssoc("SELECT * FROM `user_unit` WHERE `id_user` = '" . $user_id . "' AND `lvl` = '2' LIMIT 1");
-    if (isset($_GET['log']) and $_GET['log'] == 'take') {
-        mysql_query("UPDATE `user_set` SET `baks`=`baks`-'" . $unit_start['cena'] . "' WHERE `id`='" . $user_id . "'");
-        mysql_query("UPDATE `user_set` SET `start`='4' WHERE `id`='" . $user_id . "'");
-        mysql_query("UPDATE `user_unit` SET `kol`=`kol`+'1'  WHERE `id_user`='" . $user_id . "' AND `id_unit`='" . $unit_start['id_unit'] . "'");
-        mysql_query("INSERT INTO `voina_unit` (id_user,id_unit,tip,ataka,zaschita) VALUES('" . $user_id . "','" . $unit_start['id_unit'] . "','" . $unit_start['tip'] . "','" . $unit_start['ataka'] . "','" . $unit_start['zaschita'] . "')");
-        header('Location: start.php?case=4');
-        exit();
-    }
-    ?>
-    <style>
-        .layer1 {
-            position: relative;
-            background: #f0f0f0;
-        }
-
-        .layer2 {
-            position: absolute;
-            bottom: -50px;
-            right: 95px;
-            line-height: 1px;
-        }
-    </style>
     <div class="main"><img src="images/start/3.jpg" width="100%" alt="Обучение"/>
     <div class="mini-line"></div>
     <div class="block_zero"><b><span style="color: #9c9;">Майор:</span></b> <?= $start_text['text'] ?>

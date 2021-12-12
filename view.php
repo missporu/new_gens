@@ -3,6 +3,7 @@ $title='Просмотр';
 require_once 'system/up.php';
 $user = new RegUser();
 $sql = new SafeMySQL();
+$site = new Site();
 
 $user->_Reg();
 
@@ -11,18 +12,27 @@ try {
         throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
 
-    $smott = isset($_GET['user']) ? Filter::clearFullSpecialChars(string: $_GET['user']) : NULL;
-    $smotr = $sql->getRow("select * from users where login = ?s limit ?i", $smott, 1); ?>
+    if (isset($_GET['user'])) {
+        $smott = isset($_GET['user']) ? Filter::clearFullSpecialChars(string: $_GET['user']) : null;
+        if ($smott != null) {
+            $smotr = $sql->getRow("select * from users where login = ?s limit ?i", $smott, 1);
+        }
+    }
 
-    <div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-            <p>
-                <?= $smotr['login'] ?> | <?= $smotr['lvl'] ?> lvl
-            </p>
-        </div>
-    </div>
-    </div><?php
+    $site->setSwitch('a');
+
+    switch ($site->switch) {
+        default: ?>
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <p>
+                            <?= $smotr['login'] ?> | <?= $smotr['lvl'] ?> lvl
+                        </p>
+                    </div>
+                </div>
+            </div><?php
+    }
 } catch (Exception $e) {?>
     <div class="container">
     <div class="row">

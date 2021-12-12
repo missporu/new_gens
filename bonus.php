@@ -39,14 +39,14 @@ try {
                 $user->addMoney(key: "gold", value: $gold);
             }
             $sql->query("update user_bonus set time = ?i, status_day = ?i, last_date = ?s where id_user = ?i limit ?i", (time()+(60*60*24)), $day, Times::setDate(), $user->user(key: 'id'), 1);
-            Site::session_empty(type: 'ok', text: "Получена ежедневная награда!");
+            Site::session_empty(type: 'ok', text: "Получена ежедневная награда!", location: 'menu');
         } else { ?>
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12">
                         Сегодня ваш <?= $user->userBonus(value: 'status_day') ?> день!<br>
                         <form class="" action="" method="post">
-                            <input type="submit" class="btn btn-default" name="bonus" value="Получить бонус">
+                            <input type="submit" class="btn btn-block btn-dancer" name="bonus" value="Получить бонус">
                         </form>
                     </div>
                 </div>
@@ -55,13 +55,14 @@ try {
     } else {
         $vvv = $user->userBonus(value: 'time') - time();
         $vvv = Times::timeHours(time: $vvv);
-        throw new Exception(message: "До бонуса осталось {$vvv}<br>Завтра {$user->userBonus(value: 'status_day')} день бонуса! Не пропустите! ");
+        throw new Exception(message: "До бонуса осталось {$vvv}");
     }
 } catch (Exception $e) { ?>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 text-center text-info">
                 <p><?= $e->getMessage() ?></p>
+                <p>Завтра <b class="text-warning"><?= $user->userBonus(value: 'status_day') ?>й</b> день бонуса! Не пропустите!</p>
             </div>
         </div>
     </div><?php

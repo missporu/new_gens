@@ -1,5 +1,7 @@
 <?php
-require_once('./system/up.php');
+require_once './system/up.php';
+$user = new RegUser();
+
 $user->_noReg(); ?>
 
 <div class="container">
@@ -21,4 +23,4 @@ $user->_noReg(); ?>
         </div>
     </div>
 </div><?php
-require_once('system/down.php');
+require_once 'system/down.php';

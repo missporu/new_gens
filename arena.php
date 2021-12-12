@@ -1,6 +1,8 @@
 <?php
-$title = 'Админ-панель';
+$title = 'Арена';
 require_once "system/up.php";
+$user = new RegUser();
+
 $user->_Reg();
 
 

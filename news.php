@@ -1,6 +1,13 @@
 <?php
 $title = 'Новости';
-require_once('system/up.php');
+require_once 'system/up.php';
+$user = new RegUser();
+$user->_Reg();
+
+
+/*
+
+
 _Reg();
 ?><div class="main"><?
 if ($set['logo'] == 'on') {
@@ -49,6 +56,5 @@ switch ($_GET['case']) {
 ?><div class="menuList"><li><a href="news.php"><img src="images/icons/arrow.png" alt="*" />Новости</a></li></div><div class="mini-line"></div><div class="block_zero"><b><span style="color: #ffd555;"><?= $read_news['tema'] ?><span style="float: right;"><small><?= $read_news['data'] ?></small></span></span></b></div><div class="dot-line"><div class="block_zero"><small><span style="color: #999;">Автор:</span> <a href="view.php?smotr=<?= $avtor_news['id'] ?>"><?= $avtor_news['login'] ?></a><span style="float: right;"><span style="color: #999;">Добавлено в:</span> <span style="color: #9c9;"><?= $read_news['time'] ?></small></span></span></div><div class="mini-line"></div><div class="block_zero"><span style="color: #9cc;"><?= $text ?></span><?
         break;
 }
-?></div></div></div></div><?
-require_once('system/down.php');
-?>
+?></div></div></div></div><? */
+require_once 'system/down.php';

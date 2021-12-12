@@ -2,6 +2,7 @@
 $title = 'Банк';
 require_once "system/up.php";
 $user = new RegUser();
+
 $user->_Reg();
 
 
@@ -192,4 +193,4 @@ Qiwi - кошелек (в любом терминале) - +79194810550 <br>
 break;
 }
 require_once('system/down.php'); */
-require_once "system/foot.php";
+require_once "system/down.php";

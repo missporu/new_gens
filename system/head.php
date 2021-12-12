@@ -1,7 +1,9 @@
 <?php
+date_default_timezone_set('Asia/Yekaterinburg');
 session_start();
 ob_start();
-$timeregen = microtime(as_float: TRUE); ?>
+$timeregen = microtime(as_float: TRUE);
+require_once "sys.php"; ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -16,12 +18,14 @@ $timeregen = microtime(as_float: TRUE); ?>
     <meta name="robots" content="all"/>
     <meta name="author" content="misspo">
     <link rel="icon" href="/war-game.ico"><?php
+    $page = new Page();
     if (empty($title)) {
-        $title = $site->name;
-    }
-    echo '<title>' . $title . '</title>'; ?>
+        $page->title = $page->name;
+    } else $page->setTitle($title);
 
-    <meta property="og:title" content="<?= $title ?>"/>
+    echo '<title>' . $page->title . '</title>'; ?>
+
+    <meta property="og:title" content="<?= $page->title ?>"/>
     <meta property="og:description"
           content="Новая браузерная онлайн-игра, в которую можно играть с компьютера и мобильного телефона!"/>
     <meta property="og:image" content="//<?= Site::getDomen() ?>/images/logotips/logo.jpg"/>

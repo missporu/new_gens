@@ -5,7 +5,7 @@ $user = new RegUser();
 $site = new Site();
 
 $user->_Reg();
-$site->setSwitch(a: 'a'); ?>
+$site->setSwitch(get: 'a'); ?>
 
     <div class="container">
         <div class="row">
@@ -47,11 +47,12 @@ $site->setSwitch(a: 'a'); ?>
             </div>
         </div>
     </div>
+
 <? Site::lineHrInContainer() ?>
     <div class="container">
     <div class="row">
         <div class="col-xs-12"><?php
-            switch ( $site->switch ) {
+            switch ($site->switch) {
                 default: ?>
                     <div class="col-xs-12">
                     <img src="images/flags/<?= $user->user(key: 'side') ?>.png" alt="Флаг"/>
@@ -61,7 +62,7 @@ $site->setSwitch(a: 'a'); ?>
                     break;
 
                 case 'trofei':
-                    echo "Трофеи в разработке";
+                    echo "Трофеи в разработке.";
                     break;
 
                 case 'sklad':

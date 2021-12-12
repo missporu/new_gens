@@ -1,6 +1,5 @@
 <?php
 require_once "setting.php";
-require_once "head.php";
 
 function imageBaks() { ?>
     <img src="/images/icons/baks.png" alt="Бакс"><?php
@@ -9,6 +8,8 @@ function imageBaks() { ?>
 function imageGold() { ?>
     <img src="/images/icons/gold.png" alt="Золото"><?php
 }
+
+
 
 /*
 require_once "class/Filter.php";

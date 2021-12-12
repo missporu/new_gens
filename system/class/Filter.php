@@ -1,11 +1,15 @@
 <?php
 
-class Filter {
+use JetBrains\PhpStorm\Pure;
+
+class Filter
+{
     /**
      * @param $string
      * @return mixed
      */
-    static public function clearFullSpecialChars($string): mixed {
+    #[Pure] static public function clearFullSpecialChars($string): mixed
+    {
         return filter_var(value: $string, filter: FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     }
 
@@ -13,7 +17,8 @@ class Filter {
      * @param $string
      * @return string
      */
-    static public function output($string): string {
+    #[Pure] static public function output($string): string
+    {
         return self::clearFullSpecialChars(string: $string);
     }
 
@@ -21,7 +26,8 @@ class Filter {
      * @param $string
      * @return mixed
      */
-    static public function clearString($string): mixed {
+    #[Pure] static public function clearString($string): mixed
+    {
         return filter_var(value: $string, filter: FILTER_SANITIZE_STRING);
     }
 
@@ -29,7 +35,8 @@ class Filter {
      * @param $string
      * @return int
      */
-    static public function clearInt($string): int {
+    #[Pure] static public function clearInt($string): int
+    {
         return intval(value: abs(num: filter_var(value: $string, filter: FILTER_SANITIZE_NUMBER_INT)));
     }
 }

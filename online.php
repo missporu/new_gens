@@ -1,7 +1,10 @@
 <?php
 $title = 'Онлайн';
 require_once('system/up.php');
+$site = new Site();
+$user = new RegUser();
 $user->_Reg();
+$sql = new SafeMySQL();
 
 try {
     if($user->getBlock()) {
@@ -11,28 +14,21 @@ try {
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h3 class="text-center text-info"><?= $title ?></h3>
+                <h3 class="text-center text-info"><?= $page->title ?></h3>
             </div>
             <div class="clearfix"></div><?php
             $online_int = $sql->getOne("select count(id) from users where online > ?i", time()-600);
             if($online_int > 0) {
                 $online = $sql->getAll("select mesto, login, id from users where online > ?i order by id desc", time()-600);
                 foreach ($online as $onl) {
-                    $mesto = explode(separator: '.', string: $onl['mesto']);
-                    if ($mesto[0] == 'admin') {$m = 'Админка';}
-                    elseif ($mesto[0] == 'menu') {$m = 'Главная';}
-                    elseif ($mesto[0] == 'online') {$m = 'Онлайн';}
-                    elseif ($mesto[0] == 'pers') {$m = 'Профиль';}
-                    else $m = '?'; ?>
+                    Site::PrintMiniLine(); ?>
                     <div class="col-xs-6">
                         <a href="view.php?user=<?= $onl['login'] ?>"><?= $onl['login'] ?></a>
                     </div>
-                    <div class="col-xs-6">
-                        <?= $m ?>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="separ"></div>
-                    <div class="clearfix"></div><?
+                    <div class="col-xs-6 text-right">
+                        <?= $onl['mesto'] ?>
+                    </div><?
+                    Site::PrintMiniLine();
                 }
             } else { ?>
                 <p class="text-danger text-center">

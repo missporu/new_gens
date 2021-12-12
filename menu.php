@@ -1,13 +1,17 @@
 <?php
 $title = 'Главная';
-require_once ('system/up.php');
+require_once 'system/up.php';
+$user = new RegUser();
+$site = new Site();
+$sql = new SafeMySQL();
+
 $user->_Reg();
 
 try {
     if($user->getBlock()) {
         throw new Exception(message: 'Вы заблокированы администрацией проекта!');
     }
-
+    $site->setSwitch(get: 'a');
     switch ($site->switch) {
         default: ?>
             <div class="container">
@@ -21,9 +25,7 @@ try {
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="arena.php">
-                                        <span>Арена</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'arena', text: 'Арена') ?>
                                 </li>
                             </ul>
                         </div>
@@ -36,15 +38,11 @@ try {
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="marketplace.php">
-                                        <span>Рынок ресурсов</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'marketplace', text: 'Рынок ресурсов') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="blackmarket.php">
-                                        <span>Черный рынок</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'blackmarket', text: 'Черный рынок') ?>
                                 </li>
                             </ul>
                         </div>
@@ -58,9 +56,7 @@ try {
                             <ul class="list-group"><?
                                 if($user->userBonus(value: 'time') < time() + 5) { ?>
                                     <li class="list-group-item">
-                                        <a class="btn btn-block btn-danger" href="bonus.php">
-                                            <span>Ежедневный бонус!</span>
-                                        </a>
+                                        <? Site::linkToSiteAdd(class: 'btn btn-block btn-danger', link: 'bonus', text: 'Ежедневный бонус!') ?>
                                     </li><?php
                                     Site::PrintMiniLine();
                                 } ?>
@@ -71,15 +67,11 @@ try {
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="bank.php">
-                                        <span>Банк</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'bank', text: 'Банк') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="clan.php">
-                                        <span>Клан</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'clan', text: 'Клан') ?>
                                 </li>
                             </ul>
                         </div>
@@ -92,21 +84,15 @@ try {
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="chat.php">
-                                        <span>Чат</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'chat', text: 'Чат') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="mail.php">
-                                        <span>Почта</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'mail', text: 'Почта') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="forum.php">
-                                        <span>Форум</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'forum', text: 'Форум') ?>
                                 </li>
                             </ul>
                         </div>
@@ -119,15 +105,11 @@ try {
                         <div class="col-xs-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="help.php">
-                                        <span>Поддержка</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'help', text: 'Поддержка') ?>
                                 </li>
                                 <? Site::PrintMiniLine() ?>
                                 <li class="list-group-item">
-                                    <a class="btn btn-block btn-dark" href="news.php">
-                                        <span>Новости</span>
-                                    </a>
+                                    <? Site::linkToSiteAdd(class: 'btn btn-block btn-dark', link: 'news', text: 'Новости') ?>
                                 </li>
                             </ul>
                         </div>
@@ -137,16 +119,6 @@ try {
 
 
                     <? /*
-                    <div class="col-xs-6">
-                        <a class="button btn-success btn-block" href="voina.php?case=vrag">
-                            <h3>Война</h3>
-                        </a>
-                    </div>
-                    <div class="col-xs-6">
-                        <a class="button btn-success btn-block" href="#">
-                            <h3>В разработке</h3>
-                        </a>
-                    </div>
 
                     <? $site->PrintMiniLine() ?>
                     <div class="col-xs-6">
