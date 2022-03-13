@@ -25,15 +25,15 @@ try {
                 if ($user->user(key: 'prava') > 1) {
                     $dostup = $_POST['user'];
                     if ($dostup == "user") {
-                        $dostup = $user->user(key: 'login');
+                        $dostup = Filter::clearFullSpecialChars($user->user(key: 'login'));
                         $prava = 0;
                     }
                     if ($dostup == "admin") {
-                        $dostup = $admin->AdminPrint($user->user(key: 'prava'));
+                        $dostup = Filter::clearFullSpecialChars($admin->AdminPrint($user->user(key: 'prava')));
                         $prava = 1;
                     }
                 } else {
-                    $dostup = $user->user(key: 'login');
+                    $dostup = Filter::clearFullSpecialChars($user->user(key: 'login'));
                     $prava = 0;
                 }
                 $sql->query("insert into chat set id_user = ?i, user = ?s, komu = ?s, privat = ?i, text = ?s, time = ?s, date = ?s, tip = ?i, admin = ?i", $user->user(key: 'id'), $dostup, "", 0, $text, Times::setTime(), Times::setDate(), 1, $prava);
@@ -73,10 +73,10 @@ try {
                                         <?= $ci['date'] ?>  <?= $ci['time'] ?>
                                     </div>
                                     <div class="col-xs-9">
-                                <a href="#<?= Filter::clearInt($ci['id']) ?>" data-toggle="modal"><strong class="text-danger"><?= $ci['user'] ?> :</strong></a><?= nl2br(Filter::output($ci['text'])) ?><?php
-                                    if ($admin->setAdmin(admin: 1983)->returnAdmin()) { ?>
-                                    <a href="?a=delete&id=<?= $ci['id'] ?>"><strong class="text-info">[del]</strong></a><?php
-                                    } ?>
+                                        <a href="#<?= Filter::clearInt($ci['id']) ?>" data-toggle="modal"><strong class="text-danger"><?= $ci['user'] ?> :</strong></a><?= nl2br(Filter::output($ci['text'])) ?><?php
+                                        if ($admin->setAdmin(admin: 1983)->returnAdmin()) { ?>
+                                            <a href="?a=delete&id=<?= $ci['id'] ?>"><strong class="text-info">[del]</strong></a><?php
+                                        } ?>
                                     </div><?php
                                     Site::PrintMiniLine(); ?>
 
@@ -84,9 +84,7 @@ try {
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                                        &times;
-                                                    </button><?php
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><?php
                                                     if ($ci['admin'] == 1) { ?>
                                                         <h4 class="modal-title text-center">
                                                             Информация скрыта
@@ -103,24 +101,24 @@ try {
                                                 <div class="modal-footer">
                                                     <div class="col-xs-12"><?php
                                                         Site::linkToSiteAdd(class: 'btn btn-block btn-minidark', link: "view?user={$ci['user']}", text: 'Перейти'); ?><?
-                                                        } ?>
+                                                    } ?>
                                                     </div>
                                                 </div>
-                                            </div><!-- /.modal-content -->
-                                        </div><!-- /.modal-dialog -->
-                                    </div><!-- /.modal --><?php
+                                            </div>
+                                        </div>
+                                    </div><?php
                                 } ?>
-                                </div>
-                                </div>
-                                </div><?php
+                        </div>
+                    </div>
+                </div><?php
                                 Site::navig3(page: $site->page, get: 'page', pages: $site->pages);
                             } else { ?>
-                                <p class="text-center">
-                                    Сообщений нет
-                                </p>
-                                </div>
-                                </div>
-                                </div><?php
+                            <p class="text-center">
+                                Сообщений нет
+                            </p>
+                        </div>
+                    </div>
+                </div><?php
                             }
             }
             break;

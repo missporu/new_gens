@@ -1,7 +1,8 @@
 <?php
 	require_once ('system/up.php');
 	_Reg();
-$hp_ind = _FetchAssoc("SELECT * FROM `user_set` WHERE `id` = '".$set['id_vrag']."' LIMIT 1");	
+$hp_ind = _FetchAssoc("SELECT * FROM `user_set` WHERE `id` = '".$set['id_vrag']."' LIMIT 1");
+	
 $max = $hp_ind['max_hp'];
 $now = $hp_ind['hp'];
 $health = 130 / ($max / $now);

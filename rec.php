@@ -52,10 +52,6 @@ $_SESSION['err']=NULL;
 }
 ?>
 <center><div class="hello"><span style="color:#739871;">Восстановление забытого пароля</center></div>
-
-
-
-
 <div class="cont center">
 
 <span style="color:#BCBCBC;">Введите свой Логин, почту, которую Вы указали в профиле.</a>

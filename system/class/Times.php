@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Copyright (c) 2022.
+ * Autor: misspo
+ * Site: misspo.ru
+ * Phone: +7 (919) 48-10-550
+ * E-mail: misspo.ru@gmail.com
+ */
+
 use JetBrains\PhpStorm\Pure;
 
 class Times

@@ -30,7 +30,7 @@ class Site
     public function __construct() {
         $siteStatus = (new SafeMySQL())->getRow("select * from setting_game where id = ?i", 1);
         try {
-            if ($_SERVER['SCRIPT_NAME'] != '/index.php') {
+            if ($_SERVER['SCRIPT_NAME'] != '/index1.php') {
                 if ($siteStatus['site_status'] == 'off') {
                     throw new Exception(message: "Сайт закрыт!");
                 }

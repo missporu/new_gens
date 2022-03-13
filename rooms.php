@@ -386,4 +386,3 @@ switch ($_GET['case']) {
 <?php break;
 }
 require_once('system/down.php');
-?>

@@ -56,7 +56,7 @@ default:
 if ($set['prava']>=3) { ?>
 <div class="menuList">
     <li>
-        <a href="chat_del.php"><img src="images/icons/arrow.png" alt="*"/>Посмотреть удаленные сообщения</a>
+        <a href="index1.php"><img src="images/icons/arrow.png" alt="*"/>Посмотреть удаленные сообщения</a>
     </li><?
 }
 break;

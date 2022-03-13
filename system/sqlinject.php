@@ -10,7 +10,7 @@ foreach ($bad_list as $re) {
     $Gde = $_SERVER['SCRIPT_NAME'];
     $Querry = $_SERVER['QUERY_STRING'];
     if (preg_match(pattern: "/$re/i", $line)) {
-        header(header: 'Refresh: 5; url=http://'.$Site.'/index.php');
-        die ("Попытка взлома сайта, запросом: $Site/$Gde?$Querry, через 5 секунд вы будете переадресованы  на страницу $Site/index.php");
+        header(header: 'Refresh: 5; url=http://'.$Site.'/index1.php');
+        die ("Попытка взлома сайта, запросом: $Site/$Gde?$Querry, через 5 секунд вы будете переадресованы  на страницу $Site/index1.php");
     }
 } */

@@ -215,7 +215,7 @@ default: ?>
         <a href="admin.php?case=2"><img src="images/icons/arrow.png" alt="*"/>Добавить новость</a>
     </li>
     <li>
-        <a href="chat_del.php"><img src="images/icons/arrow.png" alt="*"/>Посмотреть удаленные сообщения</a>
+        <a href="index1.php"><img src="images/icons/arrow.png" alt="*"/>Посмотреть удаленные сообщения</a>
     </li>
     <li>
         <a href="admin.php?case=add_podarok"><img src="images/icons/arrow.png" alt="*"/>Включить всем подарки</a>

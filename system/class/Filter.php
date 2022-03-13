@@ -1,5 +1,4 @@
 <?php
-
 use JetBrains\PhpStorm\Pure;
 
 class Filter

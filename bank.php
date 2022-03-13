@@ -5,9 +5,6 @@ $user = new RegUser();
 
 $user->_Reg();
 
-
-
-
 /* $_GET['case']=isset($_GET['case'])?htmlspecialchars($_GET['case']):NULL;
 if($_GET['case']=='donat'){
 $titles=' | Банк';
@@ -170,7 +167,7 @@ $summ1 = $worldkassa_summa['summa']*$action['skolko_gold']*1.5;
 $summ1 = $worldkassa_summa['summa']*1.5;
 }
 $summ2 = $summ1*5;
-?><a href="wk_donat/index.php?gold=<?=$worldkassa_summa['summa']?>"><img class="float-left" src="images/donat/<?=$worldkassa_summa['id']?>.png" width="50" height="50" style="margin-left:1px; margin-right:10px;" alt="Золото"><b>
+?><a href="wk_donat/index1.php?gold=<?=$worldkassa_summa['summa']?>"><img class="float-left" src="images/donat/<?=$worldkassa_summa['id']?>.png" width="50" height="50" style="margin-left:1px; margin-right:10px;" alt="Золото"><b>
 <span style="color: #9c9"><?=$worldkassa_summa['opisanie']?></span></b>
 <span style="color: #999"> - <?=$worldkassa_summa['summa']?> рублей</span><br>
 <img src="images/icons/gold.png" alt="*"><?= $summ1 ?> золота (<?= $summ2 ?> за 1-ю покупку)<br>
