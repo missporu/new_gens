@@ -31,7 +31,12 @@ class RegUser
         if ($this->getUser() == true) {
             $this->user_alliance = Filter::clearInt(string: (new SafeMySQL())->getOne("select count(id) from alliance_user where kto = ?i OR s_kem = ?i", $this->userID(), $this->userID()));
 
-            (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", time(), $this->userID(), 1);
+            $this->onlineUpdate();
+
+            $this->buildFarmBaks();
+            $this->buildFarmSilver();
+            $this->buildFarmNeft();
+            $this->buildFarmGaz();
         }
     }
 
@@ -67,11 +72,74 @@ class RegUser
         }
     }
 
+    protected function onlineUpdate() {
+        (new SafeMySQL())->query("update users set online = ?i where id = ?i limit ?i", time(), $this->userID(), 1);
+    }
+
+    protected function buildFarmBaks() {
+        if (time() > $this->user('build_up_baks')) {
+            $build_up = $this->user('build_up_baks');
+            if ($build_up == 0) $build_up = time() - 1;
+            $dohod_up = Filter::clearInt(time() - $build_up);
+            if ($dohod_up >= 1) {
+                $dohod_baks = $this->user('baks_up') * $dohod_up;
+                if ($dohod_baks >= 1) {
+                    (new SafeMySQL())->query("update users set baks = baks+?i, build_up_baks = ?i where id = ?i", $dohod_baks, time(), $this->userID());
+                }
+            }
+        }
+    }
+
+    protected function buildFarmSilver() {
+        if (time() > $this->user('build_up_silver')) {
+            $build_up = $this->user('build_up_silver');
+            if ($build_up == 0) $build_up = time() - 1;
+            $dohod_up = Filter::clearInt(time() - $build_up);
+            if ($dohod_up >= 1) {
+                $dohod_silver = $this->user('silver_up') * $dohod_up;
+                if ($dohod_silver >= 1) {
+                    (new SafeMySQL())->query("update users set silver = silver+?i, build_up_silver = ?i where id = ?i", $dohod_silver, time(), $this->user('id'));
+                }
+            }
+        }
+    }
+
+    protected function buildFarmNeft() {
+        if (time() > $this->user('build_up_neft')) {
+            $build_up = $this->user('build_up_neft');
+            if ($build_up == 0) $build_up = time() - 1;
+            $dohod_up = Filter::clearInt(time() - $build_up);
+            if ($dohod_up >= 1) {
+                $dohod_neft = $this->user('neft_up') * $dohod_up;
+                if ($dohod_neft >= 1) {
+                    (new SafeMySQL())->query("update users set neft = neft+?i, build_up_neft = ?i where id = ?i", $dohod_neft, time(), $this->userID());
+                }
+            }
+        }
+    }
+
+
+    protected function buildFarmGaz() {
+        if (time() > $this->user('build_up_gaz')) {
+            $build_up = $this->user('build_up_gaz');
+            if ($build_up == 0) $build_up = time() - 1;
+            $dohod_up = Filter::clearInt(time() - $build_up);
+            if ($dohod_up >= 1) {
+                $dohod_gaz = $this->user('gaz_up') * $dohod_up;
+                if ($dohod_gaz >= 1) {
+                    (new SafeMySQL())->query("update users set gaz = gaz+?i, build_up_gaz = ?i where id = ?i", $dohod_gaz, time(), $this->userID());
+                }
+            }
+        }
+    }
+
     /**
-     * @param $name
-     * @param $prepare
-     * @param $key
-     * @param $value
+     * $smotr_user = (new SafeMySQL())->getRow("select $value from users where $name = ?$prepare limit ?i", $key, 1);<br>
+     * select * from users where login = ?s , Admin<br>
+     * @param $name (where)
+     * @param $prepare (s)
+     * @param $key ($name = ...)
+     * @param $value (select -> return)
      * @return mixed
      */
     public function smotr_user($name, $prepare, $key, $value) {
@@ -154,8 +222,8 @@ class RegUser
         try {
             $addMoney = $this->user(key: $key) + $value;
             $addMoney = round(num: Filter::clearInt(string: $addMoney));
-            if ($addMoney > 999999999) {
-                $addMoney = 999999999;
+            if ($addMoney > 9999999999) {
+                $addMoney = 9999999999;
                 throw new Exception(message: "Вы превысили лимит (999999999)");
             }
             (new SafeMySQL())->query("update users set $key = ?i where login = ?s limit ?i", $addMoney, $this->user(key: 'login'), 1);

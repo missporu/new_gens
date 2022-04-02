@@ -16,6 +16,7 @@ $user->_Reg();
 $sql = new SafeMySQL();
 $site = new Site();
 $page = new Page();
+
 $page->setTitle($title);
 
 try {
@@ -31,9 +32,8 @@ try {
             Site::PrintMiniLine();
 
             switch ($site->switch) {
-                /**
-                 * Главная
-                 */
+
+                /** Главная */
                 default:
 
                     $my_build = $sql->getOne("select count(id) from build_user where id_user = ?i", $user->user(key: 'id'));
@@ -48,15 +48,29 @@ try {
                         $my_build = $sql->getAll("select * from build_user where id_user = ?i", $user->user('id'));
                         foreach ($my_build as $b) { ?>
                             <div class="col-xs-4 text-center">
-                                <strong class="red"><?= $b['name'] ?></strong><br><?
-                                if ($b['bonus'] > 0) { ?>
-                                    bonus: <?= $b['bonus'] ?><br><?php
-                                }
+                                <strong class="red"><?= $b['name'] ?></strong><br>
+
+                                <?= Build::echoKey($b['keyword']); ?> <?= Build::echoKey($b['znak']); ?>
+                                <?= Build::echoKey($b['sklad']); ?>
+                                <?= Build::echoKey($b['b_serebro']); ?>
+                                <?= Build::echoKey($b['b_neft']); ?>
+                                <?= Build::echoKey($b['b_gaz']); ?>
+                                <?= Build::echoKey($b['b_energy']);
+
+                                if (is_null($b['sklad']) && $b['znak'] != null) {
+                                    echo " в час <br>";
+                                } ?>
+
+                                <?= Build::returnKey($b['b_serebro']); ?>
+                                <?= Build::returnKey($b['b_neft']) ?>
+                                <?= Build::returnKey($b['b_gaz']) ?>
+                                <?= Build::returnKey($b['b_energy']);
+
                                 if ($b['time_stroy'] > time()) { ?>
                                     <strong class="red">Строится <?= $b['lvl'] ?> ур.</strong><br><?php
                                     echo "(" . Times::timeHours(time: $b['time_stroy'] - time()) . ")";
                                 } else { ?>
-                                    <strong class="red">Ур.: <?= $b['lvl'] ?></strong><br><?php
+                                    <br><strong class="red">Ур.: <?= $b['lvl'] ?></strong><br><?php
                                 } ?>
                             </div>
                             <div class="col-xs-4">
@@ -77,9 +91,7 @@ try {
                     break;
 
 
-                /**
-                 * Улучшения
-                 */
+                /** Улучшения **/
                 case 'up':
 
                     break;
@@ -100,10 +112,21 @@ try {
                             $ss = $sql->getRow("select * from build_user where id_user = ?i and id_build = ?i", $user->user(key: 'id'), $w['id']);
                             if (!is_array($ss)) { ?>
                                 <div class="col-xs-4 text-center">
-                                    <strong class="red"><?= $w['name'] ?></strong><br><?
-                                    if ($w['bonus'] > 0) { ?>
-                                        Бонус: <?= $w['bonus'] ?><br><?php
-                                    } ?>
+                                    <strong class="red"><?= $w['name'] ?></strong><br><?php
+                                    function print_w($name) {
+                                        global $w;
+                                        if (!is_null($name)) { ?>
+                                            <?= Build::echoKey($w['keyword']); ?> <?= Build::echoKey($w['znak']); ?>
+                                            <?= Build::echoKey($name);
+                                            if (is_null($w['sklad']) && $w['znak'] != null) {
+                                                echo " в час ";
+                                            }
+                                        }
+                                    }
+                                    print_w($w['b_serebro']);
+                                    print_w($w['b_neft']);
+                                    print_w($w['b_gaz']);
+                                    print_w($w['b_energy']); ?>
                                 </div>
                                 <div class="col-xs-4">
                                     <strong class="silver">Серебро: <?= $w['serebro'] ?></strong><br>
@@ -133,7 +156,7 @@ try {
                         if ($my_build) {
                             Site::session_empty(text: 'Это здание уже построено!');
                         }
-                        $sql->query("insert into build_user set id_build = ?i, id_user = ?i, name = ?s, tip = ?i, lvl = ?i, time_up = ?i, bonus = ?i, serebro = ?i, neft = ?i, gaz = ?i, energy = ?i, ku = ?i, time_stroy = ?i", $build['id'], $user->user('id'), $build['name'], $build['tip'], 1, $build['time_up'], $build['bonus'], $build['serebro'], $build['neft'], $build['gaz'], $build['energy'], $build['ku'], time()+$build['time_up']);
+                        $sql->query("insert into build_user set id_build = ?i, id_user = ?i, name = ?s, tip = ?i, lvl = ?i, time_up = ?i, serebro = ?i, neft = ?i, gaz = ?i, energy = ?i, ku = ?i, time_stroy = ?i", $build['id'], $user->user('id'), $build['name'], $build['tip'], 1, $build['time_up'], $build['serebro'], $build['neft'], $build['gaz'], $build['energy'], $build['ku'], time()+$build['time_up']);
                         Site::session_empty('ok', 'Вы начали стройку!', '?');
                     } else {
                         Site::session_empty('error', 'Нет такого здания!', '?');

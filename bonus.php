@@ -33,7 +33,6 @@ try {
         }
         if(isset($_POST['bonus'])) {
             $user->addMoney(key: "baks", value: $money);
-            $user->addMoney(key: "exp", value: $exp);
             if($user->userBonus(value: 'status_day') == 7) {
                 $gold = 10;
                 $user->addMoney(key: "gold", value: $gold);
@@ -77,10 +76,10 @@ try {
                     <li>
                     <p class="green">
                         <?= 100 * $i ?> <i class="fa fa-usd" aria-hidden="true"></i>
-                    </p>
+                    </p><? /**
                     <p class="orange">
                         <?= 10 * $i ?> exp
-                    </p><?
+                    </p><? */
                     if ($i == 7) { ?>
                         <p class="yellow">10 <i class="fa fa-money" aria-hidden="true"></i></p><?
                     } ?>

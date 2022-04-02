@@ -30,12 +30,12 @@
                title="Добавить в закладки">В закладки</a>
         </div>
         <? Site::PrintMiniLine() ?>
-        <div class="col-xs-12 text-center">
+        <!--<div class="col-xs-12 text-center">
             <script type="text/javascript" src="https://mobtop.ru/c/121843.js"></script>
             <noscript><a href="https://mobtop.ru/in/121843"><img src="https://mobtop.ru/121843.gif"
                                                                  alt="MobTop.Ru - Рейтинг и статистика мобильных сайтов"/></a>
             </noscript>
-        </div>
+        </div>-->
         <? Site::PrintMiniLine() ?>
         <div class="col-xs-12 text-center">
             <p class="small">Разработка сайтов - <? Site::linkToWeb('', 'misspo.ru', 'misspo'); ?> &copy; 2016 - <?= date("Y"); ?>.</p>
